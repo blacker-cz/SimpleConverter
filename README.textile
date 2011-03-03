@@ -1,0 +1,36 @@
+h1. SimpleConverter
+
+h2. Description
+
+SimpleConverter is very simple document convertor. Allows use of plugins for conversion between different document formats.
+
+h2. 3rd party software, libraries, etc.
+
+SimpleConverter depends on following libraries:
+* Managed Extensibility Framework - "http://mef.codeplex.com/(http://mef.codeplex.com/)":http://mef.codeplex.com/
+* GPPG shift reduce parser library - "http://gppg.codeplex.com/(http://gppg.codeplex.com/)":http://gppg.codeplex.com/
+
+SimpleConverter is using following software for generation of document scanner and parser:
+* Gardens Point LEX - "http://gplex.codeplex.com/(http://gplex.codeplex.com/)":http://gplex.codeplex.com/
+* Gardens Point Parser Generator - "http://gppg.codeplex.com/(http://gppg.codeplex.com/)":http://gppg.codeplex.com/
+
+Other used resources:
+* Silk icon set 1.3 - "http://www.famfamfam.com/lab/icons/silk/(http://www.famfamfam.com/lab/icons/silk/)":http://www.famfamfam.com/lab/icons/silk/
+
+h2. License
+
+SimpleConverter - universal document converter
+Copyright (C) 2011  Lukáš Černý
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
