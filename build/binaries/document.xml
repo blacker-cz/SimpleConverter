@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Node xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Type>document</Type>
+  <Children>
+    <Node>
+      <Type>body</Type>
+      <Children>
+        <Node>
+          <Type>author</Type>
+          <Children>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">Kaja marik</Content>
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>slide</Type>
+          <Children>
+            <Node>
+              <Type>frametitle</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">Table of contents</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>date</Type>
+          <Children>
+            <Node>
+              <Type>today</Type>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>slide</Type>
+          <Children />
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>slide</Type>
+          <Children>
+            <Node>
+              <Type>frametitle</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">Title</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+            <Node>
+              <Type>section</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">Section no.1</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">Each frame should have a title. </Content>
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>subsection</Type>
+          <Children>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">Subsection no.1.1 </Content>
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>slide</Type>
+          <Children>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">Without title somethink is missing. </Content>
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>section</Type>
+          <Children>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">Section no. 2</Content>
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>subsection</Type>
+          <Children>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">Lists I</Content>
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>slide</Type>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>slide</Type>
+          <Children>
+            <Node>
+              <Type>frametitle</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">lists with pause</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+            <Node>
+              <Type>smallcaps</Type>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>slide</Type>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>slide</Type>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>section</Type>
+          <Children>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">Section no.3</Content>
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>subsection</Type>
+          <Children>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">Tables</Content>
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>slide</Type>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>slide</Type>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>section</Type>
+          <Children>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">Section no. 4</Content>
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>subsection</Type>
+          <Children>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">blocs</Content>
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+        <Node>
+          <Type>slide</Type>
+          <Children>
+            <Node>
+              <Type>frametitle</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">blocs</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+            <Node>
+              <Type>block</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">block</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+            <Node>
+              <Type>block</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">title of the bloc</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">bloc text tab </Content>
+            </Node>
+            <Node>
+              <Type>block</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">block</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+            <Node>
+              <Type>block</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">exampleblock</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+            <Node>
+              <Type>block</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">title of the bloc</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">bloc text space </Content>
+            </Node>
+            <Node>
+              <Type>block</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">exampleblock</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+            <Node>
+              <Type>block</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">alertblock</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+            <Node>
+              <Type>block</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">title of the bloc</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+            <Node>
+              <Type>string</Type>
+              <OverlaySpec />
+              <OptionalParams />
+              <Content xsi:type="xsd:string">blok s haluzemi na konci zacatku a dal </Content>
+            </Node>
+            <Node>
+              <Type>block</Type>
+              <Children>
+                <Node>
+                  <Type>string</Type>
+                  <OverlaySpec />
+                  <OptionalParams />
+                  <Content xsi:type="xsd:string">alertblock</Content>
+                </Node>
+              </Children>
+              <OverlaySpec />
+              <OptionalParams />
+            </Node>
+          </Children>
+          <OverlaySpec />
+          <OptionalParams />
+        </Node>
+      </Children>
+      <OverlaySpec />
+      <OptionalParams />
+    </Node>
+  </Children>
+  <OverlaySpec />
+  <OptionalParams />
+</Node>

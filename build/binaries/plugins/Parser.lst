@@ -1,0 +1,208 @@
+
+// ==========================================================================
+//  GPPG error listing for yacc source file <D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 3.3.2011 11:27:30>
+// ==========================================================================
+//  Version:  1.4.3
+//  Machine:  LUKAS-PC
+//  DateTime: 3.3.2011 11:27:32
+//  UserName: Lukas
+// ==========================================================================
+
+
+%using SimpleConverter.Contract
+
+%namespace SimpleConverter.Plugin.Beamer2PPT
+
+%start document
+
+%{
+    public Node Document { get; private set; }
+%}
+
+%union {
+    public string Text;
+    public Node documentNode;
+}
+
+// todo: cleanup this hell :D
+%token <documentNode> DOCUMENTCLASS "\documentclass", USEPACKAGE "\usepackage",
+       TITLE "\title", AUTHOR "\author", TODAY "\today", DATE "\date", TITLEPAGE "\titlepage",
+       BEGIN_DOCUMENT "\begin{document}", END_DOCUMENT "\end{document}",
+       BEGIN_FRAME "\begin{frame}", END_FRAME "\end{frame}", FRAME "\frame", FRAMETITLE "\frametitle", PAUSE "\pause",
+       BEGIN_ITEMIZE "\begin{itemize}", END_ITEMIZE "\end{itemize}", BEGIN_ENUMERATE "\begin{enumerate}",
+       END_ENUMERATE "\end{enumerate}", BEGIN_DESCRIPTION "\begin{description}", END_DESCRIPTION "\end{description}",
+       BEGIN_TABULAR "\begin{tabular}", END_TABULAR "\end{tabular}"
+       SECTION "\section", SUBSECTION "\subsection", SUBSUBSECTION "\subsubsection",
+       OVERLAY "overlay specification", OPTIONAL "optional parameter"
+%token <documentNode> TEXTBF "\textbf", <documentNode> TEXTIT "\textit", <documentNode> TEXTTT "\texttt", <documentNode> TEXTSC "\textsc"
+//-------------------------------------^^
+// Error: Syntax error, unexpected '<', expecting ident, or litchar
+// ----------------------------------------------------------------
+%token '{', '}', NL "\\ or \cr", '&', ENDROW "\\ or \cr",
+       COLOR "\color", BFSERIES "\bfseries", TTFAMILY "\ttfamily", ITSHAPE "\itshape", SCSHAPE "\scshape",
+       TINY "\tiny", SCRIPTSIZE "\scriptsize", FOOTNOTESIZE "\footnotesize", SMALL "\small",
+       NORMALSIZE "\normalsize", LARGE "\large", LARGE2 "\Large", LARGE3 "\LARGE", HUGE "\huge", HUGE2 "\Huge",
+       ITEM "\item"
+
+%nonassoc <Text> STRING "plain text"
+
+%right HIGH_PRIORITY
+
+%%
+// Error: There are 5 non-terminating NonTerminal Symbols
+   //  {command, TEXTBF, TEXTIT, TEXTTT, TEXTSC}
+// Warning: Terminating TEXTBF fixes the following size-2 NonTerminal set
+   // {command, TEXTBF}
+// Warning: Terminating TEXTIT fixes the following size-2 NonTerminal set
+   // {command, TEXTIT}
+// Warning: Terminating TEXTTT fixes the following size-2 NonTerminal set
+   // {command, TEXTTT}
+// Warning: Terminating TEXTSC fixes the following size-2 NonTerminal set
+   // {command, TEXTSC}
+// Error: NonTerminal symbol "TEXTBF" has no productions
+// Error: NonTerminal symbol "TEXTIT" has no productions
+// Error: NonTerminal symbol "TEXTTT" has no productions
+// Error: NonTerminal symbol "TEXTSC" has no productions
+// ----------------------------------------------------------------------
+
+document :
+            documentclass preambule body
+        ;
+
+documentclass :
+            DOCUMENTCLASS '{' STRING '}'            {
+                                                        if(String.Compare($3, "beamer", false) != 0) {
+                                                            Messenger.Instance.SendMessage("Invalid document class \"" + $3 + "\"", MessageLevel.ERROR);
+                                                        }
+                                                    }
+        ;
+
+preambule :
+        |   preambule USEPACKAGE '{' STRING '}'
+        |   preambule titlesettings
+        ;
+
+titlesettings :
+            TITLE '{' simpleformtext '}'
+        |   AUTHOR '{' simpleformtext '}'
+        |   DATE '{' simpleformtext '}'
+        ;
+
+sectionsettings :
+            SECTION '{' simpleformtext '}'
+        |   SUBSECTION '{' simpleformtext '}'
+        |   SUBSUBSECTION '{' simpleformtext '}'
+        ;
+
+body : 
+            BEGIN_DOCUMENT bodycontent END_DOCUMENT
+        ;
+    
+bodycontent :
+        |   bodycontent titlesettings
+        |   bodycontent sectionsettings
+        |   bodycontent slide
+        ;
+
+slide :
+            BEGIN_FRAME slidecontent END_FRAME
+        |   FRAME '{' slidecontent '}'
+        ;
+
+
+slidecontent : /* return List<INode> - create node in specific command; append right side to the left side*/
+        |   slidecontent '{' slidecontent '}'
+        |   slidecontent STRING
+        |   slidecontent sectionsettings    // todo: ?
+        |   slidecontent environment
+        |   slidecontent commands
+        ;
+
+// todo: need to consider table environment
+environment :
+            BEGIN_ITEMIZE items_list END_ITEMIZE
+        |   BEGIN_ENUMERATE items_list END_ENUMERATE
+        |   BEGIN_DESCRIPTION items_list END_DESCRIPTION
+        |   BEGIN_TABULAR '{' STRING '}' table_rows END_TABULAR
+        ;
+
+items_list :
+            ITEM slidecontent
+        |   items_list ITEM slidecontent
+        ;
+
+// todo: need to add rule for \hline
+table_rows :
+            table_cols
+        |   table_rows ENDROW table_cols
+        ;
+
+// todo: need to add rule for \multicolumn
+table_cols :
+            slidecontent
+        |   table_cols '&' slidecontent
+        ;
+
+commands : /* copy List<INode> from slidecontent to command INode*/
+            command '{' slidecontent '}'
+        |   groupcommand slidecontent  // todo: resolve shift/reduce conflicts
+        |   standalonecommand  // e.g. \today, \pause, \\
+        ;
+
+command :
+            TEXTBF                  {
+                                        $$ = new Node("bold");
+                                    }
+        |   TEXTIT                  {
+                                        $$ = new Node("italic");
+                                    }
+        |   TEXTTT                  {
+                                        $$ = new Node("typewriter");
+                                    }
+        |   TEXTSC                  {
+                                        $$ = new Node("smallcaps");
+                                    }
+        ;
+
+groupcommand :
+            BFSERIES
+        |   TTFAMILY
+        |   ITSHAPE
+        |   SCSHAPE
+        |   TINY
+        |   SCRIPTSIZE
+        |   FOOTNOTESIZE
+        |   SMALL
+        |   NORMALSIZE
+        |   LARGE
+        |   LARGE2
+        |   LARGE3
+        |   HUGE
+        |   HUGE2
+        |   COLOR '{' STRING '}'
+        ;
+
+standalonecommand :
+            TODAY
+        |   PAUSE
+        |   FRAMETITLE '{' simpleformtext '}'
+        |   NL
+        ;
+
+// Simple formatted text; todo: check if this works how it should, resolve shift/reduce conflicts
+// ----------------------------------------------------------------------------
+
+simpleformtext :
+        |   simpleformtext command '{' simpleformtext '}'
+        |   simpleformtext groupcommand simpleformtext
+        |   simpleformtext STRING
+        |   simpleformtext NL
+        |   simpleformtext '{' simpleformtext '}'
+        |   simpleformtext TODAY
+        ;
+
+%%
+
+public Parser(Scanner scn) : base(scn) { }
+// ==========================================================================
+

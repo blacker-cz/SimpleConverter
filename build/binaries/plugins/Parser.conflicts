@@ -1,0 +1,1491 @@
+// Parser Conflict Information for grammar file "D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 3.3.2011 12:14:03"
+
+Shift/Reduce conflict on symbol ""plain text"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""plain text"":	State-26 -> State-27
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 27
+    65 simpleformtext: simpleformtext "plain text" .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+
+Shift/Reduce conflict on symbol ""\\ or \cr"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\\ or \cr"":	State-26 -> State-28
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 28
+    66 simpleformtext: simpleformtext "\\ or \cr" .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+
+Shift/Reduce conflict on symbol "'{'", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift "'{'":	State-26 -> State-29
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 29
+    67 simpleformtext: simpleformtext '{' . simpleformtext '}' 
+
+Shift/Reduce conflict on symbol ""\today"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\today"":	State-26 -> State-32
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 32
+    68 simpleformtext: simpleformtext "\today" .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+
+Shift/Reduce conflict on symbol ""\textbf"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\textbf"":	State-26 -> State-33
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 33
+    39 command: "\textbf" .
+	-lookahead: '{'
+
+Shift/Reduce conflict on symbol ""\textit"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\textit"":	State-26 -> State-34
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 34
+    40 command: "\textit" .
+	-lookahead: '{'
+
+Shift/Reduce conflict on symbol ""\texttt"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\texttt"":	State-26 -> State-35
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 35
+    41 command: "\texttt" .
+	-lookahead: '{'
+
+Shift/Reduce conflict on symbol ""\textsc"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\textsc"":	State-26 -> State-36
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 36
+    42 command: "\textsc" .
+	-lookahead: '{'
+
+Shift/Reduce conflict on symbol ""\bfseries"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\bfseries"":	State-26 -> State-37
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 37
+    43 groupcommand: "\bfseries" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\ttfamily"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\ttfamily"":	State-26 -> State-38
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 38
+    44 groupcommand: "\ttfamily" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\itshape"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\itshape"":	State-26 -> State-39
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 39
+    45 groupcommand: "\itshape" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\scshape"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\scshape"":	State-26 -> State-40
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 40
+    46 groupcommand: "\scshape" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\tiny"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\tiny"":	State-26 -> State-41
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 41
+    47 groupcommand: "\tiny" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\scriptsize"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\scriptsize"":	State-26 -> State-42
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 42
+    48 groupcommand: "\scriptsize" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\footnotesize"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\footnotesize"":	State-26 -> State-43
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 43
+    49 groupcommand: "\footnotesize" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\small"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\small"":	State-26 -> State-44
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 44
+    50 groupcommand: "\small" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\normalsize"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\normalsize"":	State-26 -> State-45
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 45
+    51 groupcommand: "\normalsize" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\large"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\large"":	State-26 -> State-46
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 46
+    52 groupcommand: "\large" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\Large"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\Large"":	State-26 -> State-47
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 47
+    53 groupcommand: "\Large" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\LARGE"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\LARGE"":	State-26 -> State-48
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 48
+    54 groupcommand: "\LARGE" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\huge"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\huge"":	State-26 -> State-49
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 49
+    55 groupcommand: "\huge" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\Huge"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\Huge"":	State-26 -> State-50
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 50
+    56 groupcommand: "\Huge" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\color"", parser will shift
+ Reduce 64:	simpleformtext -> simpleformtext, groupcommand, simpleformtext
+ Shift ""\color"":	State-26 -> State-51
+  Items for From-state State 26
+    64 simpleformtext: simpleformtext groupcommand simpleformtext .
+	-lookahead: '}', "plain text", "\\ or \cr", '{', "\today", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color"
+    63 simpleformtext: simpleformtext . command '{' simpleformtext '}' 
+    64 simpleformtext: simpleformtext . groupcommand simpleformtext 
+    65 simpleformtext: simpleformtext . "plain text" 
+    66 simpleformtext: simpleformtext . "\\ or \cr" 
+    67 simpleformtext: simpleformtext . '{' simpleformtext '}' 
+    68 simpleformtext: simpleformtext . "\today" 
+  Items for Next-state State 51
+    57 groupcommand: "\color" . '{' "plain text" '}' 
+
+Shift/Reduce conflict on symbol "'{'", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift "'{'":	State-113 -> State-78
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 78
+    21 slidecontent: slidecontent '{' . slidecontent '}' 
+
+Shift/Reduce conflict on symbol ""plain text"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""plain text"":	State-113 -> State-81
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 81
+    22 slidecontent: slidecontent "plain text" .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\section"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\section"":	State-113 -> State-63
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 63
+    10 sectionsettings: "\section" . '{' simpleformtext '}' 
+
+Shift/Reduce conflict on symbol ""\subsection"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\subsection"":	State-113 -> State-67
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 67
+    11 sectionsettings: "\subsection" . '{' simpleformtext '}' 
+
+Shift/Reduce conflict on symbol ""\subsubsection"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\subsubsection"":	State-113 -> State-71
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 71
+    12 sectionsettings: "\subsubsection" . '{' simpleformtext '}' 
+
+Shift/Reduce conflict on symbol ""\begin{itemize}"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\begin{itemize}"":	State-113 -> State-85
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 85
+    26 environment: "\begin{itemize}" . items_list "\end{itemize}" 
+
+Shift/Reduce conflict on symbol ""\begin{enumerate}"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\begin{enumerate}"":	State-113 -> State-90
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 90
+    27 environment: "\begin{enumerate}" . items_list "\end{enumerate}" 
+
+Shift/Reduce conflict on symbol ""\begin{description}"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\begin{description}"":	State-113 -> State-95
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 95
+    28 environment: "\begin{description}" . items_list "\end{description}" 
+
+Shift/Reduce conflict on symbol ""\begin{tabular}"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\begin{tabular}"":	State-113 -> State-98
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 98
+    29 environment: "\begin{tabular}" . '{' "plain text" '}' table_rows "\end{tabular}" 
+
+Shift/Reduce conflict on symbol ""\textbf"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\textbf"":	State-113 -> State-33
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 33
+    39 command: "\textbf" .
+	-lookahead: '{'
+
+Shift/Reduce conflict on symbol ""\textit"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\textit"":	State-113 -> State-34
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 34
+    40 command: "\textit" .
+	-lookahead: '{'
+
+Shift/Reduce conflict on symbol ""\texttt"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\texttt"":	State-113 -> State-35
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 35
+    41 command: "\texttt" .
+	-lookahead: '{'
+
+Shift/Reduce conflict on symbol ""\textsc"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\textsc"":	State-113 -> State-36
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 36
+    42 command: "\textsc" .
+	-lookahead: '{'
+
+Shift/Reduce conflict on symbol ""\bfseries"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\bfseries"":	State-113 -> State-37
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 37
+    43 groupcommand: "\bfseries" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\ttfamily"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\ttfamily"":	State-113 -> State-38
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 38
+    44 groupcommand: "\ttfamily" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\itshape"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\itshape"":	State-113 -> State-39
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 39
+    45 groupcommand: "\itshape" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\scshape"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\scshape"":	State-113 -> State-40
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 40
+    46 groupcommand: "\scshape" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\tiny"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\tiny"":	State-113 -> State-41
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 41
+    47 groupcommand: "\tiny" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\scriptsize"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\scriptsize"":	State-113 -> State-42
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 42
+    48 groupcommand: "\scriptsize" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\footnotesize"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\footnotesize"":	State-113 -> State-43
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 43
+    49 groupcommand: "\footnotesize" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\small"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\small"":	State-113 -> State-44
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 44
+    50 groupcommand: "\small" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\normalsize"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\normalsize"":	State-113 -> State-45
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 45
+    51 groupcommand: "\normalsize" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\large"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\large"":	State-113 -> State-46
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 46
+    52 groupcommand: "\large" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\Large"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\Large"":	State-113 -> State-47
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 47
+    53 groupcommand: "\Large" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\LARGE"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\LARGE"":	State-113 -> State-48
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 48
+    54 groupcommand: "\LARGE" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\huge"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\huge"":	State-113 -> State-49
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 49
+    55 groupcommand: "\huge" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\Huge"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\Huge"":	State-113 -> State-50
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 50
+    56 groupcommand: "\Huge" .
+	-lookahead: "plain text", "\\ or \cr", '{', "\today", "\textbf", "\textit", 
+                "\texttt", "\textsc", "\bfseries", "\ttfamily", "\itshape", 
+                "\scshape", "\tiny", "\scriptsize", "\footnotesize", "\small", 
+                "\normalsize", "\large", "\Large", "\LARGE", "\huge", "\Huge", 
+                "\color", '}', "\section", "\subsection", "\subsubsection", 
+                "\begin{itemize}", "\begin{enumerate}", "\begin{description}", 
+                "\begin{tabular}", "\pause", "\frametitle", "\end{frame}", 
+                "\end{itemize}", "\item", "\end{enumerate}", 
+                "\end{description}", '&', "\end{tabular}", "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\color"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\color"":	State-113 -> State-51
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 51
+    57 groupcommand: "\color" . '{' "plain text" '}' 
+
+Shift/Reduce conflict on symbol ""\today"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\today"":	State-113 -> State-115
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 115
+    58 standalonecommand: "\today" .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\pause"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\pause"":	State-113 -> State-116
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 116
+    59 standalonecommand: "\pause" .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+
+Shift/Reduce conflict on symbol ""\frametitle"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\frametitle"":	State-113 -> State-117
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 117
+    60 standalonecommand: "\frametitle" . '{' simpleformtext '}' 
+
+Shift/Reduce conflict on symbol ""\\ or \cr"", parser will shift
+ Reduce 37:	commands -> groupcommand, slidecontent
+ Shift ""\\ or \cr"":	State-113 -> State-121
+  Items for From-state State 113
+    37 commands: groupcommand slidecontent .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+    21 slidecontent: slidecontent . '{' slidecontent '}' 
+    22 slidecontent: slidecontent . "plain text" 
+    23 slidecontent: slidecontent . sectionsettings 
+    24 slidecontent: slidecontent . environment 
+    25 slidecontent: slidecontent . commands 
+  Items for Next-state State 121
+    61 standalonecommand: "\\ or \cr" .
+	-lookahead: "\end{frame}", '{', "plain text", "\section", "\subsection", 
+                "\subsubsection", "\begin{itemize}", "\begin{enumerate}", 
+                "\begin{description}", "\begin{tabular}", "\textbf", 
+                "\textit", "\texttt", "\textsc", "\bfseries", "\ttfamily", 
+                "\itshape", "\scshape", "\tiny", "\scriptsize", 
+                "\footnotesize", "\small", "\normalsize", "\large", "\Large", 
+                "\LARGE", "\huge", "\Huge", "\color", "\today", "\pause", 
+                "\frametitle", "\\ or \cr", '}', "\end{itemize}", "\item", 
+                "\end{enumerate}", "\end{description}", '&', "\end{tabular}", 
+                "\\ or \cr"
+
+// End conflict information for parser
