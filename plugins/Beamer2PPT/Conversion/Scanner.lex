@@ -49,7 +49,7 @@ envEnd      \\end{wsl}
 {envEnd}\{description\}     { return (int) Tokens.END_DESCRIPTION; }
 {envBegin}\{tabular\}       { tabular = true; return (int) Tokens.BEGIN_TABULAR; }
 {envEnd}\{tabular\}         { tabular = false; return (int) Tokens.END_TABULAR; }
-\\item                      { return (int) Tokens.ITEM; }
+\\item                      { BEGIN(pre_overlay); return (int) Tokens.ITEM; }
 \\multicolumn               {}
 
 // Beamer specific

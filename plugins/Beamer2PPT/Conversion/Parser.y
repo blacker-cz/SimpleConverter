@@ -36,8 +36,8 @@
 %right HIGH_PRIORITY
 
 // todo: wtf??
-%type <documentNode> command groupcommand standalonecommand commands slide titlesettings sectionsettings body
-%type <nodeList> simpleformtext slidecontent bodycontent preambule
+%type <documentNode> command groupcommand standalonecommand commands slide titlesettings sectionsettings body environment
+%type <nodeList> simpleformtext slidecontent bodycontent preambule items_list table_rows table_cols
 
 %%
 
@@ -157,10 +157,10 @@ slidecontent :                      {   /* return List<Node> - create node in sp
                                         $1.Add($2);
                                         $$ = $1;
                                     }
-        |   slidecontent environment/*    {
+        |   slidecontent environment    {
                                         $1.Add($2);
                                         $$ = $1;
-                                    }*/
+                                    }
         |   slidecontent commands   {
                                         $1.Add($2);
                                         $$ = $1;
@@ -169,27 +169,70 @@ slidecontent :                      {   /* return List<Node> - create node in sp
 
 // todo: need to consider table environment
 environment :
-            BEGIN_ITEMIZE items_list END_ITEMIZE
-        |   BEGIN_ENUMERATE items_list END_ENUMERATE
-        |   BEGIN_DESCRIPTION items_list END_DESCRIPTION
-        |   BEGIN_TABULAR '{' STRING '}' table_rows END_TABULAR
+            BEGIN_ITEMIZE items_list END_ITEMIZE    {
+                                        $$ = new Node("bulletlist");
+                                        $$.Children = $2;
+                                    }
+        |   BEGIN_ENUMERATE items_list END_ENUMERATE    {
+                                        $$ = new Node("numberedlist");
+                                        $$.Children = $2;
+                                    }
+        |   BEGIN_DESCRIPTION items_list END_DESCRIPTION    {
+                                        $$ = new Node("descriptionlist");
+                                        $$.Children = $2;
+                                    }
+        |   BEGIN_TABULAR '{' STRING '}' table_rows END_TABULAR    {
+                                        $$ = new Node("table");
+                                        $$.Children = $5;
+                                        $$.Content = (object) $3;
+                                    }
         ;
 
 items_list :
-            ITEM slidecontent
-        |   items_list ITEM slidecontent
+            ITEM slidecontent       {
+                                        Node tmp = new Node("item");
+                                        tmp.Children = $2;
+                                        $$ = new List<Node>();
+                                        $$.Add(tmp);
+                                    }
+        |   items_list ITEM slidecontent    {
+                                        Node tmp = new Node("item");
+                                        tmp.Children = $3;
+                                        $1.Add(tmp);
+                                        $$ = $1;
+                                    }
         ;
 
 // todo: need to add rule for \hline
 table_rows :
-            table_cols
-        |   table_rows ENDROW table_cols
+            table_cols              {
+                                        Node tmp = new Node("tablerow");
+                                        tmp.Children = $1;
+                                        $$ = new List<Node>();
+                                        $$.Add(tmp);
+                                    }
+        |   table_rows ENDROW table_cols    {
+                                        Node tmp = new Node("tablerow");
+                                        tmp.Children = $3;
+                                        $1.Add(tmp);
+                                        $$ = $1;
+                                    }
         ;
 
 // todo: need to add rule for \multicolumn
 table_cols :
-            slidecontent
-        |   table_cols '&' slidecontent
+            slidecontent            {
+                                        Node tmp = new Node("tablecolumn");
+                                        tmp.Children = $1;
+                                        $$ = new List<Node>();
+                                        $$.Add(tmp);
+                                    }
+        |   table_cols '&' slidecontent     {
+                                        Node tmp = new Node("tablecolumn");
+                                        tmp.Children = $3;
+                                        $1.Add(tmp);
+                                        $$ = $1;
+                                    }
         ;
 
 commands : /* copy List<Node> from slidecontent to command Node*/
