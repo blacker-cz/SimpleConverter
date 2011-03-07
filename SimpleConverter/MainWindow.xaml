@@ -14,7 +14,25 @@
             <ColumnDefinition Width="169" />
             <ColumnDefinition Width="111" />
         </Grid.ColumnDefinitions>
-        <ListBox Name="listBoxFiles" Margin="12,12,9,0" Grid.ColumnSpan="2" AllowDrop="True" />
+        <ListBox Name="listBoxFiles" Margin="12,12,9,0" Grid.ColumnSpan="2" AllowDrop="True" ItemsSource="{Binding Files}" SelectedItem="{Binding Path=SelectedFile}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Background" Value="{Binding ValidColor}" />
+                    <Setter Property="Margin" Value="0,1,0,0" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                        <StackPanel Margin="3,3,0,8" HorizontalAlignment="Stretch">
+                        <TextBlock Text="{Binding Filename}" FontWeight="Bold"></TextBlock>
+                        <TextBlock Text="{Binding Filepath}" FontSize="10" FontStyle="Italic"></TextBlock>
+                        </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.InputBindings>
+                <KeyBinding Command="{Binding RemoveFileCommand}" Key="Delete" />
+            </ListBox.InputBindings>
+        </ListBox>
         <TabControl Margin="12,6,12,12" Name="tabControl" Grid.ColumnSpan="3" Grid.Row="2" Grid.RowSpan="2">
             <TabItem Header="Settings" Name="tabSettings" Content="{Binding PluginView}">
             </TabItem>
@@ -53,11 +71,11 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <Button Content="Convert" Height="35" HorizontalAlignment="Left" Margin="0,51,0,0" Name="buttonConvert" VerticalAlignment="Top" Width="99" Grid.Column="2" ToolTip="Start conversion" />
+        <Button Content="Convert" Height="35" HorizontalAlignment="Left" Margin="0,51,0,0" Name="buttonConvert" VerticalAlignment="Top" Width="99" Grid.Column="2" ToolTip="Start conversion" Command="{Binding StartConversionCommand}" />
         <Button Content="Stop batch" Height="35" HorizontalAlignment="Left" Margin="0,92,0,0" Name="buttonStop" VerticalAlignment="Top" Width="99" IsEnabled="False" Grid.Column="2" ToolTip="Stop current conversion job" />
-        <Button Content="Add file" Grid.Column="2" Height="33" HorizontalAlignment="Left" Margin="0,12,0,0" Name="buttonAddFile" VerticalAlignment="Top" Width="74" ToolTip="Add file to conversion job" Command="{Binding StartConversionCommand}" />
-        <TextBox Grid.Row="1" Margin="12,7,9,35" Name="textBox1" Grid.ColumnSpan="2" />
-        <Button Content="Browse" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" Margin="0,7,0,0" Name="buttonBrowse" Width="99" Height="26" VerticalAlignment="Top" ToolTip="Browse for output directory" />
-        <Button Content="X" Grid.Column="2" Height="33" HorizontalAlignment="Left" Margin="80,12,0,0" Name="buttonRemove" VerticalAlignment="Top" Width="19" ToolTip="Remove file from conversion job" />
+        <Button Content="Add file" Grid.Column="2" Height="33" HorizontalAlignment="Left" Margin="0,12,0,0" Name="buttonAddFile" VerticalAlignment="Top" Width="74" ToolTip="Add file to conversion job" Command="{Binding AddFileCommand}" />
+        <TextBox Grid.Row="1" Margin="12,7,9,35" Name="textBox1" Grid.ColumnSpan="2" Text="{Binding OutputPath}"  />
+        <Button Content="Browse" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" Margin="0,7,0,0" Name="buttonBrowse" Width="99" Height="26" VerticalAlignment="Top" ToolTip="Browse for output directory" Command="{Binding BrowseCommand}" />
+        <Button Content="X" Grid.Column="2" Height="33" HorizontalAlignment="Left" Margin="80,12,0,0" Name="buttonRemove" VerticalAlignment="Top" Width="19" ToolTip="Remove file from conversion job" Command="{Binding RemoveFileCommand}" />
     </Grid>
 </Window>
