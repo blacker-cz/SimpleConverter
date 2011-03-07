@@ -32,6 +32,13 @@ namespace SimpleConverter.Contract
         /// </summary>
         /// <returns></returns>
         System.Windows.FrameworkElement GetVisual();
+
+        /// <summary>
+        /// Check if filename is of supported type
+        /// </summary>
+        /// <param name="filename">Filename</param>
+        /// <returns>True if is supported, false otherwise</returns>
+        bool ValidateFile(string filename);
     }
 
     /// <summary>

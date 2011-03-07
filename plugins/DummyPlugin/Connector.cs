@@ -16,6 +16,13 @@ namespace SimpleConverter.Plugin.Dummy
 
         public event ProgressDelegate ProgressEvent;
 
+        private Random _random;
+
+        public Connector()
+        {
+            _random = new Random(DateTime.Now.Millisecond);
+        }
+
         public void ConvertDocument(string filename, string outputDirectory = "")
         {
             throw new NotImplementedException();
@@ -27,6 +34,11 @@ namespace SimpleConverter.Plugin.Dummy
                 _visual = new SettingsView();
 
             return _visual;
+        }
+
+        public bool ValidateFile(string filename)
+        {
+            return (_random.Next() % 2 == 1);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 System.IO.StreamWriter writer = new System.IO.StreamWriter(@"document.xml");
                 x.Serialize(writer, parser.Document);
 
-                Messenger.Instance.SendMessage("Document tree serialized to document.xml");
+                Messenger.Instance.SendMessage(@"Document tree serialized to ""document.xml""");
             }
 #endif
             #endregion // Debug serialization
@@ -61,6 +61,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 _visual = new SettingsView();
 
             return _visual;
+        }
+
+        public bool ValidateFile(string filename)
+        {
+            // todo: refactor this!!
+            if (System.IO.Path.GetExtension(filename) == ".tex")
+                return true;
+            return false;
         }
 
         #endregion
