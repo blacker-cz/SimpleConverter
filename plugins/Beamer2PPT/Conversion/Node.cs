@@ -37,11 +37,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         public string Type { get; set; }
 
         /// <summary>
-        /// List of children.
-        /// </summary>
-        public List<Node> Children { get; set; }
-
-        /// <summary>
         /// Overlay specification
         /// </summary>
         public string OverlaySpec { get; set; }
@@ -57,5 +52,10 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// todo: change to string?
         /// </summary>
         public object Content { get; set; }
+
+        /// <summary>
+        /// List of children.
+        /// </summary>
+        public List<Node> Children { get; set; }
     }
 }
