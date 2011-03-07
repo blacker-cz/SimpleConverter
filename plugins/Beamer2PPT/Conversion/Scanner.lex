@@ -57,7 +57,7 @@ envEnd      \\end{wsl}
 \\frame         { return (int) Tokens.FRAME; }
 \\frametitle    { return (int) Tokens.FRAMETITLE; }
 \\pause         {}
-\\usetheme      {}
+\\usetheme      { return (int) Tokens.USETHEME; }
 
 // Text formatting
 // -----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ envEnd      \\end{wsl}
 \\section       { return (int) Tokens.SECTION; }
 \\subsection    { return (int) Tokens.SUBSECTION; }
 \\subsubsection { return (int) Tokens.SUBSUBSECTION; }
-\\LaTeX[ ]?     {/* process as plaintext (copy to unformattedText) and switch state to "str" */}
+\\LaTeX[ ]?     { BEGIN(str); unformattedText = @"LaTeX"; spaces = 0; nls = 0; }
 // New paragraph
 \\\\|\\cr       { if(tabular) return (int) Tokens.ENDROW; else return (int) Tokens.NL; }
 
@@ -103,11 +103,6 @@ envEnd      \\end{wsl}
 \{              { return '{'; }
 \}              { return '}'; }
 &               { return '&'; }
-// Meaning of [,],< and > depends on context
-\[              {}
-\]              {}
-\<              {}
-\>              {}
 // Comments
 %.*\r?\n?{ws}    {/*ignore*/}
 
@@ -122,7 +117,7 @@ envEnd      \\end{wsl}
     }
 <overlay> {
         [^\>]*                  unformattedText += yytext;
-        \>                      BEGIN(pre_optional); yylval.Text = unformattedText; // return (int) Tokens.OVERLAY;
+        \>                      BEGIN(pre_optional); yylval.Text = unformattedText; return (int) Tokens.OVERLAY;
     }
 
 // Optional parameters
@@ -133,7 +128,7 @@ envEnd      \\end{wsl}
     }
 <optional> {
         [^\]]*                  unformattedText += yytext;
-        \]                      BEGIN(INITIAL); yylval.Text = unformattedText; // return (int) Tokens.OPTIONAL;
+        \]                      BEGIN(INITIAL); yylval.Text = unformattedText; return (int) Tokens.OPTIONAL;
     }
 
 // Plain text

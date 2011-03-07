@@ -6,6 +6,7 @@
 
 %{
     public Node Document { get; private set; }
+    public int SlideCount { get; private set; }
 %}
 
 %union {
@@ -15,7 +16,7 @@
 }
 
 // todo: cleanup this hell :D
-%token DOCUMENTCLASS "\documentclass", USEPACKAGE "\usepackage",
+%token DOCUMENTCLASS "\documentclass", USEPACKAGE "\usepackage", USETHEME "\usetheme",
        TITLE "\title", AUTHOR "\author", TODAY "\today", DATE "\date", TITLEPAGE "\titlepage",
        BEGIN_DOCUMENT "\begin{document}", END_DOCUMENT "\end{document}",
        BEGIN_FRAME "\begin{frame}", END_FRAME "\end{frame}", FRAME "\frame", FRAMETITLE "\frametitle", PAUSE "\pause",
@@ -32,29 +33,32 @@
        ITEM "\item"
 
 %nonassoc <Text> STRING "plain text"
+%nonassoc <Text> OPTIONAL "optional parameter"
+%nonassoc <Text> OVERLAY "overlay specification"
 
-%right HIGH_PRIORITY
-
-// todo: wtf??
-%type <documentNode> command groupcommand standalonecommand commands slide titlesettings sectionsettings body environment
+// setup types for some non-terminals
+%type <documentNode> command groupcommand standalonecommand commands slide titlesettings sectionsettings body environment documentclass
 %type <nodeList> simpleformtext slidecontent bodycontent preambule items_list table_rows table_cols
+%type <Text> optional overlay
 
 %%
 
 document :
             documentclass preambule body    {
-                                        Document = new Node("document");
+                                        Document = $1;
                                         Document.Children = $2;
                                         Document.Children.Add($3);
                                     }
         ;
 
 documentclass :
-            DOCUMENTCLASS '{' STRING '}'            {
-                                                        if(String.Compare($3, "beamer", false) != 0) {
-                                                            Messenger.Instance.SendMessage("Invalid document class \"" + $3 + "\"", MessageLevel.ERROR);
-                                                        }
-                                                    }
+            DOCUMENTCLASS optional '{' STRING '}'    {
+                                        if(String.Compare($4, "beamer", false) != 0) {
+                                            Messenger.Instance.SendMessage("Invalid document class \"" + $4 + "\"", MessageLevel.WARNING);
+                                        }
+                                        $$ = new Node("document");
+                                        $$.OptionalParams = $2;
+                                    }
         ;
 
 preambule :                         {
@@ -63,6 +67,13 @@ preambule :                         {
         |   preambule USEPACKAGE '{' STRING '}'     {   // really need to process??
                                         Node tmp = new Node("package");
                                         tmp.Content = (object) $4;
+                                        $1.Add(tmp);
+                                        $$ = $1;
+                                    }
+        |   preambule optional USETHEME '{' STRING '}'     {
+                                        Node tmp = new Node("theme");
+                                        tmp.Content = (object) $5;
+                                        tmp.OptionalParams = $2;
                                         $1.Add(tmp);
                                         $$ = $1;
                                     }
@@ -130,10 +141,12 @@ slide : // todo: maybe count slides in here :)
             BEGIN_FRAME slidecontent END_FRAME   {
                                         $$ = new Node("slide");
                                         $$.Children = $2;
+                                        SlideCount++;
                                     }
         |   FRAME '{' slidecontent '}'   {
                                         $$ = new Node("slide");
                                         $$.Children = $3;
+                                        SlideCount++;
                                     }
         ;
 
@@ -189,15 +202,19 @@ environment :
         ;
 
 items_list :
-            ITEM slidecontent       {
+            ITEM overlay optional slidecontent       {
                                         Node tmp = new Node("item");
-                                        tmp.Children = $2;
+                                        tmp.OverlaySpec = $2;
+                                        tmp.OptionalParams = $3;
+                                        tmp.Children = $4;
                                         $$ = new List<Node>();
                                         $$.Add(tmp);
                                     }
-        |   items_list ITEM slidecontent    {
+        |   items_list ITEM overlay optional slidecontent    {
                                         Node tmp = new Node("item");
-                                        tmp.Children = $3;
+                                        tmp.OverlaySpec = $3;
+                                        tmp.OptionalParams = $4;
+                                        tmp.Children = $5;
                                         $1.Add(tmp);
                                         $$ = $1;
                                     }
@@ -328,6 +345,22 @@ standalonecommand :
                                     }
         ;
 
+optional :                          {
+                                        $$ = "";
+                                    }
+        |   OPTIONAL                {
+                                        $$ = $1;
+                                    }
+        ;
+
+overlay :                           {
+                                        $$ = "";
+                                    }
+        |   OVERLAY                 {
+                                        $$ = $1;
+                                    }
+        ;
+
 // Simple formatted text; todo: check if this works how it should, resolve shift/reduce conflicts (dangling else??)
 // ----------------------------------------------------------------------------
 
@@ -368,4 +401,6 @@ simpleformtext :                    {
 
 %%
 
-public Parser(Scanner scn) : base(scn) { }
+public Parser(Scanner scn) : base(scn) {
+    SlideCount = 0;
+}
