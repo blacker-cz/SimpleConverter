@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Connector.cs" />
     <Compile Include="Conversion\Node.cs" />
+    <Compile Include="Exceptions.cs" />
     <Compile Include="IMessenger.cs" />
     <Compile Include="Messenger.cs" />
     <Compile Include="Output\PowerPointBuilder.cs" />
