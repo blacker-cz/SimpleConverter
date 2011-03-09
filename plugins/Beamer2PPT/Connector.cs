@@ -24,7 +24,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             // register Messenger
             Messenger.Instance.Add(this);
 
-            // hardcoded for debugging purposes - will use threads
+            #region Analysis of Beamer document
+            Messenger.Instance.SendMessage("Started parsing.");
+
             Parser parser;
 
             System.IO.FileStream reader;
@@ -33,26 +35,60 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             parser = new Parser(scanner);
 
-            Messenger.Instance.SendMessage("Started parsing.");
-
             bool ok = parser.Parse();
 
             reader.Close();
 
+            if (!ok)    // todo: print message or not?
+                return;
+
+            Messenger.Instance.SendMessage("Parsing done!");
+
+            #endregion // Analysis of Beamer document
+
             #region Debug serialization
 #if DEBUG
-            if (ok)
-            {
-                System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(parser.Document.GetType());
-                System.IO.StreamWriter writer = new System.IO.StreamWriter(@"document.xml");
-                x.Serialize(writer, parser.Document);
+            System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(parser.Document.GetType());
+            System.IO.StreamWriter writer = new System.IO.StreamWriter(@"document.xml");
+            x.Serialize(writer, parser.Document);
 
-                Messenger.Instance.SendMessage(@"Document tree serialized to ""document.xml""");
-            }
+            Messenger.Instance.SendMessage(@"Document tree serialized to ""document.xml""");
 #endif
             #endregion // Debug serialization
 
-            Messenger.Instance.SendMessage("Parsing done!");
+            // check if there are slides in presentation
+            if (parser.SlideCount == 0)
+            {
+                Messenger.Instance.SendMessage("Empty presentation - output omitted.", MessageLevel.ERROR);
+                return;
+            }
+
+            ProgressInfo(PowerPointBuilder.BasicProgress);
+
+            #region Building output document
+
+            Messenger.Instance.SendMessage("Started building output.");
+
+            PowerPointBuilder builder;
+
+            try
+            {
+                builder = new PowerPointBuilder(filename, outputDirectory, parser.Document, parser.SlideCount);
+                // setup progress delegate
+                builder.Progress = new ProgressDelegate(ProgressInfo);
+            }
+            catch (Exception ex)
+            {
+                Messenger.Instance.SendMessage(ex.Message, MessageLevel.ERROR);
+                return;
+            }
+
+            // close PowerPoint and opened presentations
+            builder.Close();
+
+            Messenger.Instance.SendMessage("Output building done.");
+
+            #endregion // Building output document
         }
 
         public System.Windows.FrameworkElement GetVisual()
@@ -74,6 +110,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         #endregion
 
         #region IMessenger implementation
+
         /// <summary>
         /// Fire event with message
         /// todo: thread safe?
@@ -94,6 +131,27 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 
             }
         }
+
         #endregion
+
+        /// <summary>
+        /// Fire event with progress info
+        /// </summary>
+        /// <param name="progress">Progress information</param>
+        public void ProgressInfo(int progress)
+        {
+            try
+            {
+                if (ProgressEvent != null)
+                {
+                    ProgressEvent(progress);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
     }
 }
