@@ -44,7 +44,7 @@ namespace SimpleConverter
         public MainWindowViewModel()
         {
             if (Factory.Loader.Instance.Plugins.Count<Contract.IPluginMetaData>() == 0)
-                throw new Exception("No plugins available."); // todo use better (appropriate) exception
+                throw new Factory.PluginLoaderException("No plugins available.");
 
             Plugins = new ObservableCollection<Contract.IPluginMetaData>(Factory.Loader.Instance.Plugins);
             Messages = new ObservableCollection<ListMessage>();

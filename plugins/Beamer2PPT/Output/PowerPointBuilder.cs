@@ -10,10 +10,21 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 {
     class PowerPointBuilder
     {
+        #region Public variables and properties
+
         /// <summary>
         /// Magic number for progress after document parsings
         /// </summary>
         public const int BasicProgress = 20;
+
+        /// <summary>
+        /// Progress information delegate
+        /// </summary>
+        public Contract.ProgressDelegate Progress { get; set; }
+
+        #endregion // Public variables and properties
+
+        #region Private variables
 
         /// <summary>
         /// Current progress
@@ -45,10 +56,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         private PowerPoint.Presentation _pptPresentation;
 
-        /// <summary>
-        /// Progress information delegate
-        /// </summary>
-        public Contract.ProgressDelegate Progress { get; set; }
+        #endregion // Private variables
 
         /// <summary>
         /// Constructor
@@ -75,14 +83,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             }
             catch
             {
-                throw new Exception("Couldn't start PowerPoint.");  // todo: use better exception
+                throw new PowerPointApplicationException("Couldn't start PowerPoint.");
             }
 
             // check office version
             if (System.Convert.ToSingle(_pptApplication.Version, System.Globalization.CultureInfo.InvariantCulture) < 12.0)
             {
                 Close();    // close application
-                throw new Exception("You must have Office 2007 or higher!");  // todo: use better exception
+                throw new PowerPointApplicationException("You must have Office 2007 or higher!");
             }
         }
 
@@ -92,11 +100,16 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <returns>true if no errors occured, false otherwise</returns>
         public bool Build()
         {
+            // some ideas:
+            // - two runs through document tree
+            //      - in first run setup content table, frametitles and subtitles table, maybe references (if implemented), packages, theme etc.
+            //      - in second run build output document
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Raise progress counter
+        /// Raise progress counter.
+        /// This method will raise progress counter based on slide count and fire (call) <see cref="Progress" /> delegate.
         /// </summary>
         public void RaiseProgress()
         {

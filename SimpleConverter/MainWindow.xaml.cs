@@ -27,7 +27,7 @@ namespace SimpleConverter
             {
                 this.DataContext = new MainWindowViewModel();
             }
-            catch (Exception e) // todo fix this :)
+            catch (Factory.PluginLoaderException e)
             {
                 this.Close();
                 MessageBox.Show("Application encountered following error:\n\n\"" + e.Message + "\"", "Error", MessageBoxButton.OK, MessageBoxImage.Error);

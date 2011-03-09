@@ -38,9 +38,9 @@ namespace SimpleConverter.Factory
                 var container = new CompositionContainer(catalog);
                 container.ComposeParts(this);
             }
-            catch (Exception)   // todo: refactor
+            catch
             {
-                throw new Exception("Couldn't load plugins.");
+                throw new PluginLoaderException("Couldn't load plugins.");
             }
         }
 

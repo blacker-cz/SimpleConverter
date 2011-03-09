@@ -77,16 +77,27 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 // setup progress delegate
                 builder.Progress = new ProgressDelegate(ProgressInfo);
             }
-            catch (Exception ex)
+            catch (PowerPointApplicationException ex)
             {
                 Messenger.Instance.SendMessage(ex.Message, MessageLevel.ERROR);
                 return;
             }
 
-            // close PowerPoint and opened presentations
-            builder.Close();
+            try
+            {
+                builder.Build();
 
-            Messenger.Instance.SendMessage("Output building done.");
+                Messenger.Instance.SendMessage("Output building done.");
+            }
+            catch (DocumentBuilderException ex)
+            {
+                Messenger.Instance.SendMessage(ex.Message, MessageLevel.ERROR);
+            }
+            finally
+            {
+                // close PowerPoint and opened presentations
+                builder.Close();
+            }
 
             #endregion // Building output document
         }
@@ -113,7 +124,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
         /// <summary>
         /// Fire event with message
-        /// todo: thread safe?
         /// </summary>
         /// <param name="message">Text message</param>
         /// <param name="level">Message level</param>
