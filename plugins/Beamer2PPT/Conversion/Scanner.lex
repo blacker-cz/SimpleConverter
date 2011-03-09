@@ -56,6 +56,7 @@ envEnd      \\end{wsl}
 // -----------------------------------------------------------------------------
 \\frame         { return (int) Tokens.FRAME; }
 \\frametitle    { return (int) Tokens.FRAMETITLE; }
+\\framesubtitle { return (int) Tokens.FRAMESUBTITLE; }
 \\pause         {}
 \\usetheme      { return (int) Tokens.USETHEME; }
 

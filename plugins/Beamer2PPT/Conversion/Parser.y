@@ -19,7 +19,8 @@
 %token DOCUMENTCLASS "\documentclass", USEPACKAGE "\usepackage", USETHEME "\usetheme",
        TITLE "\title", AUTHOR "\author", TODAY "\today", DATE "\date", TITLEPAGE "\titlepage",
        BEGIN_DOCUMENT "\begin{document}", END_DOCUMENT "\end{document}",
-       BEGIN_FRAME "\begin{frame}", END_FRAME "\end{frame}", FRAME "\frame", FRAMETITLE "\frametitle", PAUSE "\pause",
+       BEGIN_FRAME "\begin{frame}", END_FRAME "\end{frame}", FRAME "\frame", FRAMETITLE "\frametitle",
+       FRAMESUBTITLE "\framesubtitle", PAUSE "\pause",
        BEGIN_ITEMIZE "\begin{itemize}", END_ITEMIZE "\end{itemize}", BEGIN_ENUMERATE "\begin{enumerate}",
        END_ENUMERATE "\end{enumerate}", BEGIN_DESCRIPTION "\begin{description}", END_DESCRIPTION "\end{description}",
        BEGIN_TABULAR "\begin{tabular}", END_TABULAR "\end{tabular}"
@@ -141,6 +142,25 @@ slide : // todo: maybe count slides in here :)
             BEGIN_FRAME slidecontent END_FRAME   {
                                         $$ = new Node("slide");
                                         $$.Children = $2;
+                                        SlideCount++;
+                                    }
+        |   BEGIN_FRAME '{' simpleformtext '}' slidecontent END_FRAME   {
+                                        $$ = new Node("slide");
+                                        $$.Children = $5;
+                                        Node tmp = new Node("frametitle");
+                                        tmp.Children = $3;
+                                        $$.Children.Add(tmp);
+                                        SlideCount++;
+                                    }
+        |   BEGIN_FRAME '{' simpleformtext '}' '{' simpleformtext '}' slidecontent END_FRAME   {
+                                        $$ = new Node("slide");
+                                        $$.Children = $8;
+                                        Node tmp = new Node("frametitle");
+                                        tmp.Children = $3;
+                                        $$.Children.Add(tmp);
+                                        tmp = new Node("framesubtitle");
+                                        tmp.Children = $6;
+                                        $$.Children.Add(tmp);
                                         SlideCount++;
                                     }
         |   FRAME '{' slidecontent '}'   {
@@ -336,8 +356,12 @@ standalonecommand :
         |   PAUSE                   {
                                         $$ = new Node("pause");
                                     }
-        |   FRAMETITLE '{' simpleformtext '}'    {
+        |   FRAMETITLE '{' simpleformtext '}'   {
                                         $$ = new Node("frametitle");
+                                        $$.Children = $3;
+                                    }
+        |   FRAMESUBTITLE '{' simpleformtext '}'    {
+                                        $$ = new Node("framesubtitle");
                                         $$.Children = $3;
                                     }
         |   NL                      {
