@@ -6,7 +6,7 @@ using System.Text;
 namespace SimpleConverter.Plugin.Beamer2PPT
 {
     /// <summary>
-    /// Interface for document Node
+    /// Class for document Node
     /// </summary>
     public class Node
     {
