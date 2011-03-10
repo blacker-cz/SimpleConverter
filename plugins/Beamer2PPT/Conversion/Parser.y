@@ -7,6 +7,8 @@
 %{
     public Node Document { get; private set; }
     public int SlideCount { get; private set; }
+    public List<SectionRecord> SectionTable { get; private set; }
+    public Dictionary<int, FrametitleRecord> FrametitleTable { get; private set; }
 %}
 
 %union {
@@ -38,7 +40,7 @@
 %nonassoc <Text> OVERLAY "overlay specification"
 
 // setup types for some non-terminals
-%type <documentNode> command groupcommand standalonecommand commands slide titlesettings sectionsettings body environment documentclass
+%type <documentNode> command groupcommand standalonecommand commands slide titlesettings body environment documentclass
 %type <nodeList> simpleformtext slidecontent bodycontent preambule items_list table_rows table_cols
 %type <Text> optional overlay
 
@@ -101,16 +103,13 @@ titlesettings :
 
 sectionsettings :
             SECTION '{' simpleformtext '}'      {
-                                        $$ = new Node("section");
-                                        $$.Children = $3;
+                                        SectionTable.Add(new SectionRecord(SlideCount + 1, $3));
                                     }
         |   SUBSECTION '{' simpleformtext '}'   {
-                                        $$ = new Node("subsection");
-                                        $$.Children = $3;
+                                        SectionTable.Add(new SectionRecord(SlideCount + 1, $3, SectionType.SUBSECTION));
                                     }
         |   SUBSUBSECTION '{' simpleformtext '}'    {
-                                        $$ = new Node("subsubsection");
-                                        $$.Children = $3;
+                                        SectionTable.Add(new SectionRecord(SlideCount + 1, $3, SectionType.SUBSUBSECTION));
                                     }
         ;
 
@@ -129,7 +128,6 @@ bodycontent :                       {
                                         $$ = $1;
                                     }
         |   bodycontent sectionsettings {
-                                        $1.Add($2);
                                         $$ = $1;
                                     }
         |   bodycontent slide       {
@@ -138,7 +136,7 @@ bodycontent :                       {
                                     }
         ;
 
-slide : // todo: maybe count slides in here :)
+slide :
             BEGIN_FRAME slidecontent END_FRAME   {
                                         $$ = new Node("slide");
                                         $$.Children = $2;
@@ -147,21 +145,15 @@ slide : // todo: maybe count slides in here :)
         |   BEGIN_FRAME '{' simpleformtext '}' slidecontent END_FRAME   {
                                         $$ = new Node("slide");
                                         $$.Children = $5;
-                                        Node tmp = new Node("frametitle");
-                                        tmp.Children = $3;
-                                        $$.Children.Add(tmp);
                                         SlideCount++;
+                                        SetFrameTitle(SlideCount, $3);
                                     }
         |   BEGIN_FRAME '{' simpleformtext '}' '{' simpleformtext '}' slidecontent END_FRAME   {
                                         $$ = new Node("slide");
                                         $$.Children = $8;
-                                        Node tmp = new Node("frametitle");
-                                        tmp.Children = $3;
-                                        $$.Children.Add(tmp);
-                                        tmp = new Node("framesubtitle");
-                                        tmp.Children = $6;
-                                        $$.Children.Add(tmp);
                                         SlideCount++;
+                                        SetFrameTitle(SlideCount, $3);
+                                        SetFrameSubtitle(SlideCount, $6);
                                     }
         |   FRAME '{' slidecontent '}'   {
                                         $$ = new Node("slide");
@@ -186,8 +178,7 @@ slidecontent :                      {   /* return List<Node> - create node in sp
                                         $1.Add(tmp);
                                         $$ = $1;
                                     }
-        |   slidecontent sectionsettings   {    // todo: insert to document, or create elsewhere on stack?
-                                        $1.Add($2);
+        |   slidecontent sectionsettings {
                                         $$ = $1;
                                     }
         |   slidecontent environment    {
@@ -195,7 +186,9 @@ slidecontent :                      {   /* return List<Node> - create node in sp
                                         $$ = $1;
                                     }
         |   slidecontent commands   {
-                                        $1.Add($2);
+                                        if($2 != null) {    // need to check because of frametitle and framesubtitle commands
+                                            $1.Add($2);
+                                        }
                                         $$ = $1;
                                     }
         ;
@@ -357,12 +350,12 @@ standalonecommand :
                                         $$ = new Node("pause");
                                     }
         |   FRAMETITLE '{' simpleformtext '}'   {
-                                        $$ = new Node("frametitle");
-                                        $$.Children = $3;
+                                        SetFrameTitle(SlideCount + 1, $3);
+                                        $$ = null;
                                     }
         |   FRAMESUBTITLE '{' simpleformtext '}'    {
-                                        $$ = new Node("framesubtitle");
-                                        $$.Children = $3;
+                                        SetFrameSubtitle(SlideCount + 1, $3);
+                                        $$ = null;
                                     }
         |   NL                      {
                                         $$ = new Node("paragraph");
@@ -427,4 +420,36 @@ simpleformtext :                    {
 
 public Parser(Scanner scn) : base(scn) {
     SlideCount = 0;
+    SectionTable = new List<SectionRecord>();
+    FrametitleTable = new Dictionary<int, FrametitleRecord>();
+}
+
+/// <summary>
+/// Set frame title
+/// </summary>
+/// <param name="slide">Slide number</param>
+/// <param name="content">Frame title content</param>
+private void SetFrameTitle(int slide, List<Node> content) {
+    if(content == null || content.Count == 0)
+        return;
+    if(FrametitleTable.ContainsKey(slide)) {    // key exist change value
+        FrametitleTable[slide].Title = content;
+    } else {    // key doesn't exist create new record
+        FrametitleTable.Add(slide, new FrametitleRecord(content, null));
+    }
+}
+
+/// <summary>
+/// Set frame subtitle
+/// </summary>
+/// <param name="slide">Slide number</param>
+/// <param name="content">Frame subtitle content</param>
+private void SetFrameSubtitle(int slide, List<Node> content) {
+    if(content == null || content.Count == 0)
+        return;
+    if(FrametitleTable.ContainsKey(slide)) {    // key exist change value
+        FrametitleTable[slide].Subtitle = content;
+    } else {    // key doesn't exist create new record
+        FrametitleTable.Add(slide, new FrametitleRecord(null, content));
+    }
 }

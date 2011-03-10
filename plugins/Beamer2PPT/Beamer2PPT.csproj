@@ -58,7 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connector.cs" />
+    <Compile Include="Conversion\FrametitleRecord.cs" />
     <Compile Include="Conversion\Node.cs" />
+    <Compile Include="Conversion\SectionRecord.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="IMessenger.cs" />
     <Compile Include="Messenger.cs" />
