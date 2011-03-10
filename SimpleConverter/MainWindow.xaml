@@ -54,7 +54,7 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <ProgressBar Height="22" HorizontalAlignment="Left" Margin="6,132,0,0" Name="progressBar1" VerticalAlignment="Top" Width="517" Value="0" />
+                    <ProgressBar Height="22" HorizontalAlignment="Left" Margin="6,132,0,0" Name="progressBar1" VerticalAlignment="Top" Width="517" Value="{Binding FileProgress, Mode=OneWay}" />
                 </Grid>
             </TabItem>
         </TabControl>

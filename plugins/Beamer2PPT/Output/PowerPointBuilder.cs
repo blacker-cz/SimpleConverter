@@ -104,16 +104,19 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             // - two runs through document tree
             //      - in first run setup content table, frametitles and subtitles table, maybe references (if implemented), packages, theme etc.
             //      - in second run build output document
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return false;
         }
 
         /// <summary>
         /// Raise progress counter.
         /// This method will raise progress counter based on slide count and fire (call) <see cref="Progress" /> delegate.
+        /// Implemented for two passes.
+        /// todo: make this less magical :)
         /// </summary>
         public void RaiseProgress()
         {
-            int step = (100 - BasicProgress) / _slideCount;
+            int step = (100 - BasicProgress) / (_slideCount * 2);
             _currentProgress = Math.Min(_currentProgress + step, 100);
 
             if (Progress != null)

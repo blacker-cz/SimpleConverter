@@ -99,14 +99,18 @@ namespace SimpleConverter
 
                 _selectedPlugin = value;
 
-                // unregister message event
+                // unregister events
                 if (_currentPlugin != null)
+                {
                     _currentPlugin.SendMessageEvent -= new Contract.SendMessageDelegate(OnSendMessage);
+                    _currentPlugin.ProgressEvent -= new Contract.ProgressDelegate(OnFileProgress);
+                }
 
                 _currentPlugin = Factory.Loader.Instance[value.Key];
 
-                // register message even with currently selected plugin
+                // register events with currently selected plugin
                 _currentPlugin.SendMessageEvent += new Contract.SendMessageDelegate(OnSendMessage);
+                _currentPlugin.ProgressEvent += new Contract.ProgressDelegate(OnFileProgress);
 
                 // revalidate files in list
                 foreach (var item in Files)
@@ -135,6 +139,8 @@ namespace SimpleConverter
             }
         }
 
+        public int FileProgress { get; private set; }
+
         /// <summary>
         /// Selected file in file list
         /// </summary>
@@ -151,6 +157,8 @@ namespace SimpleConverter
             }
         }
 
+        #region Event handlers
+
         /// <summary>
         /// Event handling for send message event from plugin
         /// </summary>
@@ -160,6 +168,18 @@ namespace SimpleConverter
         {
             Messages.Add(new ListMessage(message, level));
         }
+
+        /// <summary>
+        /// Event handling for file progress change
+        /// </summary>
+        /// <param name="progress">Current progress</param>
+        private void OnFileProgress(int progress)
+        {
+            FileProgress = progress;
+            InvokePropertyChanged("FileProgress");
+        }
+
+        #endregion // Event handlers
 
         #region Button Click Handlers
 

@@ -24,6 +24,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             // register Messenger
             Messenger.Instance.Add(this);
 
+            // set progress info to initial value
+            ProgressInfo(0);
+
             #region Analysis of Beamer document
             Messenger.Instance.SendMessage("Started parsing.");
 
