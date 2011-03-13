@@ -39,6 +39,11 @@ namespace SimpleConverter
                          _browseCommand;
 
         /// <summary>
+        /// Background thread object reference
+        /// </summary>
+        private BackgroundThread _backgroundThread;
+
+        /// <summary>
         /// Public constructor.
         /// </summary>
         public MainWindowViewModel()
@@ -47,13 +52,21 @@ namespace SimpleConverter
                 throw new Factory.PluginLoaderException("No plugins available.");
 
             Plugins = new ObservableCollection<Contract.IPluginMetaData>(Factory.Loader.Instance.Plugins);
-            Messages = new ObservableCollection<ListMessage>();
+            Messages = new Contract.AsyncObservableCollection<ListMessage>();
             Files = new Contract.ElementCollection<ListFile>();
+#if DEBUG
+            Files.Add(new ListFile(@"D:\Programovani\VS.2010\SimpleConverter\_bordel\beamer.tex"));
+#endif
             SelectedPlugin = Factory.Loader.Instance.Plugins.First<Contract.IPluginMetaData>();
             SelectPluginEnabled = true;
 
             // load output path from user settings
             _outputPath = Properties.Settings.Default.OutputPath;
+
+            // initialize background thread
+            _backgroundThread = new BackgroundThread();
+            _backgroundThread.ThreadEndedEvent += new ThreadEndedDelegate(ConversionDone);
+
         }
 
         /// <summary>
@@ -200,11 +213,23 @@ namespace SimpleConverter
 
         #region Button Click Handlers
 
+        /// <summary>
+        /// Convert button clicked
+        /// </summary>
         public void StartConversionClicked()
         {
             // todo: disable add/remove file, settings, plugin change, convert, browse (maybe switch browse textbox to read-only); enable stop batch
-            // hardcoded for debugging purposes - process in new thread
-            _currentPlugin.ConvertDocument(@"D:\Programovani\VS.2010\SimpleConverter\_bordel\beamer.tex");
+            _backgroundThread.Run(_currentPlugin, Files, OutputPath);
+        }
+
+        /// <summary>
+        /// Conversion in background thread ended
+        /// This event will start in another thread
+        /// </summary>
+        public void ConversionDone()
+        {
+            // todo: enable disabled and disable enabled :)
+            //_backgroundThread.Join();
         }
 
         /// <summary>

@@ -50,7 +50,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Message}" />
+                                <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Message}" Width="300" />
                             </GridView>
                         </ListView.View>
                     </ListView>

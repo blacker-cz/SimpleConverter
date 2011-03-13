@@ -18,4 +18,42 @@ namespace SimpleConverter.Factory
         protected PluginLoaderException(SerializationInfo info, StreamingContext context)
             : base(info, context) { }
     }
+
+    /// <summary>
+    /// Custom exception for invalid state error
+    /// </summary>
+    [Serializable]
+    public class InvalidStateException : Exception
+    {
+        public InvalidStateException()
+            : base(@"Invalid application state.") { }
+
+        public InvalidStateException(string message)
+            : base(message) { }
+
+        public InvalidStateException(string message, Exception innerException)
+            : base(message, innerException) { }
+
+        protected InvalidStateException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
+    }
+
+    /// <summary>
+    /// Custom exception for invalid argument error
+    /// </summary>
+    [Serializable]
+    public class InvalidArgumentException : Exception
+    {
+        public InvalidArgumentException()
+            : base(@"Invalid argument passed.") { }
+
+        public InvalidArgumentException(string message)
+            : base(message) { }
+
+        public InvalidArgumentException(string message, Exception innerException)
+            : base(message, innerException) { }
+
+        protected InvalidArgumentException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
+    }
 }

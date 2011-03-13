@@ -48,6 +48,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncObservableCollection.cs" />
     <Compile Include="BaseViewModel.cs" />
     <Compile Include="ElementCollection.cs" />
     <Compile Include="Hash.cs" />
