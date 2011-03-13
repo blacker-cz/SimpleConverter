@@ -38,7 +38,7 @@
             </TabItem>
             <TabItem Header="Progress" Name="tabProgress" IsEnabled="True">
                 <Grid>
-                    <ListView Height="120" HorizontalAlignment="Left" Margin="6,6,0,0" Name="listView1" VerticalAlignment="Top" Width="517" ItemsSource="{Binding Messages}" SelectionMode="Single" Focusable="False">
+                    <ListView Height="120" Margin="6,6,6,0" Name="listView1" VerticalAlignment="Top" ItemsSource="{Binding Messages}" SelectionMode="Single" Focusable="False">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="" Width="22">
@@ -54,11 +54,11 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <ProgressBar Height="22" HorizontalAlignment="Left" Margin="6,132,0,0" Name="progressBar1" VerticalAlignment="Top" Width="517" Value="{Binding FileProgress, Mode=OneWay}" />
+                    <ProgressBar Height="22" Margin="6,132,6,0" Name="progressBar1" VerticalAlignment="Top" Value="{Binding FileProgress, Mode=OneWay}" />
                 </Grid>
             </TabItem>
         </TabControl>
-        <ComboBox Grid.Row="1" Margin="9,0,12,9" Name="comboBoxPlugins" Background="{x:Null}" Grid.ColumnSpan="2" Grid.RowSpan="2" Panel.ZIndex="-1" Grid.Column="1" ItemsSource="{Binding Plugins}" SelectedItem="{Binding Path=SelectedPlugin, Mode=TwoWay}" Height="53" VerticalAlignment="Bottom" ToolTip="Select conversion plugin">
+        <ComboBox Grid.Row="1" Margin="9,0,12,9" Name="comboBoxPlugins" Background="{x:Null}" Grid.ColumnSpan="2" Grid.RowSpan="2" Panel.ZIndex="-1" Grid.Column="1" ItemsSource="{Binding Plugins}" SelectedItem="{Binding Path=SelectedPlugin, Mode=TwoWay}" Height="53" VerticalAlignment="Bottom" ToolTip="Select conversion plugin" IsEnabled="{Binding SelectPluginEnabled, Mode=OneWay}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="3,3,0,8" HorizontalAlignment="Stretch">

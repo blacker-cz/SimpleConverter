@@ -13,7 +13,7 @@ namespace SimpleConverter
     /// 
     /// Implements Model-View-ViewModel pattern.
     /// </summary>
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : Contract.BaseViewModel
     {
         /// <summary>
         /// Metadata of currently selected plugin.
@@ -48,13 +48,9 @@ namespace SimpleConverter
 
             Plugins = new ObservableCollection<Contract.IPluginMetaData>(Factory.Loader.Instance.Plugins);
             Messages = new ObservableCollection<ListMessage>();
-            Files = new ElementCollection<ListFile>();
+            Files = new Contract.ElementCollection<ListFile>();
             SelectedPlugin = Factory.Loader.Instance.Plugins.First<Contract.IPluginMetaData>();
-
-            _startConversionCommand = new StartConversionCommand(this);
-            _addFileCommand = new AddFileCommand(this);
-            _removeFileCommand = new RemoveFileCommand(this);
-            _browseCommand = new BrowseCommand(this);
+            SelectPluginEnabled = true;
 
             // load output path from user settings
             _outputPath = Properties.Settings.Default.OutputPath;
@@ -73,18 +69,31 @@ namespace SimpleConverter
         /// <summary>
         /// Collection of files
         /// </summary>
-        public ElementCollection<ListFile> Files { get; private set; }
+        public Contract.ElementCollection<ListFile> Files { get; private set; }
+
+        #region Binding for button commands
 
         /// <summary>
-        /// Handlers for button click
+        /// Command binding for start conversion command
         /// </summary>
-        public ICommand StartConversionCommand { get { return _startConversionCommand; } }
+        public ICommand StartConversionCommand { get { return _startConversionCommand ?? (_startConversionCommand = new StartConversionCommand(this)); } }
 
-        public ICommand AddFileCommand { get { return _addFileCommand; } }
+        /// <summary>
+        /// Command binding for add file command
+        /// </summary>
+        public ICommand AddFileCommand { get { return _addFileCommand ?? (_addFileCommand = new AddFileCommand(this)); } }
 
-        public ICommand RemoveFileCommand { get { return _removeFileCommand; } }
+        /// <summary>
+        /// Command binding for remove file command
+        /// </summary>
+        public ICommand RemoveFileCommand { get { return _removeFileCommand ?? (_removeFileCommand = new RemoveFileCommand(this)); } }
 
-        public ICommand BrowseCommand { get { return _browseCommand;  } }
+        /// <summary>
+        /// Command binding for browse command
+        /// </summary>
+        public ICommand BrowseCommand { get { return _browseCommand ?? (_browseCommand = new BrowseCommand(this)); } }
+
+        #endregion // Binding for button commands
 
         /// <summary>
         /// Selected plugin in combobox
@@ -125,6 +134,11 @@ namespace SimpleConverter
         }
 
         /// <summary>
+        /// Flag for enabling/disabling select plugin combobox
+        /// </summary>
+        public bool SelectPluginEnabled { get; private set; }
+
+        /// <summary>
         /// Output directory path
         /// </summary>
         public string OutputPath
@@ -139,6 +153,9 @@ namespace SimpleConverter
             }
         }
 
+        /// <summary>
+        /// Progress counter for current file
+        /// </summary>
         public int FileProgress { get; private set; }
 
         /// <summary>
@@ -185,6 +202,7 @@ namespace SimpleConverter
 
         public void StartConversionClicked()
         {
+            // todo: disable add/remove file, settings, plugin change, convert, browse (maybe switch browse textbox to read-only); enable stop batch
             // hardcoded for debugging purposes - process in new thread
             _currentPlugin.ConvertDocument(@"D:\Programovani\VS.2010\SimpleConverter\_bordel\beamer.tex");
         }
@@ -242,96 +260,6 @@ namespace SimpleConverter
             dlg.Dispose();
         }
 
-        #endregion
-
-        #region Implementation of INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void InvokePropertyChanged(string propertyName)
-        {
-            var e = new PropertyChangedEventArgs(propertyName);
-
-            PropertyChangedEventHandler changed = PropertyChanged;
-
-            if (changed != null)
-                changed(this, e);
-        }
-
-        #endregion  // Implementation of INotifyPropertyChanged
-
-        #region Message wrapper class
-
-        public class ListMessage
-        {
-            public ListMessage(string message, Contract.MessageLevel level = Contract.MessageLevel.INFO)
-            {
-                Message = message;
-                switch (level)
-                {
-                    case SimpleConverter.Contract.MessageLevel.INFO:
-                        Icon = (System.Windows.Media.ImageSource)System.Windows.Application.Current.FindResource("iconInfo");
-                        break;
-                    case SimpleConverter.Contract.MessageLevel.WARNING:
-                        Icon = (System.Windows.Media.ImageSource)System.Windows.Application.Current.FindResource("iconWarning");
-                        break;
-                    case SimpleConverter.Contract.MessageLevel.ERROR:
-                        Icon = (System.Windows.Media.ImageSource)System.Windows.Application.Current.FindResource("iconError");
-                        break;
-                    default:
-                        throw new ArgumentException("Unknown message level.");
-                }
-            }
-
-            public string Message { get; private set; }
-
-            public System.Windows.Media.ImageSource Icon { get; private set; }
-        }
-
-        #endregion // Message wrapper class
-
-        #region File wrapper class
-
-        public class ListFile
-        {
-            public ListFile(string filename, bool valid = false)
-            {
-                Filename = System.IO.Path.GetFileName(filename); ;
-                Filepath = filename;
-                Valid = valid;
-            }
-
-            public string Filename { get; private set; }
-
-            public string Filepath { get; private set; }
-
-            public bool Valid { get; set; }
-
-            public string ValidColor
-            {
-                get
-                {
-                    if(Valid)
-                        return "PaleGreen";
-                    else
-                        return "LightSalmon";
-                }
-            }
-        }
-
-        #endregion // File wrapper class
-    }
-
-    /// <summary>
-    /// Observable collection with method for raising CollectionChanged event
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class ElementCollection<T> : ObservableCollection<T>
-    {
-        public void UpdateCollection()
-        {
-            OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(
-                                System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
-        }
+        #endregion // Button Click Handlers
     }
 }
