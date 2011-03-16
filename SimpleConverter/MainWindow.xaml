@@ -1,7 +1,7 @@
 ﻿<Window x:Class="SimpleConverter.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SimpleConverter" Height="559" Width="585" UseLayoutRounding="True">
+        Title="SimpleConverter" Height="559" Width="585" UseLayoutRounding="True" Icon="/SimpleConverter;component/appicon.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="159*" MinHeight="130" />
