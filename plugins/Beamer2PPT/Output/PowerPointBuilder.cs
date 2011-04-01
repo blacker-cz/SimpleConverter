@@ -56,6 +56,16 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         private PowerPoint.Presentation _pptPresentation;
 
+        /// <summary>
+        /// List of section definition records
+        /// </summary>
+        private List<SectionRecord> _sectionTable;
+
+        /// <summary>
+        /// Table of frame titles
+        /// </summary>
+        private Dictionary<int, FrametitleRecord> _frametitleTable;
+
         #endregion // Private variables
 
         /// <summary>
@@ -65,7 +75,10 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <param name="outputPath">Output directory</param>
         /// <param name="document">Document tree</param>
         /// <param name="slideCount">Number of slides in document tree</param>
-        public PowerPointBuilder(string filename, string outputPath, Node document, int slideCount)
+        /// <param name="sectionTable">Table of document sections</param>
+        /// <param name="frametitleTable">Table of frame titles</param>
+        /// <exception cref="PowerPointApplicationException"></exception>
+        public PowerPointBuilder(string filename, string outputPath, Node document, int slideCount, List<SectionRecord> sectionTable, Dictionary<int, FrametitleRecord> frametitleTable)
         {
             if (outputPath.Length == 0)
                 _filename = Path.Combine(Directory.GetCurrentDirectory(), "output", Path.GetFileNameWithoutExtension(filename));
@@ -75,11 +88,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             _document = document;
             _slideCount = slideCount;
 
+            _sectionTable = sectionTable ?? new List<SectionRecord>();
+            _frametitleTable = frametitleTable ?? new Dictionary<int, FrametitleRecord>();
+
             // start PowerPoint
             try
             {
                 // workaround for starting PowerPoint on background
-                _pptApplication = (PowerPoint.Application) Activator.CreateInstance(Type.GetTypeFromProgID("PowerPoint.Application"));
+                _pptApplication = (PowerPoint.Application)Activator.CreateInstance(Type.GetTypeFromProgID("PowerPoint.Application"));
             }
             catch
             {
@@ -101,11 +117,12 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         public bool Build()
         {
             // some ideas:
-            // - two runs through document tree
-            //      - in first run setup content table, frametitles and subtitles table, maybe references (if implemented), packages, theme etc.
-            //      - in second run build output document
-            //throw new NotImplementedException();
-            return false;
+            //      - probably two tables for title settings, one local, second one global; use Dictionary<string, Node>;
+            //                      clone global to local on slide start; edit global outside of slide, edit local inside of slide
+
+            // todo: process preambule
+
+            return true;
         }
 
         /// <summary>

@@ -111,7 +111,16 @@ namespace SimpleConverter
             foreach (ListFile file in _files)
             {
                 if (file.Valid)
-                    _plugin.ConvertDocument(file.Filepath, _outputPath);
+                {
+                    try
+                    {
+                        _plugin.ConvertDocument(file.Filepath, _outputPath);
+                    }
+                    catch (Exception)
+                    {
+                        break;
+                    }
+                }
 
                 lock (_lock)
                 {

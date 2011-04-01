@@ -19,6 +19,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
         public event ProgressDelegate ProgressEvent;
 
+        /// <summary>
+        /// Converts document
+        /// </summary>
+        /// <param name="filename">Filename of input document</param>
+        /// <param name="outputDirectory">Output directory for converted document</param>
         public void ConvertDocument(string filename, string outputDirectory = "")
         {
             // register Messenger
@@ -76,14 +81,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             try
             {
-                builder = new PowerPointBuilder(filename, outputDirectory, parser.Document, parser.SlideCount);
+                builder = new PowerPointBuilder(filename, outputDirectory, parser.Document, parser.SlideCount, parser.SectionTable, parser.FrametitleTable);
                 // setup progress delegate
                 builder.Progress = new ProgressDelegate(ProgressInfo);
             }
             catch (PowerPointApplicationException ex)
             {
                 Messenger.Instance.SendMessage(ex.Message, MessageLevel.ERROR);
-                return;
+                throw new Exception(ex.Message, ex);    // propagate exception (to end document processing loop)
             }
 
             try
@@ -105,6 +110,10 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             #endregion // Building output document
         }
 
+        /// <summary>
+        /// Content of the settings tab
+        /// </summary>
+        /// <returns></returns>
         public System.Windows.FrameworkElement GetVisual()
         {
             if (_visual == null)    // keep plugin view instantiated
@@ -113,6 +122,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             return _visual;
         }
 
+        /// <summary>
+        /// Check if filename is of supported type
+        /// </summary>
+        /// <param name="filename">Filename</param>
+        /// <returns>True if is supported, false otherwise</returns>
         public bool ValidateFile(string filename)
         {
             // todo: refactor this!!
