@@ -66,6 +66,16 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         private Dictionary<int, FrametitleRecord> _frametitleTable;
 
+        /// <summary>
+        /// Table with global title page settings (author, title, date, etc.)
+        /// </summary>
+        private Dictionary<string, List<Node>> _titlePageSettings;
+
+        /// <summary>
+        /// Internal counter for currently processed slide
+        /// </summary>
+        private int _currentSlide;
+
         #endregion // Private variables
 
         /// <summary>
@@ -91,6 +101,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             _sectionTable = sectionTable ?? new List<SectionRecord>();
             _frametitleTable = frametitleTable ?? new Dictionary<int, FrametitleRecord>();
 
+            _titlePageSettings = new Dictionary<string, List<Node>>();
+
             // start PowerPoint
             try
             {
@@ -113,27 +125,39 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <summary>
         /// Build presentation from document tree.
         /// </summary>
-        /// <returns>true if no errors occured, false otherwise</returns>
-        public bool Build()
+        public void Build()
         {
             // some ideas:
             //      - probably two tables for title settings, one local, second one global; use Dictionary<string, Node>;
             //                      clone global to local on slide start; edit global outside of slide, edit local inside of slide
 
-            // todo: process preambule
+            Node preambule = _document.FindFirstNode("preambule");
+            ProcessPreambule(preambule);
 
-            return true;
+            // create new presentation without window
+            _pptPresentation = _pptApplication.Presentations.Add(MsoTriState.msoFalse);
+
+            Node body = _document.FindFirstNode("body");
+            ProcessBody(body);
+
+            // todo: set type of file depending on settings window
+            _pptPresentation.SaveAs(_filename, PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation);
+
+            // final progress change after saving
+            RaiseProgress();
+
+            Messenger.Instance.SendMessage("Output saved to: \"" + _pptPresentation.FullName + "\"");
         }
 
         /// <summary>
         /// Raise progress counter.
         /// This method will raise progress counter based on slide count and fire (call) <see cref="Progress" /> delegate.
-        /// Implemented for two passes.
+        /// Implemented for one pass.
         /// todo: make this less magical :)
         /// </summary>
         public void RaiseProgress()
         {
-            int step = (100 - BasicProgress) / (_slideCount * 2);
+            int step = (100 - BasicProgress) / (_slideCount);
             _currentProgress = Math.Min(_currentProgress + step, 100);
 
             if (Progress != null)
@@ -150,6 +174,82 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             if (_pptApplication != null)
                 _pptApplication.Quit();
+        }
+
+        /// <summary>
+        /// Process document preambule part
+        /// </summary>
+        /// <param name="preambule">Preambule node</param>
+        private void ProcessPreambule(Node preambule)
+        {
+            foreach (Node node in preambule.Children)
+            {
+                switch (node.Type)
+                {
+                    // title page settings
+                    case "author":
+                    case "title":
+                    case "date":
+                        _titlePageSettings[node.Type] = node.Children;
+                        break;
+                    // unknown or invalid node -> ignore
+                    default:
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Process document body part
+        /// </summary>
+        /// <param name="body">Body node</param>
+        private void ProcessBody(Node body)
+        {
+            foreach (Node node in body.Children)
+            {
+                switch (node.Type)
+                {
+                    // title page settings
+                    case "author":
+                    case "title":
+                    case "date":
+                        _titlePageSettings[node.Type] = node.Children;
+                        break;
+                    // slide
+                    case "slide":
+                        ProcessSlide(node);
+                        break;
+                    // unknown or invalid node -> ignore
+                    default:
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Process slide content
+        /// </summary>
+        /// <param name="slideNode">Slide node</param>
+        private void ProcessSlide(Node slideNode)
+        {
+            // copy global title settings table to local one
+            Dictionary<string, List<Node>> localTitlePageSettings = new Dictionary<string, List<Node>>(_titlePageSettings);
+
+            // increment current slide number
+            _currentSlide++;
+
+            PowerPoint.Slide slide;
+
+            // create new slide -> if slide contains title, use layout with title
+            if(_frametitleTable.ContainsKey(_currentSlide))
+                slide = _pptPresentation.Slides.Add(_currentSlide, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
+            else
+                slide = _pptPresentation.Slides.Add(_currentSlide, PowerPoint.PpSlideLayout.ppLayoutBlank);
+
+            // todo: process slide content (write class for this task :) )
+
+            // report progress
+            RaiseProgress();
         }
     }
 }
