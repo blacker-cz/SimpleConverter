@@ -40,8 +40,8 @@
 %nonassoc <Text> OVERLAY "overlay specification"
 
 // setup types for some non-terminals
-%type <documentNode> command groupcommand standalonecommand commands slide titlesettings body environment documentclass
-%type <nodeList> simpleformtext slidecontent bodycontent preambule items_list table_rows table_cols
+%type <documentNode> command groupcommand standalonecommand commands slide titlesettings body environment documentclass preambule
+%type <nodeList> simpleformtext slidecontent bodycontent items_list table_rows table_cols
 %type <Text> optional overlay
 
 %%
@@ -49,7 +49,8 @@
 document :
             documentclass preambule body    {
                                         Document = $1;
-                                        Document.Children = $2;
+                                        Document.Children = new List<Node>();
+                                        Document.Children.Add($2);
                                         Document.Children.Add($3);
                                     }
         ;
@@ -65,23 +66,24 @@ documentclass :
         ;
 
 preambule :                         {
-                                        $$ = new List<Node>();
+                                        $$ = new Node("preambule");
+                                        $$.Children = new List<Node>();
                                     }
         |   preambule USEPACKAGE '{' STRING '}'     {   // really need to process??
                                         Node tmp = new Node("package");
                                         tmp.Content = (object) $4;
-                                        $1.Add(tmp);
+                                        $1.Children.Add(tmp);
                                         $$ = $1;
                                     }
         |   preambule optional USETHEME '{' STRING '}'     {
                                         Node tmp = new Node("theme");
                                         tmp.Content = (object) $5;
                                         tmp.OptionalParams = $2;
-                                        $1.Add(tmp);
+                                        $1.Children.Add(tmp);
                                         $$ = $1;
                                     }
         |   preambule titlesettings     {
-                                        $1.Add($2);
+                                        $1.Children.Add($2);
                                         $$ = $1;
                                     }
         ;
