@@ -93,7 +93,7 @@ titlesettings :
                                         $$ = new Node("title");
                                         $$.Children = $3;
                                     }
-        |   AUTHOR '{' simpleformtext '}'   {
+        |   AUTHOR '{' simpleformtext '}'   { // todo: can contain \and command
                                         $$ = new Node("author");
                                         $$.Children = $3;
                                     }

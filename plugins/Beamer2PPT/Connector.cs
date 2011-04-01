@@ -94,8 +94,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             try
             {
                 builder.Build();
-
-                Messenger.Instance.SendMessage("Output building done.");
             }
             catch (DocumentBuilderException ex)
             {

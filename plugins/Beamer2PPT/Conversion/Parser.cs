@@ -4,9 +4,9 @@
 
 // GPPG version 1.4.3
 // Machine:  LUKAS-PC
-// DateTime: 1.4.2011 10:44:46
+// DateTime: 1.4.2011 17:10:52
 // UserName: Lukas
-// Input file <D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 1.4.2011 10:44:43>
+// Input file <D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 1.4.2011 16:20:08>
 
 // options: conflicts no-lines diagnose & report gplex conflicts
 
@@ -45,12 +45,12 @@ public abstract class ScanBase : AbstractScanner<ValueType,LexLocation> {
 
 public class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
-  // Verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 1.4.2011 10:44:43
+  // Verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 1.4.2011 16:20:08
     public Node Document { get; private set; }
     public int SlideCount { get; private set; }
     public List<SectionRecord> SectionTable { get; private set; }
     public Dictionary<int, FrametitleRecord> FrametitleTable { get; private set; }
-  // End verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 1.4.2011 10:44:43
+  // End verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 1.4.2011 16:20:08
 
 #pragma warning disable 649
   private static Dictionary<int, string> aliasses;
@@ -421,7 +421,7 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
                                     }
         break;
       case 9: // titlesettings -> "\author", '{', simpleformtext, '}'
-{
+{ // todo: can contain \and command
                                         CurrentSemanticValue.documentNode = new Node("author");
                                         CurrentSemanticValue.documentNode.Children = ValueStack[ValueStack.Depth-2].nodeList;
                                     }
