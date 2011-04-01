@@ -57,5 +57,86 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// List of children.
         /// </summary>
         public List<Node> Children { get; set; }
+
+        #region Search implementation // todo: test this
+
+        /// <summary>
+        /// Next node id (used for search)
+        /// </summary>
+        private int _nextNode = 0;
+
+        /// <summary>
+        /// Node counter (used for search)
+        /// </summary>
+        private int _nodeCounter = 0;
+
+        /// <summary>
+        /// Last used search path in FindFirstNode
+        /// </summary>
+        private string _lastPath;
+
+        /// <summary>
+        /// Find first node by its path
+        /// </summary>
+        /// <param name="path">Node path, levels are separated by /</param>
+        /// <example>var node = FindFirstNode("body/slide/string");</example>
+        /// <returns>Node if found; null otherwise</returns>
+        public Node FindFirstNode(string path)
+        {
+            _nextNode = 0;
+            _lastPath = path;
+            return FindNextNode(path);
+        }
+
+        /// <summary>
+        /// Find next node
+        /// </summary>
+        /// <returns>Node if found; null otherwise</returns>
+        public Node FindNextNode()
+        {
+            if (_lastPath == null)
+                throw new InvalidOperationException("FindFirstNode not called!");
+
+            return FindNextNode(_lastPath);
+        }
+
+        /// <summary>
+        /// Find next node by its path (recursive)
+        /// </summary>
+        /// <param name="path">Node path</param>
+        /// <returns>Node if found; null otherwise</returns>
+        private Node FindNextNode(string path)
+        {
+            string[] nodesPath = path.Split(new char[] {'/'}, 2);
+
+            foreach (var node in Children)
+            {
+                if (node.Type == path)
+                {
+                    if (nodesPath.Length != 1)
+                    {
+                        Node tmp =  FindNextNode(nodesPath[1]);
+                        if (tmp != null)
+                            return tmp;
+                    }
+                    else
+                    {
+                        if (_nextNode == _nodeCounter)
+                        {
+                            _nextNode++;
+                            _nodeCounter = 0;
+
+                            return node;
+                        }
+                        _nodeCounter++;
+                    }
+                }
+            }
+
+            _nodeCounter = 0;
+            return null;
+        }
+
+        #endregion // Search implementation
     }
 }
