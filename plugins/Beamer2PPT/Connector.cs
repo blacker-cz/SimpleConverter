@@ -20,15 +20,21 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         public event ProgressDelegate ProgressEvent;
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public Connector()
+        {
+            // register Messenger
+            Messenger.Instance.Add(this);
+        }
+
+        /// <summary>
         /// Converts document
         /// </summary>
         /// <param name="filename">Filename of input document</param>
         /// <param name="outputDirectory">Output directory for converted document</param>
         public void ConvertDocument(string filename, string outputDirectory = "")
         {
-            // register Messenger
-            Messenger.Instance.Add(this);
-
             // set progress info to initial value
             ProgressInfo(0);
 
