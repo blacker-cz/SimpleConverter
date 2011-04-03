@@ -13,7 +13,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         #region Public variables and properties
 
         /// <summary>
-        /// Magic number for progress after document parsings
+        /// Magic number for progress after document parsing
         /// </summary>
         public const int BasicProgress = 20;
 
@@ -76,6 +76,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         private int _currentSlide;
 
+        /// <summary>
+        /// Internal counter for slide index (because of overlays - one slide definition can generate more then one slide)
+        /// </summary>
+        private int _slideIndex;
+
         #endregion // Private variables
 
         /// <summary>
@@ -132,12 +137,18 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             //                      clone global to local on slide start; edit global outside of slide, edit local inside of slide
 
             Node preambule = _document.FindFirstNode("preambule");
+            if (preambule == null)
+                throw new DocumentBuilderException("Couldn't build document, something went wrong. Please try again.");
+
             ProcessPreambule(preambule);
 
             // create new presentation without window
             _pptPresentation = _pptApplication.Presentations.Add(MsoTriState.msoFalse);
 
             Node body = _document.FindFirstNode("body");
+            if (body == null)
+                throw new DocumentBuilderException("Couldn't build document, something went wrong. Please try again.");
+
             ProcessBody(body);
 
             // todo: set type of file depending on settings window
@@ -232,21 +243,35 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <param name="slideNode">Slide node</param>
         private void ProcessSlide(Node slideNode)
         {
-            // copy global title settings table to local one
-            Dictionary<string, List<Node>> localTitlePageSettings = new Dictionary<string, List<Node>>(_titlePageSettings);
+            // presentation slide
+            PowerPoint.Slide slide;
 
             // increment current slide number
             _currentSlide++;
 
-            PowerPoint.Slide slide;
+            int passNumber = 0;
 
-            // create new slide -> if slide contains title, use layout with title
-            if(_frametitleTable.ContainsKey(_currentSlide))
-                slide = _pptPresentation.Slides.Add(_currentSlide, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
-            else
-                slide = _pptPresentation.Slides.Add(_currentSlide, PowerPoint.PpSlideLayout.ppLayoutBlank);
+            SlideBuilder slideBuilder = new SlideBuilder(_currentSlide);
 
-            // todo: process slide content (write class for this task :) )
+            do
+            {    // --- loop over all overlays
+
+                passNumber++;
+
+                // create new slide -> if slide contains title, use layout with title
+                if (_frametitleTable.ContainsKey(_currentSlide))
+                {
+                    // todo: check overlay params for current pass and then generate slide with or without title
+                    slide = _pptPresentation.Slides.Add(_currentSlide, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
+                    
+                    // todo: generate slide title here
+                }
+                else
+                {
+                    slide = _pptPresentation.Slides.Add(_currentSlide, PowerPoint.PpSlideLayout.ppLayoutBlank);
+                }
+
+            } while (!slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber)); // --- end loop over all overlays
 
             // report progress
             RaiseProgress();
