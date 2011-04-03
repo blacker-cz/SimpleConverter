@@ -17,6 +17,15 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         public Node() { }
 #endif
+        /// <summary>
+        /// Overlay specification
+        /// </summary>
+        private string _overlaySpec;
+
+        /// <summary>
+        /// Expanded overlay specification
+        /// </summary>
+        private List<int> _overlayList;
 
         /// <summary>
         /// Constructor implementation
@@ -39,7 +48,35 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <summary>
         /// Overlay specification
         /// </summary>
-        public string OverlaySpec { get; set; }
+        public string OverlaySpec
+        {
+            get { return _overlaySpec; }
+            set
+            {
+                _overlaySpec = value;
+
+                // invalidate overlay list
+                _overlayList = null;
+            }
+        }
+
+        /// <summary>
+        /// Overlay specification getter
+        /// </summary>
+        public List<int> OverlayList
+        {
+            get
+            {
+                if (_overlayList == null)
+                {
+                    _overlayList = new List<int>();
+
+                    // todo: expand overlay string here
+                }
+
+                return _overlayList;
+            }
+        }
 
         /// <summary>
         /// Optional parameters
