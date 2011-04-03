@@ -57,6 +57,13 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             _slide = slide;
             _titlesettings = titlesettings;
             _passNumber = passNumber;
+
+            // concept:
+            //      iterate through nodes
+            //      save font settings on stack (when entering - push new setting to stack; when leaving font settings node - pop from stack)
+            //      if node is string - append to current shape
+            //      if node is table/image or another shape-like object, process them separatedly
+            //      at least one method for table processing and one method for image processing
             
             return true;
         }
