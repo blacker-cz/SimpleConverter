@@ -33,7 +33,7 @@
        COLOR "\color", BFSERIES "\bfseries", TTFAMILY "\ttfamily", ITSHAPE "\itshape", SCSHAPE "\scshape",
        TINY "\tiny", SCRIPTSIZE "\scriptsize", FOOTNOTESIZE "\footnotesize", SMALL "\small",
        NORMALSIZE "\normalsize", LARGE "\large", LARGE2 "\Large", LARGE3 "\LARGE", HUGE "\huge", HUGE2 "\Huge",
-       ITEM "\item"
+       ITEM "\item", UNDERLINE "\underline"
 
 %nonassoc <Text> STRING "plain text"
 %nonassoc <Text> OPTIONAL "optional parameter"
@@ -293,6 +293,9 @@ command :
                                     }
         |   TEXTSC                  {
                                         $$ = new Node("smallcaps");
+                                    }
+        |   UNDERLINE               {
+                                        $$ = new Node("underline");
                                     }
         ;
 

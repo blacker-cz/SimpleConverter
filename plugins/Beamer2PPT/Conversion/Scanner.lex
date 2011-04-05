@@ -81,6 +81,7 @@ envEnd      \\end{wsl}
 \\huge          { return (int) Tokens.HUGE; }
 \\Huge          { return (int) Tokens.HUGE2; }
 \\color         { return (int) Tokens.COLOR; }
+\\underline     { return (int) Tokens.UNDERLINE; }
 
 // Images
 // -----------------------------------------------------------------------------
