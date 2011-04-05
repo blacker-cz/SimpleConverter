@@ -66,6 +66,7 @@
     <Compile Include="Messenger.cs" />
     <Compile Include="Output\PowerPointBuilder.cs" />
     <Compile Include="Output\SlideBuilder.cs" />
+    <Compile Include="Output\TextFormat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GUI\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>

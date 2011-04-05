@@ -65,7 +65,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             //      if node is table/image or another shape-like object, process them separatedly
             //      at least one method for table processing and one method for image processing
             
-            return true;
+            return _passNumber == _maxPass;
         }
     }
 }

@@ -264,7 +264,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     // todo: check overlay params for current pass and then generate slide with or without title
                     slide = _pptPresentation.Slides.Add(_currentSlide, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
                     
-                    // todo: generate slide title here
+                    // todo: generate slide title here (probably in separate class)
                 }
                 else
                 {
