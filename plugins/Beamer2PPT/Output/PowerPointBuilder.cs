@@ -257,18 +257,19 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             {    // --- loop over all overlays
 
                 passNumber++;
+                _slideIndex++;
 
                 // create new slide -> if slide contains title, use layout with title
                 if (_frametitleTable.ContainsKey(_currentSlide))
                 {
                     // todo: check overlay params for current pass and then generate slide with or without title
-                    slide = _pptPresentation.Slides.Add(_currentSlide, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
+                    slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
                     
                     // todo: generate slide title here (probably in separate class)
                 }
                 else
                 {
-                    slide = _pptPresentation.Slides.Add(_currentSlide, PowerPoint.PpSlideLayout.ppLayoutBlank);
+                    slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutBlank);
                 }
 
             } while (!slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber)); // --- end loop over all overlays
