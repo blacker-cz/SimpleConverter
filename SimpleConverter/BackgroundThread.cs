@@ -112,14 +112,18 @@ namespace SimpleConverter
             {
                 if (file.Valid)
                 {
-                    try
+#if !DEBUG
                     {
+#endif
                         _plugin.ConvertDocument(file.Filepath, _outputPath);
+#if !DEBUG
                     }
                     catch (Exception)
                     {
+                        // todo: print error message
                         break;
                     }
+#endif
                 }
 
                 lock (_lock)
