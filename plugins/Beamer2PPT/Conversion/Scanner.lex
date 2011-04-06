@@ -55,8 +55,8 @@ envEnd      \\end{wsl}
 // Beamer specific
 // -----------------------------------------------------------------------------
 \\frame         { return (int) Tokens.FRAME; }
-\\frametitle    { return (int) Tokens.FRAMETITLE; }
-\\framesubtitle { return (int) Tokens.FRAMESUBTITLE; }
+\\frametitle    { BEGIN(pre_overlay); return (int) Tokens.FRAMETITLE; }
+\\framesubtitle { BEGIN(pre_overlay); return (int) Tokens.FRAMESUBTITLE; }
 \\pause         {}
 \\usetheme      { return (int) Tokens.USETHEME; }
 
@@ -114,19 +114,19 @@ envEnd      \\end{wsl}
 // Overlay specification
 // -----------------------------------------------------------------------------
 <pre_overlay> {
-        {wsl}\<                 BEGIN(overlay); unformattedText = "";
-        [^({wsl}\<)]            BEGIN(pre_optional); yyless(0);
+        {wsl}<                  BEGIN(overlay); unformattedText = "";
+        {wsl}[^<]               BEGIN(pre_optional); yyless(0);
     }
 <overlay> {
-        [^\>]*                  unformattedText += yytext;
-        \>                      BEGIN(pre_optional); yylval.Text = unformattedText; return (int) Tokens.OVERLAY;
+        [^>]*                   unformattedText += yytext;
+        >                       BEGIN(pre_optional); yylval.Text = unformattedText; return (int) Tokens.OVERLAY;
     }
 
 // Optional parameters
 // -----------------------------------------------------------------------------
 <pre_optional> {
         {wsl}\[                 BEGIN(optional); unformattedText = "";
-        [^({wsl}\[)]            BEGIN(INITIAL); yyless(0);
+        {wsl}[^[]               BEGIN(INITIAL); yyless(0);
     }
 <optional> {
         [^\]]*                  unformattedText += yytext;

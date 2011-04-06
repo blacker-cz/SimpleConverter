@@ -354,12 +354,12 @@ standalonecommand :
         |   PAUSE                   {
                                         $$ = new Node("pause");
                                     }
-        |   FRAMETITLE '{' simpleformtext '}'   {
-                                        SetFrameTitle(SlideCount + 1, $3);
+        |   FRAMETITLE overlay optional '{' simpleformtext '}'   {
+                                        SetFrameTitle(SlideCount + 1, $5, $2);
                                         $$ = null;
                                     }
-        |   FRAMESUBTITLE '{' simpleformtext '}'    {
-                                        SetFrameSubtitle(SlideCount + 1, $3);
+        |   FRAMESUBTITLE overlay optional '{' simpleformtext '}'    {
+                                        SetFrameSubtitle(SlideCount + 1, $5, $2);
                                         $$ = null;
                                     }
         |   NL                      {
@@ -434,13 +434,15 @@ public Parser(Scanner scn) : base(scn) {
 /// </summary>
 /// <param name="slide">Slide number</param>
 /// <param name="content">Frame title content</param>
-private void SetFrameTitle(int slide, List<Node> content) {
+private void SetFrameTitle(int slide, List<Node> content, string overlay = "") {
     if(content == null || content.Count == 0)
         return;
     if(FrametitleTable.ContainsKey(slide)) {    // key exist change value
         FrametitleTable[slide].Title = content;
+        FrametitleTable[slide].TitleOverlay = overlay;
     } else {    // key doesn't exist create new record
         FrametitleTable.Add(slide, new FrametitleRecord(content, null));
+        FrametitleTable[slide].TitleOverlay = overlay;
     }
 }
 
@@ -449,12 +451,14 @@ private void SetFrameTitle(int slide, List<Node> content) {
 /// </summary>
 /// <param name="slide">Slide number</param>
 /// <param name="content">Frame subtitle content</param>
-private void SetFrameSubtitle(int slide, List<Node> content) {
+private void SetFrameSubtitle(int slide, List<Node> content, string overlay = "") {
     if(content == null || content.Count == 0)
         return;
     if(FrametitleTable.ContainsKey(slide)) {    // key exist change value
         FrametitleTable[slide].Subtitle = content;
+        FrametitleTable[slide].SubtitleOverlay = overlay;
     } else {    // key doesn't exist create new record
         FrametitleTable.Add(slide, new FrametitleRecord(null, content));
+        FrametitleTable[slide].SubtitleOverlay = overlay;
     }
 }
