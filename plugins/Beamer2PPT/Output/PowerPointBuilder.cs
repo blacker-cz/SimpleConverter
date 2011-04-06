@@ -249,15 +249,23 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             // increment current slide number
             _currentSlide++;
 
-            int passNumber = 0;
+            int passNumber = 0,
+                pausedCounter = 0;
             bool titleNextPass = true,
-                slideNextPass = true;
+                slideNextPass = true,
+                paused = false;
 
             SlideBuilder slideBuilder = new SlideBuilder(_currentSlide);
             TitleBuilder titleBuilder = new TitleBuilder();
 
             do
             {    // --- loop over all overlays
+
+                if (paused)
+                {
+                    pausedCounter++;
+                    paused = false;
+                }
 
                 passNumber++;
                 _slideIndex++;
@@ -275,8 +283,12 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     {
                         slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
 
-                        titleNextPass = titleBuilder.BuildTitle(slide.Shapes[1], _frametitleTable[_currentSlide], passNumber);
+                        titleNextPass = titleBuilder.BuildTitle(slide.Shapes[1], _frametitleTable[_currentSlide], passNumber, pausedCounter, out paused);
 
+                        if (paused)
+                            continue;
+
+                        // todo: pass pausedCounter to slide builder
                         slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber);
 
                         continue;

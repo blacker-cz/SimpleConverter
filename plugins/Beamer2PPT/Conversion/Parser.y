@@ -419,6 +419,10 @@ simpleformtext :                    {
                                         $1.Add(new Node("today"));
                                         $$ = $1;
                                     }
+        |   simpleformtext PAUSE    {
+                                        $1.Add(new Node("pause"));
+                                        $$ = $1;
+                                    }
         ;
 
 %%

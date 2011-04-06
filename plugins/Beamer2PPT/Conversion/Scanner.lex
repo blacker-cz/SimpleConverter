@@ -57,7 +57,7 @@ envEnd      \\end{wsl}
 \\frame         { return (int) Tokens.FRAME; }
 \\frametitle    { BEGIN(pre_overlay); return (int) Tokens.FRAMETITLE; }
 \\framesubtitle { BEGIN(pre_overlay); return (int) Tokens.FRAMESUBTITLE; }
-\\pause         {}
+\\pause         { return (int) Tokens.PAUSE; }
 \\usetheme      { return (int) Tokens.USETHEME; }
 
 // Text formatting

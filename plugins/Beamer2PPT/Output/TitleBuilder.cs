@@ -23,15 +23,21 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private int _maxPass = 1;
 
         /// <summary>
+        /// Number of processed pause commands
+        /// </summary>
+        private int _pauseCounter;
+
+        /// <summary>
         /// Build (generate) title content
         /// </summary>
         /// <param name="shape"></param>
         /// <param name="frametitle"></param>
         /// <param name="passNumber"></param>
         /// <returns>true if title is complete; false if needs another pass</returns>
-        public bool BuildTitle(PowerPoint.Shape shape, FrametitleRecord frametitle, int passNumber)
+        public bool BuildTitle(PowerPoint.Shape shape, FrametitleRecord frametitle, int passNumber, int pauseCounter, out bool paused)
         {
             _passNumber = passNumber;
+            _pauseCounter = pauseCounter;
 
             // prepare shape
             shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignLeft;
@@ -45,14 +51,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             _maxPass = Math.Max(Misc.MaxOverlay(frametitle.SubtitleOverlaySet), _maxPass);
             
             // generate title
-            BuildTitlePart(shape, frametitle.Title, new TextFormat(16.0f));
+            paused = !BuildTitlePart(shape, frametitle.Title, new TextFormat(16.0f));
 
             if (frametitle.Subtitle != null)
             {
                 shape.TextFrame2.TextRange.InsertAfter("\r");
 
                 // generate subtitle
-                BuildTitlePart(shape, frametitle.Subtitle, new TextFormat(8.0f));
+                paused = !BuildTitlePart(shape, frametitle.Subtitle, new TextFormat(8.0f));
             }
 
             return _passNumber >= _maxPass;
@@ -64,10 +70,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <param name="shape">Prepared title shape</param>
         /// <param name="content">Title content</param>
         /// <param name="format">Text format</param>
-        private void BuildTitlePart(PowerPoint.Shape shape, List<Node> content, TextFormat format)
+        /// <returns>true if completed; false if paused</returns>
+        private bool BuildTitlePart(PowerPoint.Shape shape, List<Node> content, TextFormat format)
         {
             if (content.Count == 0)   // ignore empty node
-                return;
+                return true;
 
             Stack<Node> nodes = new Stack<Node>();
 
@@ -126,8 +133,13 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         shape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
                         break;
                     case "pause":
-                        // todo: keep number of processed pauses (local) if passNumber < pauseCount -> throw pause exception (catch in PowerPointBuilder, and continue - before processing content)
-                        // else ignore
+                        // todo: keep number of processed pauses (local) if passNumber < pauseCount
+                        if (_passNumber - 1 <= _pauseCounter)
+                        {
+                            if (_passNumber == _maxPass)    // increase number of passes
+                                _maxPass++;
+                            return false;
+                        }
                         break;
                     default: // unknown node -> ignore
                         break;
@@ -142,6 +154,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     nodes.Push(item);
                 }
             }
+
+            return true;
         }
     }
 }
