@@ -250,6 +250,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             _currentSlide++;
 
             int passNumber = 0;
+            bool titleNextPass = true,
+                slideNextPass = true;
 
             SlideBuilder slideBuilder = new SlideBuilder(_currentSlide);
             TitleBuilder titleBuilder = new TitleBuilder();
@@ -263,18 +265,30 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 // create new slide -> if slide contains title, use layout with title
                 if (_frametitleTable.ContainsKey(_currentSlide))
                 {
-                    // todo: check overlay params for current pass and then generate slide with or without title
-                    slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
-                    
-                    // todo: generate slide title here (probably in separate class)
-                    titleBuilder.BuildTitle(slide.Shapes[1], _frametitleTable[_currentSlide], passNumber);
-                }
-                else
-                {
-                    slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutBlank);
-                }
+                    FrametitleRecord record = _frametitleTable[_currentSlide];
 
-            } while (!slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber)); // --- end loop over all overlays
+                    // check if slide has title for current pass
+                    if (record.SubtitleOverlaySet.Count == 0 && record.Subtitle != null
+                        || record.TitleOverlaySet.Count == 0 && record.Title != null
+                        || record.SubtitleOverlaySet.Count != 0 && record.SubtitleOverlaySet.Contains(passNumber) && record.Subtitle != null
+                        || record.TitleOverlaySet.Count != 0 && record.TitleOverlaySet.Contains(passNumber) && record.Title != null)
+                    {
+                        slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
+
+                        titleNextPass = titleBuilder.BuildTitle(slide.Shapes[1], _frametitleTable[_currentSlide], passNumber);
+
+                        slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber);
+
+                        continue;
+                    }
+                }
+                
+                slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutBlank);
+
+                slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber);
+    
+                // todo move slideBuilder inside of the loop
+            } while (!titleNextPass || !slideNextPass); // --- end loop over all overlays
 
             // report progress
             RaiseProgress();

@@ -24,7 +24,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         {
             ISet<int> overlays = new HashSet<int>();
 
-            if (overlaySpecification.Trim().Length == 0)    // empty overlay specification -> return empty set
+            // empty overlay specification -> return empty set
+            if (overlaySpecification == null || overlaySpecification.Trim().Length == 0)
                 return overlays;
 
             // "1,2-3,4-" -> ["1","2-3","4-"]
@@ -84,6 +85,19 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             }
 
             return overlays;
+        }
+
+        /// <summary>
+        /// Get max overlay number
+        /// </summary>
+        /// <param name="overlays">Overlays list</param>
+        /// <returns>Maximal overlay</returns>
+        public static int MaxOverlay(ISet<int> overlays)
+        {
+            if (overlays.Count == 0)
+                return 1;
+
+            return Math.Max(overlays.Max(), Math.Abs(overlays.Min()));
         }
     }
 }
