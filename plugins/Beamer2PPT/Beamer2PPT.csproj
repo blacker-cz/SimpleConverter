@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\build\binaries\plugins\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -64,9 +64,11 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="IMessenger.cs" />
     <Compile Include="Messenger.cs" />
+    <Compile Include="Misc.cs" />
     <Compile Include="Output\PowerPointBuilder.cs" />
     <Compile Include="Output\SlideBuilder.cs" />
     <Compile Include="Output\TextFormat.cs" />
+    <Compile Include="Output\TitleBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GUI\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -96,7 +98,7 @@
   <PropertyGroup>
     <PreBuildEvent>if $(ConfigurationName) == Debug (
 gplex /listing /summary /verbose /out:$(ProjectDir)Conversion\Scanner.cs $(ProjectDir)Conversion\Scanner.lex
-gppg $(ProjectDir)Conversion\Parser.y /gplex /nolines /conflicts /report &gt; $(ProjectDir)Conversion\Parser.cs
+gppg $(ProjectDir)Conversion\Parser.y /gplex /nolines /conflicts /report /verbose &gt; $(ProjectDir)Conversion\Parser.cs
 ) else (
 gplex /listing /out:$(ProjectDir)Conversion\Scanner.cs $(ProjectDir)Conversion\Scanner.lex
 gppg $(ProjectDir)Conversion\Parser.y /gplex /nolines &gt; $(ProjectDir)Conversion\Parser.cs
