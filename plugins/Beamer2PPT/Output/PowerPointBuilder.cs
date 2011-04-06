@@ -252,6 +252,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             int passNumber = 0;
 
             SlideBuilder slideBuilder = new SlideBuilder(_currentSlide);
+            TitleBuilder titleBuilder = new TitleBuilder();
 
             do
             {    // --- loop over all overlays
@@ -266,6 +267,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
                     
                     // todo: generate slide title here (probably in separate class)
+                    titleBuilder.BuildTitle(slide.Shapes[1], _frametitleTable[_currentSlide], passNumber);
                 }
                 else
                 {

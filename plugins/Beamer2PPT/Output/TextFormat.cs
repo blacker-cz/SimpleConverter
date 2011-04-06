@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Office.Core;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 
-namespace SimpleConverter.Plugin.Beamer2PPT.Output
+namespace SimpleConverter.Plugin.Beamer2PPT
 {
     /// <summary>
     /// Text formatting class
@@ -28,6 +28,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT.Output
         private FormatSettings _currentSettings;
 
         /// <summary>
+        /// Default parameterless constructor.
+        /// Base font size is set to 10pt
+        /// </summary>
+        public TextFormat() : this (10.0f)
+        {
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="baseFontSize">Base font size (11pt, 12pt, ...)</param>
@@ -47,6 +55,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT.Output
         /// <param name="node">Node containing new font settings</param>
         public void ModifyFormat(Node node)
         {
+            // save current font settings
             _settingsStack.Push(_currentSettings.Clone() as FormatSettings);
 
             switch (node.Type)
@@ -58,7 +67,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT.Output
                     _currentSettings.Italic = MsoTriState.msoTrue;
                     break;
                 case "underline":
-                    _currentSettings.Underline = MsoTriState.msoTrue;
+                    _currentSettings.Underline = MsoTextUnderlineType.msoUnderlineSingleLine;
                     break;
                 case "smallcaps":
                     _currentSettings.Smallcaps = MsoTriState.msoTrue;
@@ -67,7 +76,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT.Output
                     _currentSettings.FontFamily = @"Courier New";
                     break;
                 case "color":
-                    _currentSettings.Color = ParseColor(node.Content as string);
+                    _currentSettings.Color = ParseColor(node.OptionalParams, node.Content as string);
                     break;
                 // coeficients for relative font size are computed from default font size for each LaTeX size command
                 case "tiny":
@@ -123,7 +132,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT.Output
             if (shape.HasTextFrame != MsoTriState.msoTrue)
                 throw new ArgumentException("Shape must contain text frame.");
 
-            AppendText(shape.TextFrame.TextRange, text);
+            AppendText(shape.TextFrame2.TextRange, text);
         }
 
         /// <summary>
@@ -131,18 +140,32 @@ namespace SimpleConverter.Plugin.Beamer2PPT.Output
         /// </summary>
         /// <param name="range">Text range</param>
         /// <param name="text">Appended text</param>
-        public void AppendText(PowerPoint.TextRange range, string text)
+        public void AppendText(TextRange2 range, string text)
         {
-            // todo: implement this
-            // ideas: change formatting of output only if format was changed before this current append
+            // fixme: if possible, change formatting of output only if format was changed before this current append
+
+            int start = range.Text.Length;
+
+            range.InsertAfter(text);
+
+            TextRange2 format = range.Characters[start+1, text.Length];
+
+            format.Font.Bold = _currentSettings.Bold;
+            format.Font.Fill.ForeColor.RGB = _currentSettings.Color;
+            format.Font.Italic = _currentSettings.Italic;
+            format.Font.Name = _currentSettings.FontFamily;
+            format.Font.UnderlineStyle = _currentSettings.Underline;
+            format.Font.Smallcaps = _currentSettings.Smallcaps;
+            format.Font.Size = _currentSettings.FontSize;
         }
 
         /// <summary>
         /// Get color number from string
         /// </summary>
-        /// <param name="p">Color string</param>
+        /// <param name="optional">Optional color settings</param>
+        /// <param name="color">Color string</param>
         /// <returns>Color acceptable by PowerPoint</returns>
-        private int ParseColor(string p)
+        private int ParseColor(string optional, string color)
         {
             throw new NotImplementedException();
         }
@@ -182,7 +205,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT.Output
             /// <summary>
             /// Underline
             /// </summary>
-            public MsoTriState Underline { get; set; }
+            public MsoTextUnderlineType Underline { get; set; }
 
             /// <summary>
             /// Smallcaps
@@ -204,7 +227,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT.Output
                 Color = 0;  // default black color
                 Bold = MsoTriState.msoFalse;
                 Italic = MsoTriState.msoFalse;
-                Underline = MsoTriState.msoFalse;
+                Underline = MsoTextUnderlineType.msoNoUnderline;
                 Smallcaps = MsoTriState.msoFalse;
             }
 
