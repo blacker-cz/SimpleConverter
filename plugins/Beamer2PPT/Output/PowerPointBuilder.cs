@@ -251,12 +251,13 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             int passNumber = 0,
                 pausedCounter = 0;
+
             bool titleNextPass = true,
                 slideNextPass = true,
                 paused = false;
 
-            SlideBuilder slideBuilder = new SlideBuilder(_currentSlide);
-            TitleBuilder titleBuilder = new TitleBuilder();
+            SlideBuilder slideBuilder = new SlideBuilder(_currentSlide); // todo: fill base font size from preambule
+            TitleBuilder titleBuilder = new TitleBuilder(); // todo: fill base font size from preambule
 
             do
             {    // --- loop over all overlays
@@ -289,7 +290,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                             continue;
 
                         // todo: pass pausedCounter to slide builder
-                        slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber);
+                        slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber, pausedCounter, out paused);
 
                         continue;
                     }
@@ -297,7 +298,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 
                 slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutBlank);
 
-                slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber);
+                slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber, pausedCounter, out paused);
     
                 // todo move slideBuilder inside of the loop
             } while (!titleNextPass || !slideNextPass); // --- end loop over all overlays

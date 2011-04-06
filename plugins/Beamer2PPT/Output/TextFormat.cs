@@ -28,6 +28,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private FormatSettings _currentSettings;
 
         /// <summary>
+        /// Information if format has changed since last append
+        /// </summary>
+        private bool _changed;
+
+        /// <summary>
         /// Default parameterless constructor.
         /// Base font size is set to 10pt
         /// </summary>
@@ -46,6 +51,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             _settingsStack = new Stack<FormatSettings>();
 
             _currentSettings = new FormatSettings(_baseFontSize);
+
+            _changed = true;
         }
 
         /// <summary>
@@ -57,6 +64,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         {
             // save current font settings
             _settingsStack.Push(_currentSettings.Clone() as FormatSettings);
+
+            _changed = true;
 
             switch (node.Type)
             {
@@ -110,6 +119,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     _currentSettings.FontSize = _baseFontSize * 2.48832f;
                     break;
                 default:
+                    _settingsStack.Pop();   // no changes -> throw away stack top (saved at start of this method)
+                    _changed = false;
                     break;
             }
         }
@@ -120,6 +131,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         public void RollBackFormat()
         {
             _currentSettings = _settingsStack.Pop();
+
+            _changed = true;
         }
 
         /// <summary>
@@ -142,21 +155,25 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <param name="text">Appended text</param>
         public void AppendText(TextRange2 range, string text)
         {
-            // fixme: if possible, change formatting of output only if format was changed before this current append
-
             int start = range.Text.Length;
 
             range.InsertAfter(text);
 
-            TextRange2 format = range.Characters[start+1, text.Length];
+            // apply formatting only if there were changes (experimental!)
+            if (_changed)
+            {
+                TextRange2 format = range.Characters[start + 1, text.Length];
 
-            format.Font.Bold = _currentSettings.Bold;
-            format.Font.Fill.ForeColor.RGB = _currentSettings.Color;
-            format.Font.Italic = _currentSettings.Italic;
-            format.Font.Name = _currentSettings.FontFamily;
-            format.Font.UnderlineStyle = _currentSettings.Underline;
-            format.Font.Smallcaps = _currentSettings.Smallcaps;
-            format.Font.Size = _currentSettings.FontSize;
+                format.Font.Bold = _currentSettings.Bold;
+                format.Font.Fill.ForeColor.RGB = _currentSettings.Color;
+                format.Font.Italic = _currentSettings.Italic;
+                format.Font.Name = _currentSettings.FontFamily;
+                format.Font.UnderlineStyle = _currentSettings.Underline;
+                format.Font.Smallcaps = _currentSettings.Smallcaps;
+                format.Font.Size = _currentSettings.FontSize;
+
+                _changed = false;
+            }
         }
 
         /// <summary>

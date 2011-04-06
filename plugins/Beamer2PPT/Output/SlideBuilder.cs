@@ -36,12 +36,24 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private int _maxPass = 1;
 
         /// <summary>
+        /// Number of processed pause commands
+        /// </summary>
+        private int _pausedCounter;
+
+        /// <summary>
+        /// Base font size
+        /// </summary>
+        private float _baseFontSize;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="slideNumber">Number of currently generated slide</param>
-        public SlideBuilder(int slideNumber)
+        /// <param name="baseFontSize">Base font size (optional)</param>
+        public SlideBuilder(int slideNumber, float baseFontSize = 10.0f)
         {
             _slideNumber = slideNumber;
+            _baseFontSize = baseFontSize;
         }
 
         /// <summary>
@@ -52,11 +64,12 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <param name="titlesettings">Title settings table (used for \maketitle command)</param>
         /// <param name="passNumber">Number of current pass (used for overlays)</param>
         /// <returns>true if slide is complete; false if needs another pass</returns>
-        public bool BuildSlide(PowerPoint.Slide slide, Node slideNode, Dictionary<string, List<Node>> titlesettings, int passNumber)
+        public bool BuildSlide(PowerPoint.Slide slide, Node slideNode, Dictionary<string, List<Node>> titlesettings, int passNumber, int pausedCounter, out bool paused)
         {
             _slide = slide;
             _titlesettings = titlesettings;
             _passNumber = passNumber;
+            _pausedCounter = pausedCounter;
 
             // concept:
             //      iterate through nodes
@@ -64,7 +77,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             //      if node is string - append to current shape
             //      if node is table/image or another shape-like object, process them separatedly
             //      at least one method for table processing and one method for image processing
-            
+
+            paused = false;
+
             return _passNumber >= _maxPass;
         }
     }
