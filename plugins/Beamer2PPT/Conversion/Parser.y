@@ -33,7 +33,7 @@
        COLOR "\color", BFSERIES "\bfseries", TTFAMILY "\ttfamily", ITSHAPE "\itshape", SCSHAPE "\scshape",
        TINY "\tiny", SCRIPTSIZE "\scriptsize", FOOTNOTESIZE "\footnotesize", SMALL "\small",
        NORMALSIZE "\normalsize", LARGE "\large", LARGE2 "\Large", LARGE3 "\LARGE", HUGE "\huge", HUGE2 "\Huge",
-       ITEM "\item", UNDERLINE "\underline"
+       ITEM "\item", UNDERLINE "\underline", AND "\and"
 
 %nonassoc <Text> STRING "plain text"
 %nonassoc <Text> OPTIONAL "optional parameter"
@@ -71,13 +71,13 @@ preambule :                         {
                                     }
         |   preambule USEPACKAGE '{' STRING '}'     {   // really need to process??
                                         Node tmp = new Node("package");
-                                        tmp.Content = (object) $4;
+                                        tmp.Content = $4 as object;
                                         $1.Children.Add(tmp);
                                         $$ = $1;
                                     }
         |   preambule optional USETHEME '{' STRING '}'     {
                                         Node tmp = new Node("theme");
-                                        tmp.Content = (object) $5;
+                                        tmp.Content = $5 as object;
                                         tmp.OptionalParams = $2;
                                         $1.Children.Add(tmp);
                                         $$ = $1;
@@ -176,7 +176,7 @@ slidecontent :                      {   /* return List<Node> - create node in sp
                                     }
         |   slidecontent STRING     {
                                         Node tmp = new Node("string");
-                                        tmp.Content = (object) $2;
+                                        tmp.Content = $2 as object;
                                         $1.Add(tmp);
                                         $$ = $1;
                                     }
@@ -209,10 +209,10 @@ environment :
                                         $$ = new Node("descriptionlist");
                                         $$.Children = $2;
                                     }
-        |   BEGIN_TABULAR '{' STRING '}' table_rows END_TABULAR    {
+        |   BEGIN_TABULAR STRING table_rows END_TABULAR    {
                                         $$ = new Node("table");
-                                        $$.Children = $5;
-                                        $$.Content = (object) $3;
+                                        $$.Children = $3;
+                                        $$.Content = $2 as object;
                                     }
         ;
 
@@ -282,20 +282,30 @@ commands : /* copy List<Node> from slidecontent to command Node*/
         ;
 
 command :
-            TEXTBF                  {
+            TEXTBF overlay optional {
                                         $$ = new Node("bold");
+                                        $$.OverlaySpec = $2;
+                                        $$.OptionalParams = $3;
                                     }
-        |   TEXTIT                  {
+        |   TEXTIT overlay optional {
                                         $$ = new Node("italic");
+                                        $$.OverlaySpec = $2;
+                                        $$.OptionalParams = $3;
                                     }
-        |   TEXTTT                  {
+        |   TEXTTT overlay optional {
                                         $$ = new Node("typewriter");
+                                        $$.OverlaySpec = $2;
+                                        $$.OptionalParams = $3;
                                     }
-        |   TEXTSC                  {
+        |   TEXTSC overlay optional {
                                         $$ = new Node("smallcaps");
+                                        $$.OverlaySpec = $2;
+                                        $$.OptionalParams = $3;
                                     }
-        |   UNDERLINE               {
+        |   UNDERLINE overlay optional  { // beamer actually doesn't support this but we yes :D
                                         $$ = new Node("underline");
+                                        $$.OverlaySpec = $2;
+                                        $$.OptionalParams = $3;
                                     }
         ;
 
@@ -342,8 +352,11 @@ groupcommand :
         |   HUGE2                   {
                                         $$ = new Node("Huge");
                                     }
-        |   COLOR '{' STRING '}'    {
+        |   COLOR overlay optional '{' STRING '}'    {
                                         $$ = new Node("color");
+                                        $$.OverlaySpec = $2;
+                                        $$.OptionalParams = $3;
+                                        $$.Content = $5 as object;
                                     }
         ;
 
@@ -401,7 +414,7 @@ simpleformtext :                    {
                                     }
         |   simpleformtext STRING   {
                                         Node tmp = new Node("string");
-                                        tmp.Content = (object) $2;
+                                        tmp.Content = $2 as object;
                                         $1.Add(tmp);
                                         $$ = $1;
                                     }
@@ -421,6 +434,10 @@ simpleformtext :                    {
                                     }
         |   simpleformtext PAUSE    {
                                         $1.Add(new Node("pause"));
+                                        $$ = $1;
+                                    }
+        |   simpleformtext AND      {
+                                        $1.Add(new Node("and"));
                                         $$ = $1;
                                     }
         ;

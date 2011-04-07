@@ -55,7 +55,7 @@ namespace SimpleConverter
             Messages = new Contract.AsyncObservableCollection<ListMessage>();
             Files = new Contract.ElementCollection<ListFile>();
 #if DEBUG
-            Files.Add(new ListFile(@"D:\Programovani\VS.2010\SimpleConverter\_bordel\beamer.tex"));
+            Files.Add(new ListFile(@"D:\Programovani\VS.2010\SimpleConverter\_bordel\slide.tex"));
 #endif
             SelectedPlugin = Factory.Loader.Instance.Plugins.First<Contract.IPluginMetaData>();
             SelectPluginEnabled = true;

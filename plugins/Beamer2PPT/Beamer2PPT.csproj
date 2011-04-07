@@ -75,6 +75,7 @@
     </Compile>
     <Compile Include="Conversion\Scanner.cs" />
     <Compile Include="Conversion\Parser.cs" />
+    <Compile Include="Output\TabularSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Conversion\Scanner.lex" />

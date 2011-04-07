@@ -23,9 +23,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private int _maxPass = 1;
 
         /// <summary>
-        /// Number of processed pause commands
+        /// Number of processed pause commands (globally)
         /// </summary>
         private int _pauseCounter;
+
+        /// <summary>
+        /// Number of processed pause commands (locally)
+        /// </summary>
+        private int _localPauseCounter;
 
         /// <summary>
         /// Base font size
@@ -54,6 +59,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         {
             _passNumber = passNumber;
             _pauseCounter = pauseCounter;
+            _localPauseCounter = 0;
 
             // prepare shape
             shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignLeft;
@@ -68,16 +74,16 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             
             // generate title
             TextFormat textformat = new TextFormat(_baseFontSize);
-            textformat.ModifyFormat(new Node("Large")); // in beamer 
+            textformat.ModifyFormat(new Node("Large")); // in beamer title font size is same as \Large
             paused = !BuildTitlePart(shape, frametitle.Title, textformat);
 
-            if (frametitle.Subtitle != null)
+            if (!paused && frametitle.Subtitle != null)
             {
                 shape.TextFrame2.TextRange.InsertAfter("\r");
 
                 // generate subtitle
                 textformat = new TextFormat(_baseFontSize);
-                textformat.ModifyFormat(new Node("footnotesize"));
+                textformat.ModifyFormat(new Node("footnotesize"));  // in beamer subtitle font size is same as \footnotesize
                 paused = !BuildTitlePart(shape, frametitle.Subtitle, textformat);
             }
 
@@ -131,12 +137,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     case "LARGE":
                     case "huge":
                     case "Huge":
-                        // todo: test this
                         // check overlay settings
                         int min = currentNode.OverlayList.Count != 0 ? currentNode.OverlayList.Min() : int.MaxValue;
+                        _maxPass = Math.Max(Misc.MaxOverlay(currentNode.OverlayList), _maxPass);    // set maximal number of passes from overlay specification
                         if (currentNode.OverlayList.Count == 0 || currentNode.OverlayList.Contains(_passNumber) || min < 0 && Math.Abs(min) < _passNumber)
                         {
-                            _maxPass = Math.Max(Misc.MaxOverlay(currentNode.OverlayList), _maxPass);
                             format.ModifyFormat(currentNode);
                             nodes.Push(rollbackNode);
                         }
@@ -154,10 +159,13 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         shape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
                         break;
                     case "pause":
-                        if (_passNumber - 1 <= _pauseCounter)
+                        _localPauseCounter++;
+
+                        if (_localPauseCounter > _pauseCounter)
                         {
                             if (_passNumber == _maxPass)    // increase number of passes
                                 _maxPass++;
+
                             return false;
                         }
                         break;

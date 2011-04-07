@@ -57,7 +57,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
         /// <summary>
         /// Modify current formatting according to node.
-        /// todo: use interface (instead of Node) without access to children list
         /// </summary>
         /// <param name="node">Node containing new font settings</param>
         public void ModifyFormat(Node node)
@@ -156,6 +155,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         public void AppendText(TextRange2 range, string text)
         {
             int start = range.Text.Length;
+
+            text = text.Replace("\r\n", "\r");
+            text = text.Replace("\n", "\r");
 
             range.InsertAfter(text);
 

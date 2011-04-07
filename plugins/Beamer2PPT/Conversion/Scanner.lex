@@ -1,4 +1,4 @@
-%x str, overlay, optional, pre_overlay, pre_optional
+%x str, overlay, optional, pre_overlay, pre_optional, tabular_arg
 
 %using SimpleConverter.Contract;
 
@@ -21,6 +21,7 @@ envEnd      \\end{wsl}
     string unformattedText = "";
     int spaces = 0;
     int nls = 0;
+    int tbl = 0;
 %}
 
 // Parsing of LaTeX macros
@@ -47,7 +48,7 @@ envEnd      \\end{wsl}
 {envEnd}\{enumerate\}       { return (int) Tokens.END_ENUMERATE; }
 {envBegin}\{description\}   { return (int) Tokens.BEGIN_DESCRIPTION; }
 {envEnd}\{description\}     { return (int) Tokens.END_DESCRIPTION; }
-{envBegin}\{tabular\}       { tabular = true; return (int) Tokens.BEGIN_TABULAR; }
+{envBegin}\{tabular\}\{     { tabular = true; BEGIN(tabular_arg); tbl = 0; unformattedText = ""; return (int) Tokens.BEGIN_TABULAR; }
 {envEnd}\{tabular\}         { tabular = false; return (int) Tokens.END_TABULAR; }
 \\item                      { BEGIN(pre_overlay); return (int) Tokens.ITEM; }
 \\multicolumn               {}
@@ -62,10 +63,10 @@ envEnd      \\end{wsl}
 
 // Text formatting
 // -----------------------------------------------------------------------------
-\\textbf        { return (int) Tokens.TEXTBF; }
-\\texttt        { return (int) Tokens.TEXTTT; }
-\\textit        { return (int) Tokens.TEXTIT; }
-\\textsc        { return (int) Tokens.TEXTSC; }
+\\textbf        { BEGIN(pre_overlay); return (int) Tokens.TEXTBF; }
+\\texttt        { BEGIN(pre_overlay); return (int) Tokens.TEXTTT; }
+\\textit        { BEGIN(pre_overlay); return (int) Tokens.TEXTIT; }
+\\textsc        { BEGIN(pre_overlay); return (int) Tokens.TEXTSC; }
 \\bfseries      { return (int) Tokens.BFSERIES; }
 \\ttfamily      { return (int) Tokens.TTFAMILY; }
 \\itshape       { return (int) Tokens.ITSHAPE; }
@@ -80,8 +81,9 @@ envEnd      \\end{wsl}
 \\LARGE         { return (int) Tokens.LARGE3; }
 \\huge          { return (int) Tokens.HUGE; }
 \\Huge          { return (int) Tokens.HUGE2; }
-\\color         { return (int) Tokens.COLOR; }
-\\underline     { return (int) Tokens.UNDERLINE; }
+\\color         { BEGIN(pre_overlay); return (int) Tokens.COLOR; }
+\\underline     { BEGIN(pre_overlay); return (int) Tokens.UNDERLINE; }
+\\and           { return (int) Tokens.AND; }
 
 // Images
 // -----------------------------------------------------------------------------
@@ -132,6 +134,22 @@ envEnd      \\end{wsl}
         [^\]]*                  unformattedText += yytext;
         \]                      BEGIN(INITIAL); yylval.Text = unformattedText; return (int) Tokens.OPTIONAL;
     }
+
+// Tabular settings
+// -----------------------------------------------------------------------------
+<tabular_arg> {
+        \{                      tbl++; unformattedText += @"{";
+        \}                      {
+                                    tbl--; 
+                                    if(tbl < 0) {
+                                        yylval.Text = unformattedText;
+                                        BEGIN(INITIAL);
+                                        return (int) Tokens.STRING;
+                                    }
+                                    unformattedText += @"}";
+                                }
+        [^{}]*                  unformattedText += yytext;
+}
 
 // Plain text
 // -----------------------------------------------------------------------------

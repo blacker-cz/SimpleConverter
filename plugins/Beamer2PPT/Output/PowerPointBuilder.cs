@@ -152,10 +152,19 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             ProcessBody(body);
 
             // todo: set type of file depending on settings window
-            _pptPresentation.SaveAs(_filename, PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation);
-
-            // final progress change after saving
-            RaiseProgress();
+            try
+            {
+                _pptPresentation.SaveAs(_filename, PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation);
+            }
+            catch (Exception)
+            {
+                throw new DocumentBuilderException("Couldn't save output file.");
+            }
+            finally
+            {
+                // final progress change after saving
+                RaiseProgress();
+            }
 
             Messenger.Instance.SendMessage("Output saved to: \"" + _pptPresentation.FullName + "\"");
         }
@@ -250,7 +259,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             _currentSlide++;
 
             int passNumber = 0,
-                pausedCounter = 0;
+                pauseCounter = 0;
 
             bool titleNextPass = true,
                 slideNextPass = true,
@@ -264,7 +273,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
                 if (paused)
                 {
-                    pausedCounter++;
+                    pauseCounter++;
                     paused = false;
                 }
 
@@ -284,13 +293,12 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     {
                         slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
 
-                        titleNextPass = titleBuilder.BuildTitle(slide.Shapes[1], _frametitleTable[_currentSlide], passNumber, pausedCounter, out paused);
+                        titleNextPass = titleBuilder.BuildTitle(slide.Shapes[1], _frametitleTable[_currentSlide], passNumber, pauseCounter, out paused);
 
                         if (paused)
                             continue;
 
-                        // todo: pass pausedCounter to slide builder
-                        slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber, pausedCounter, out paused);
+                        slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber, pauseCounter, out paused);
 
                         continue;
                     }
@@ -298,9 +306,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 
                 slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutBlank);
 
-                slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber, pausedCounter, out paused);
+                slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber, pauseCounter, out paused);
     
-                // todo move slideBuilder inside of the loop
             } while (!titleNextPass || !slideNextPass); // --- end loop over all overlays
 
             // report progress
