@@ -82,6 +82,7 @@ envEnd      \\end{wsl}
 \\huge          { return (int) Tokens.HUGE; }
 \\Huge          { return (int) Tokens.HUGE2; }
 \\color         { BEGIN(pre_overlay); return (int) Tokens.COLOR; }
+\\textcolor     { BEGIN(pre_overlay); return (int) Tokens.TEXTCOLOR; }
 \\underline     { BEGIN(pre_overlay); return (int) Tokens.UNDERLINE; }
 \\and           { return (int) Tokens.AND; }
 
@@ -153,7 +154,7 @@ envEnd      \\end{wsl}
 
 // Plain text
 // -----------------------------------------------------------------------------
-[^#\$%\^&_\{\}~\\[:IsWhiteSpace:]]    BEGIN(str); yyless(0); unformattedText = ""; spaces = 0; nls = 0;
+[^#\$%\^&_\{\}~\\[:IsWhiteSpace:]]    BEGIN(str); yyless(0); unformattedText = ""; /*spaces = 0;*/ nls = 0;
 
 <str> {
         [^#\$%\^&_\{\}~\\ \n\t\r]*      { unformattedText += yytext; spaces = 0; nls = 0; }

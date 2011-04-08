@@ -33,7 +33,7 @@
        COLOR "\color", BFSERIES "\bfseries", TTFAMILY "\ttfamily", ITSHAPE "\itshape", SCSHAPE "\scshape",
        TINY "\tiny", SCRIPTSIZE "\scriptsize", FOOTNOTESIZE "\footnotesize", SMALL "\small",
        NORMALSIZE "\normalsize", LARGE "\large", LARGE2 "\Large", LARGE3 "\LARGE", HUGE "\huge", HUGE2 "\Huge",
-       ITEM "\item", UNDERLINE "\underline", AND "\and"
+       ITEM "\item", UNDERLINE "\underline", AND "\and", TEXTCOLOR "\textcolor"
 
 %nonassoc <Text> STRING "plain text"
 %nonassoc <Text> OPTIONAL "optional parameter"
@@ -302,10 +302,17 @@ command :
                                         $$.OverlaySpec = $2;
                                         $$.OptionalParams = $3;
                                     }
-        |   UNDERLINE overlay optional  { // beamer actually doesn't support this but we yes :D
+        |   UNDERLINE overlay optional  { // beamer actually doesn't support this but we do :D
                                         $$ = new Node("underline");
                                         $$.OverlaySpec = $2;
                                         $$.OptionalParams = $3;
+                                    }
+
+        |   TEXTCOLOR overlay optional '{' STRING '}'    {
+                                        $$ = new Node("color");
+                                        $$.OverlaySpec = $2;
+                                        $$.OptionalParams = $3;
+                                        $$.Content = $5 as object;
                                     }
         ;
 
