@@ -130,8 +130,17 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         public void RollBackFormat()
         {
-            _currentSettings = _settingsStack.Pop();
+            if(_settingsStack.Count > 0)
+                _currentSettings = _settingsStack.Pop();
 
+            _changed = true;
+        }
+
+        /// <summary>
+        /// Force format update during next append
+        /// </summary>
+        public void Invalidate()
+        {
             _changed = true;
         }
 
