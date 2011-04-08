@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Office.Core;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
+using System.Text.RegularExpressions;
 
 namespace SimpleConverter.Plugin.Beamer2PPT
 {
@@ -173,7 +174,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 format.Font.UnderlineStyle = _currentSettings.Underline;
                 format.Font.Smallcaps = _currentSettings.Smallcaps;
                 format.Font.Size = _currentSettings.FontSize;
-
                 _changed = false;
             }
         }
@@ -186,7 +186,141 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <returns>Color acceptable by PowerPoint</returns>
         private int ParseColor(string optional, string color)
         {
-            throw new NotImplementedException();
+            Regex regex;
+            Match match;
+            int retval = 0;
+
+            if (optional != null && optional.Length > 0 && color != null && color.Length > 0)
+            {
+                switch (optional.Trim())
+                {
+                    case "gray":
+                        regex = new Regex(@"^([0-1](\.[0-9]*)?)$", RegexOptions.IgnoreCase);
+                        match = regex.Match(color.Trim());
+                        
+                        if (match.Success)
+                        {
+                            float degree;
+
+                            if (!float.TryParse(match.Groups[1].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out degree))
+                                return 0;
+
+                            degree = Math.Min(degree, 1.0f);
+
+                            retval += (int)(degree * 0xFF);
+                            retval <<= 8;   // shift 8 bits
+                            retval += (int)(degree * 0xFF);
+                            retval <<= 8;   // shift 8 bits
+                            retval += (int)(degree * 0xFF);
+
+                            return retval;
+                        }
+
+                        return 0;
+                    case "rgb":
+                        regex = new Regex(@"^([0-1](\.[0-9]*)?),([0-1](\.[0-9]*)?),([0-1](\.[0-9]*)?)$", RegexOptions.IgnoreCase);
+                        match = regex.Match(color.Trim());
+
+                        if (match.Success)
+                        {
+                            float r, g, b;
+
+                            if (!float.TryParse(match.Groups[1].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out r))
+                                return 0;
+                            if (!float.TryParse(match.Groups[3].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out g))
+                                return 0;
+                            if (!float.TryParse(match.Groups[5].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out b))
+                                return 0;
+
+                            r = Math.Min(r, 1.0f);
+                            g = Math.Min(g, 1.0f);
+                            b = Math.Min(b, 1.0f);
+
+                            retval += (int)(b * 0xFF);
+                            retval <<= 8;   // shift 8 bits
+                            retval += (int)(g * 0xFF);
+                            retval <<= 8;   // shift 8 bits
+                            retval += (int)(r * 0xFF);
+
+                            return retval;
+                        }
+
+                        return 0;
+                    case "RGB": // todo: fix this
+                        regex = new Regex(@"^([0-9]{3}),([0-9]{3}),([0-9]{3})$", RegexOptions.IgnoreCase);
+                        match = regex.Match(color.Trim());
+
+                        if (match.Success)
+                        {
+                            int r, g, b;
+
+                            if (!int.TryParse(match.Groups[1].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out r))
+                                return 0;
+                            if (!int.TryParse(match.Groups[3].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out g))
+                                return 0;
+                            if (!int.TryParse(match.Groups[5].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out b))
+                                return 0;
+
+                            r = Math.Min(r, 255);
+                            g = Math.Min(g, 255);
+                            b = Math.Min(b, 255);
+
+                            retval += b;
+                            retval <<= 8;   // shift 8 bits
+                            retval += g;
+                            retval <<= 8;   // shift 8 bits
+                            retval += r;
+
+                            return retval;
+                        }
+
+                        return 0;
+                    case "HTML":
+                        regex = new Regex(@"^([A-F0-9]{2})([A-F0-9]{2})([A-F0-9]{2})$", RegexOptions.IgnoreCase);
+                        match = regex.Match(color.Trim());
+                        
+                        if (match.Success)
+                        {
+                            string hex = match.Groups[3].Value + match.Groups[2].Value + match.Groups[1].Value;
+
+                            if (!int.TryParse(hex, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out retval))
+                                return 0;
+                            
+                            return retval;
+                        }
+
+                        return 0;
+                    default:
+                        break;
+                }
+            }
+
+            if (color != null && color.Length > 0)
+            {
+                switch (color.Trim().ToLower())
+                {
+                    case "white":
+                        return 0xFFFFFF;
+                    case "black":
+                        return 0;
+                    case "red":
+                        return 0x0000FF;
+                    case "green":
+                        return 0x00FF00;
+                    case "blue":
+                        return 0xFF0000;
+                    case "cyan":
+                        return 0xFFFF00;
+                    case "magenta":
+                        return 0xFF00FF;
+                    case "yellow":
+                        return 0X00FFFF;
+                    default:
+                        break;
+                }
+            }
+
+            return 0;   // not found return black color
         }
 
         /// <summary>
