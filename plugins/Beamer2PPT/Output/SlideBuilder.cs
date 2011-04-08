@@ -172,6 +172,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         if (shape == null)
                         {
                             UpdateBottomShapeBorder(true);
+                            _format.Invalidate();
                             shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
                         }
                         _format.AppendText(shape, currentNode.Content as string);
@@ -358,9 +359,107 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             if (cols == 0 || rows == 0) // no columns or rows -> don't create table
                 return true;
 
-            tableShape = _slide.Shapes.AddTable(rows - 1, cols, 36.0f, _bottomShapeBorder + 5.0f);
+            // create table shape with "rows - 1" rows but at least one row
+            tableShape = _slide.Shapes.AddTable(((rows - 1) > 0 ? rows - 1 : rows), cols, 36.0f, _bottomShapeBorder + 5.0f);
             // style without background and borders
             tableShape.Table.ApplyStyle("2D5ABB26-0587-4C30-8999-92F81FD0307C");
+
+            int rowCounter = 0, columnCounter = 0;
+
+            // note: if pause is encountered, we need to remove all empty rows after the pause
+
+            Stack<Node> nodes = new Stack<Node>();
+
+            Node currentNode;
+
+            PowerPoint.Shape shape; // cell shape
+
+            foreach (Node node in tableNode.Children)
+            {
+                columnCounter = 0;
+
+                if (node.Type == "tablerow")
+                {
+                    rowCounter++;
+
+                    // check if we will generate last row
+                    if (rowCounter == rows && rowCounter != 1)
+                    {
+                        if (node.Children.Count == 1 && node.Children[0].Children.Count == 0)
+                            continue;
+                        else
+                            tableShape.Table.Rows.Add();
+                    }
+
+                    foreach (Node rowcontent in node.Children)
+                    {
+                        if (rowcontent.Type == "tablecolumn")
+                        {
+                            columnCounter++;
+
+                            // copy column content to stack
+                            foreach (Node item in rowcontent.Children.Reverse<Node>())
+                            {
+                                nodes.Push(item);
+                            }
+
+                            if (columnCounter > cols)
+                                throw new DocumentBuilderException("Invalid table definition.");
+
+                            // get cell shape
+                            shape = tableShape.Table.Cell(rowCounter, columnCounter).Shape;
+                            _format.Invalidate();
+
+                            // process nodes on stack
+                            while (nodes.Count != 0)
+                            {
+                                currentNode = nodes.Pop();
+
+                                // process node depending on its type
+                                switch (currentNode.Type)
+                                {
+                                    case "string":
+                                        _format.AppendText(shape, currentNode.Content as string);
+                                        break;
+                                    case "paragraph":
+                                        if (shape != null)
+                                            _format.AppendText(shape, "\r");
+                                        break;
+                                    case "pause":
+                                        if (Pause())
+                                        {
+                                            // todo: remove all other rows
+                                            return false;
+                                        }
+                                        break;
+                                    case "today":
+                                        // todo: check shape existence
+                                        shape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
+                                        break;
+                                    default: // other -> check for simple formats
+                                        SimpleTextFormat(nodes, currentNode);
+                                        break;
+                                }
+
+                                if (currentNode.Children == null)
+                                    continue;
+
+                                // push child nodes to stack
+                                foreach (Node item in currentNode.Children.Reverse<Node>())
+                                {
+                                    nodes.Push(item);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(node.Type == "hline")
+                {
+                }
+                else if (node.Type == "cline")
+                {
+                }
+            }
 
             return true;
         }
