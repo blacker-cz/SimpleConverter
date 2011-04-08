@@ -95,7 +95,7 @@ envEnd      \\end{wsl}
 // -----------------------------------------------------------------------------
 \\titlepage     {}
 \\hline         { return (int) Tokens.HLINE; }
-\\cline         {}
+\\cline         { return (int) Tokens.CLINE; }
 \\section       { return (int) Tokens.SECTION; }
 \\subsection    { return (int) Tokens.SUBSECTION; }
 \\subsubsection { return (int) Tokens.SUBSUBSECTION; }
