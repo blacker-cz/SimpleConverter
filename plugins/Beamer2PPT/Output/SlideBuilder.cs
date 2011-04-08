@@ -181,14 +181,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                             _format.AppendText(shape, "\r");
                         break;
                     case "pause":
-                        _localPauseCounter++;
-
-                        if (_localPauseCounter > _pauseCounter)
-                        {
-                            if (_passNumber == _maxPass)    // increase number of passes
-                                _maxPass++;
+                        if (Pause())
                             return false;
-                        }
                         break;
                     case "today":
                         // todo: check shape existence
@@ -208,6 +202,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         break;
                     case "table":
                         skip = true;
+                        UpdateBottomShapeBorder(true);
+                        if (!GenerateTable(currentNode))
+                            return false;   // table processing was paused
+
+                        // todo: call reshaper in here :)
                         break;
                     case "descriptionlist":
                         // todo: implement this probably as simple table
@@ -308,6 +307,34 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 default:    // unknown node -> ignore
                     break;
             }
+        }
+
+        /// <summary>
+        /// Check if should pause on current pause command
+        /// </summary>
+        /// <returns>true if should; false otherwise</returns>
+        private bool Pause()
+        {
+            _localPauseCounter++;
+
+            if (_localPauseCounter > _pauseCounter)
+            {
+                if (_passNumber == _maxPass)    // increase number of passes
+                    _maxPass++;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Generate table from its node
+        /// </summary>
+        /// <param name="tableNode">Table node</param>
+        /// <returns>true if completed; false if paused</returns>
+        private bool GenerateTable(Node tableNode)
+        {
+            return true;
         }
     }
 }
