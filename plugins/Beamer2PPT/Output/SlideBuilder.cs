@@ -203,7 +203,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     case "table":
                         skip = true;
                         UpdateBottomShapeBorder(true);
-                        if (!GenerateTable(currentNode))
+                        PowerPoint.Shape tableShape;
+
+                        if (!GenerateTable(currentNode, out tableShape))
                             return false;   // table processing was paused
 
                         // todo: call reshaper in here :)
@@ -251,6 +253,10 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     // compute bottom of the lowermost shape
                     _bottomShapeBorder = Math.Max(_bottomShapeBorder, (shape.Height + shape.Top));
                 }
+            }
+            else    // no shape -> set 15pt from top of slide
+            {
+                _bottomShapeBorder = 15.0f;
             }
         }
 
@@ -331,9 +337,31 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// Generate table from its node
         /// </summary>
         /// <param name="tableNode">Table node</param>
+        /// <param name="tableShape">output - Shape of generated table (used for reshaper)</param>
         /// <returns>true if completed; false if paused</returns>
-        private bool GenerateTable(Node tableNode)
+        private bool GenerateTable(Node tableNode, out PowerPoint.Shape tableShape)
         {
+            int rows = 0, cols = 0;
+            tableShape = null;
+
+            TabularSettings settings = TabularSettings.Parse(tableNode.Content as string);
+
+            cols = settings.Columns.Count;
+
+            // count table rows
+            foreach (Node node in tableNode.Children)
+            {
+                if (node.Type == "tablerow")
+                    rows++;
+            } // counted number of rows can be exactly one row greater than actual value (last row is empty)
+
+            if (cols == 0 || rows == 0) // no columns or rows -> don't create table
+                return true;
+
+            tableShape = _slide.Shapes.AddTable(rows - 1, cols, 36.0f, _bottomShapeBorder + 5.0f);
+            // style without background and borders
+            tableShape.Table.ApplyStyle("2D5ABB26-0587-4C30-8999-92F81FD0307C");
+
             return true;
         }
     }
