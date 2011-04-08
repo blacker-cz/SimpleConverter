@@ -247,7 +247,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
                         return 0;
                     case "RGB": // todo: fix this
-                        regex = new Regex(@"^([0-9]{3}),([0-9]{3}),([0-9]{3})$", RegexOptions.IgnoreCase);
+                        regex = new Regex(@"^([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})$", RegexOptions.IgnoreCase);
                         match = regex.Match(color.Trim());
 
                         if (match.Success)
@@ -256,9 +256,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
                             if (!int.TryParse(match.Groups[1].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out r))
                                 return 0;
-                            if (!int.TryParse(match.Groups[3].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out g))
+                            if (!int.TryParse(match.Groups[2].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out g))
                                 return 0;
-                            if (!int.TryParse(match.Groups[5].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out b))
+                            if (!int.TryParse(match.Groups[3].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out b))
                                 return 0;
 
                             r = Math.Min(r, 255);
