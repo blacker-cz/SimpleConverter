@@ -139,6 +139,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                         case 1:
                                             foreach (char ch in def)
                                             {
+                                                substate = 1;
                                                 switch (ch)
                                                 {
                                                     case '|':
