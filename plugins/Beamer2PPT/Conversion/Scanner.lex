@@ -101,7 +101,7 @@ envEnd      \\end{wsl}
 \\subsubsection { return (int) Tokens.SUBSUBSECTION; }
 \\LaTeX[ ]?     { BEGIN(str); unformattedText = @"LaTeX"; spaces = 0; nls = 0; }
 // New paragraph
-\\\\|\\cr       { if(tabular) return (int) Tokens.ENDROW; else return (int) Tokens.NL; }
+\\\\|\\cr       { BEGIN(pre_optional); if(tabular) return (int) Tokens.ENDROW; else return (int) Tokens.NL; }
 
 // Short space, todo copy to plain text loop
 \\[ ]           {}
@@ -194,7 +194,11 @@ envEnd      \\end{wsl}
         [#\$\^&_\{\}~\\]       BEGIN(INITIAL); yyless(0); yylval.Text = unformattedText; return (int) Tokens.STRING;
     }
 
-\\[[:IsLetter:]]+   {Console.WriteLine("Unknown command!");}
+// unknown commands etc.
+{envBegin}\{[^\}]+\}   { printWarning("Unknown environment " + yytext); }
+{envEnd}\{[^\}]+\}     { printWarning("Unknown environment " + yytext); }
+
+\\[[:IsLetter:]]+      { printWarning("Unknown command " + yytext); }
 
 <<EOF>>                            {/* to process, or not to process? */}
 %%
@@ -205,4 +209,16 @@ override public void yyerror(string format, params object[] args)
 
     tmp = System.String.Format("{0}:{1} - ", yyline, yycol);
     Messenger.Instance.SendMessage(tmp + format, SimpleConverter.Contract.MessageLevel.ERROR);
+}
+
+/// <summary>
+/// Print warning message
+/// </summary>
+/// <param name="message">Message</param>
+protected void printWarning(string message)
+{
+    string tmp;
+
+    tmp = System.String.Format("{0}:{1} - ", yyline, yycol);
+    Messenger.Instance.SendMessage(tmp + message, SimpleConverter.Contract.MessageLevel.WARNING);
 }
