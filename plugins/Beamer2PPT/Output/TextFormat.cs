@@ -34,9 +34,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
         /// <summary>
         /// Default parameterless constructor.
-        /// Base font size is set to 10pt
+        /// Base font size is set to 11pt
         /// </summary>
-        public TextFormat() : this (10.0f)
+        public TextFormat() : this (11.0f)
         {
         }
 

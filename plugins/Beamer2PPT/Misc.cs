@@ -115,7 +115,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             //      1 cm = 28.4 pt
             //      1 in = 72.27 pt
 
-            Regex regex = new Regex(@"([0-9]+(\.[0-9]*)?) *(cm|in|pt|mm)", RegexOptions.IgnoreCase);
+            Regex regex = new Regex(@"^([0-9]+(\.[0-9]*)?) *(cm|in|pt|mm)$", RegexOptions.IgnoreCase);
 
             Match match = regex.Match(part.Trim());
 

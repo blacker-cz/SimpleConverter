@@ -72,14 +72,21 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private TextFormat _format;
 
         /// <summary>
+        /// Folder where is located input file (used for searching for images)
+        /// </summary>
+        private string _inputFolder;
+
+        /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="inputFolder">Folder where is located input file (used for searching for images)</param>
         /// <param name="slideNumber">Number of currently generated slide</param>
         /// <param name="baseFontSize">Base font size (optional)</param>
-        public SlideBuilder(int slideNumber, float baseFontSize = 10.0f)
+        public SlideBuilder(string inputFolder, int slideNumber, float baseFontSize = 11.0f)
         {
             _slideNumber = slideNumber;
             _baseFontSize = baseFontSize;
+            _inputFolder = inputFolder;
         }
 
         /// <summary>
@@ -147,14 +154,16 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             }
 
             Node currentNode;
-            Node rollbackNode = new Node("__format_pop");
 
             PowerPoint.Shape shape = null;
+
+            bool skip;
 
             // process nodes on stack
             while (nodes.Count != 0)
             {
                 currentNode = nodes.Pop();
+                skip = false;
 
                 // process node depending on its type
                 switch (currentNode.Type)
@@ -198,6 +207,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         // todo: process in separate method or here?
                         break;
                     case "table":
+                        skip = true;
                         break;
                     case "descriptionlist":
                         // todo: implement this probably as simple table
@@ -207,7 +217,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         break;
                 }
 
-                if (currentNode.Children == null)
+                if (currentNode.Children == null || skip)
                     continue;
 
                 // push child nodes to stack

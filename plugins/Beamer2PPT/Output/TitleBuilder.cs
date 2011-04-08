@@ -41,7 +41,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// Constructor
         /// </summary>
         /// <param name="baseFontSize">Base font size (optional)</param>
-        public TitleBuilder(float baseFontSize = 10.0f)
+        public TitleBuilder(float baseFontSize = 11.0f)
         {
             _baseFontSize = baseFontSize;
         }

@@ -37,6 +37,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private string _filename;
 
         /// <summary>
+        /// Folder containing input file
+        /// </summary>
+        private string _inputFolder;
+
+        /// <summary>
         /// Document tree
         /// </summary>
         private Node _document;
@@ -81,6 +86,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         private int _slideIndex;
 
+        /// <summary>
+        /// Base font size
+        /// </summary>
+        private float _baseFontSize = 11.0f;
+
         #endregion // Private variables
 
         /// <summary>
@@ -107,6 +117,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             _frametitleTable = frametitleTable ?? new Dictionary<int, FrametitleRecord>();
 
             _titlePageSettings = new Dictionary<string, List<Node>>();
+
+            _inputFolder = Path.GetDirectoryName(filename);
 
             // start PowerPoint
             try
@@ -140,7 +152,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             if (preambule == null)
                 throw new DocumentBuilderException("Couldn't build document, something went wrong. Please try again.");
 
-            ProcessPreambule(preambule);
+            ProcessPreambule(preambule, _document.OptionalParams);
 
             // create new presentation without window
             _pptPresentation = _pptApplication.Presentations.Add(MsoTriState.msoFalse);
@@ -173,7 +185,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// Raise progress counter.
         /// This method will raise progress counter based on slide count and fire (call) <see cref="Progress" /> delegate.
         /// Implemented for one pass.
-        /// todo: make this less magical :)
+        /// fixme: make this less magical :)
         /// </summary>
         public void RaiseProgress()
         {
@@ -200,8 +212,10 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// Process document preambule part
         /// </summary>
         /// <param name="preambule">Preambule node</param>
-        private void ProcessPreambule(Node preambule)
+        /// <param name="documentclassOptionals">\document class optional parameters (size)</param>
+        private void ProcessPreambule(Node preambule, string documentclassOptionals)
         {
+            // process preambule nodes
             foreach (Node node in preambule.Children)
             {
                 switch (node.Type)
@@ -216,6 +230,16 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     default:
                         break;
                 }
+            }
+
+            // process \documentclass optional parameters
+            string[] parts = documentclassOptionals.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
+            
+            foreach (string part in parts)
+            {
+                float size = Misc.ParseLength(part);
+                if (size > 0)
+                    _baseFontSize = size;
             }
         }
 
@@ -265,8 +289,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 slideNextPass = true,
                 paused = false;
 
-            SlideBuilder slideBuilder = new SlideBuilder(_currentSlide); // todo: fill base font size from preambule
-            TitleBuilder titleBuilder = new TitleBuilder(); // todo: fill base font size from preambule
+            SlideBuilder slideBuilder = new SlideBuilder(_inputFolder, _currentSlide, _baseFontSize);
+            TitleBuilder titleBuilder = new TitleBuilder(_baseFontSize);
 
             do
             {    // --- loop over all overlays
