@@ -33,14 +33,14 @@
        COLOR "\color", BFSERIES "\bfseries", TTFAMILY "\ttfamily", ITSHAPE "\itshape", SCSHAPE "\scshape",
        TINY "\tiny", SCRIPTSIZE "\scriptsize", FOOTNOTESIZE "\footnotesize", SMALL "\small",
        NORMALSIZE "\normalsize", LARGE "\large", LARGE2 "\Large", LARGE3 "\LARGE", HUGE "\huge", HUGE2 "\Huge",
-       ITEM "\item", UNDERLINE "\underline", AND "\and", TEXTCOLOR "\textcolor"
+       ITEM "\item", UNDERLINE "\underline", AND "\and", TEXTCOLOR "\textcolor", HLINE "\hline"
 
 %nonassoc <Text> STRING "plain text"
 %nonassoc <Text> OPTIONAL "optional parameter"
 %nonassoc <Text> OVERLAY "overlay specification"
 
 // setup types for some non-terminals
-%type <documentNode> command groupcommand standalonecommand commands slide titlesettings body environment documentclass preambule
+%type <documentNode> command groupcommand standalonecommand commands slide titlesettings body environment documentclass preambule table_hline
 %type <nodeList> simpleformtext slidecontent bodycontent items_list table_rows table_cols
 %type <Text> optional overlay
 
@@ -243,10 +243,33 @@ table_rows :
                                         $$ = new List<Node>();
                                         $$.Add(tmp);
                                     }
+        |   table_hline table_cols  {
+                                        Node tmp = new Node("tablerow");
+                                        tmp.Children = $2;
+                                        $$ = new List<Node>();
+                                        $$.Add($1);
+                                        $$.Add(tmp);
+                                    }
         |   table_rows ENDROW table_cols    {
                                         Node tmp = new Node("tablerow");
                                         tmp.Children = $3;
                                         $1.Add(tmp);
+                                        $$ = $1;
+                                    }
+        |   table_rows ENDROW table_hline table_cols    {
+                                        Node tmp = new Node("tablerow");
+                                        tmp.Children = $4;
+                                        $1.Add($3);
+                                        $1.Add(tmp);
+                                        $$ = $1;
+                                    }
+        ;
+
+table_hline :
+            HLINE                   {
+                                        $$ = new Node("hline");
+                                    }
+        |   table_hline HLINE       {
                                         $$ = $1;
                                     }
         ;
