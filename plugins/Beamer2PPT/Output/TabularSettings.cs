@@ -61,49 +61,138 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         /// <param name="tabularSettings">String with tabular settings</param>
         /// <returns>Instance of TabularSettings class</returns>
+        /// <exception cref="DocumentBuilderException"></exception>
         private void ParseHeader(string tabularSettings)
         {
             // remove spaces
             tabularSettings = tabularSettings.Replace(" ", "");
             
-            // split params
+            // split params (with empty strings)
             string[] parts = tabularSettings.Split('{', '}');
 
-            bool normal = true;
-            bool width = false;
+            int state = 1;
+            int iterations = 0;
 
             int columnIndex = 0;
 
+            List<string> iterables = new List<string>();
+
             foreach (string part in parts)
             {
-                if (normal)
+                switch (state)
                 {
-                    foreach (char ch in part)
-                    {
-                        switch (ch)
+                    case 1:
+                        foreach (char ch in part)
                         {
-                            case '|':
-                                Borders.Add(columnIndex);
-                                break;
-                            case 'c':
-                            case 'l':
-                            case 'r':
-                                columnIndex++;
-                                Columns.Add(new Column(ch));
-                                break;
-                            case 'p':
-                                normal = false;
-                                width = true;
-                                break;
-                            default:
-                                break;
+                            switch (ch)
+                            {
+                                case '|':
+                                    Borders.Add(columnIndex);
+                                    break;
+                                case 'c':
+                                case 'l':
+                                case 'r':
+                                    columnIndex++;
+                                    Columns.Add(new Column(ch));
+                                    break;
+                                case 'p':
+                                    state = 6;
+                                    break;
+                                case '*':
+                                    state = 2;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                    }
-                } else if (width)
-                {
-                    // column width here
+                        break;
+
+                    case 2: // number of iterations
+                        if (!int.TryParse(part, out iterations))
+                            throw new DocumentBuilderException("Invalid table column definition.");
+                        state = 3;
+                        break;
+
+                    case 3: // empty string between } and { (after number of iterations)
+                        if (part.Length != 0)
+                            throw new DocumentBuilderException("Invalid table column definition.");
+                        iterables.Clear();
+                        state = 4;
+                        break;
+
+                    case 4: // iterated columns definition
+                        iterables.Add(part);
+
+                        if (part.EndsWith("p")) // following is width definition
+                        {
+                            state = 5;
+                        }
+                        else    // iterate through columns
+                        {
+                            for (int i = 0; i < iterations; i++)
+                            {
+                                int substate = 1;
+                                foreach (string def in iterables)
+                                {
+                                    switch (substate)
+                                    {
+                                        case 1:
+                                            foreach (char ch in def)
+                                            {
+                                                switch (ch)
+                                                {
+                                                    case '|':
+                                                        Borders.Add(columnIndex);
+                                                        break;
+                                                    case 'c':
+                                                    case 'l':
+                                                    case 'r':
+                                                        columnIndex++;
+                                                        Columns.Add(new Column(ch));
+                                                        break;
+                                                    case 'p':
+                                                        substate = 2;
+                                                        break;
+                                                    case '*':
+                                                        throw new DocumentBuilderException("Invalid table column definition.");
+                                                    default:
+                                                        break;
+                                                }
+                                            }
+                                            break;
+
+                                        case 2:
+                                            columnIndex++;
+                                            Columns.Add(new Column('p', Misc.ParseLength(def)));
+                                            substate = 1;
+                                            break;
+
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }
+                            state = 1;
+                        }
+                        break;
+
+                    case 5: // width definition inside iterated columns definition
+                        iterables.Add(part);
+                        state = 4;
+                        break;
+
+                    case 6: // column width
+                        columnIndex++;
+                        Columns.Add(new Column('p', Misc.ParseLength(part)));
+                        state = 1;
+                        break;
+
+                    default:
+                        break;
                 }
             }
+
+            return;
         }
 
         /// <summary>
