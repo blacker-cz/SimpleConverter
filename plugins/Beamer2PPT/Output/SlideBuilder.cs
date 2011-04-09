@@ -242,13 +242,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             {
                 foreach (PowerPoint.Shape shape in _slide.Shapes)
                 {
-                    if (autoTrim && shape.HasTextFrame == MsoTriState.msoTrue && shape.TextFrame2.HasText == MsoTriState.msoTrue)
+                    if (autoTrim)
                     {
-                        // TextRange.TrimText() method is useless because it doesn't actually remove whitespaces from text range but returns its copy
-                        // first compute number of whitespace characters at the end of shape
-                        int size = shape.TextFrame2.TextRange.Text.Length - shape.TextFrame2.TextRange.Text.TrimEnd().Length;
-                        if (size > 0)   // then if there is more then zero of these characters -> delete them
-                            shape.TextFrame2.TextRange.Characters[1 + shape.TextFrame2.TextRange.Text.Length - size, size].Delete();
+                        Misc.TrimShape(shape);
                     }
 
                     // compute bottom of the lowermost shape
@@ -359,8 +355,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             if (cols == 0 || rows == 0) // no columns or rows -> don't create table
                 return true;
 
-            // create table shape with "rows - 1" rows but at least one row
-            tableShape = _slide.Shapes.AddTable(((rows - 1) > 0 ? rows - 1 : rows), cols, 36.0f, _bottomShapeBorder + 5.0f);
+            // create table shape with "rows - 1" rows but at least one row; also create table with extreme width so we can resize it down
+            tableShape = _slide.Shapes.AddTable(((rows - 1) > 0 ? rows - 1 : rows), cols, 36.0f, _bottomShapeBorder + 5.0f, cols * 1000.0f);
             // style without background and borders
             tableShape.Table.ApplyStyle("2D5ABB26-0587-4C30-8999-92F81FD0307C");
 
@@ -393,7 +389,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
                     foreach (Node rowcontent in node.Children)
                     {
-                        if (rowcontent.Type == "tablecolumn")
+                        if (rowcontent.Type == "tablecolumn" || rowcontent.Type == "tablecolumn_merged")
                         {
                             columnCounter++;
 
@@ -408,6 +404,26 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
                             // get cell shape
                             shape = tableShape.Table.Cell(rowCounter, columnCounter).Shape;
+
+                            // set cell alignment
+                            switch (settings.Columns[columnCounter-1].alignment)
+                            {
+                                case 'l':
+                                    shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignLeft;
+                                    break;
+                                case 'c':
+                                    shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignCenter;
+                                    break;
+                                case 'r':
+                                    shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignRight;
+                                    break;
+                                case 'p':
+                                    shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignJustify;
+                                    break;
+                                default:
+                                    break;
+                            }
+
                             _format.Invalidate();
 
                             // process nodes on stack
@@ -428,12 +444,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                     case "pause":
                                         if (Pause())
                                         {
-                                            // todo: remove all other rows
+                                            // todo: remove all other rows after generating and resizing complete table
                                             return false;
                                         }
                                         break;
                                     case "today":
-                                        // todo: check shape existence
                                         shape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
                                         break;
                                     default: // other -> check for simple formats
@@ -450,6 +465,24 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                     nodes.Push(item);
                                 }
                             }
+
+                            // merge cells
+                            if (rowcontent.Type == "tablecolumn_merged")
+                            {
+                                // merge cells here and increment columnCounter depending on number of merged cells
+                                string tmp = rowcontent.Content as string;
+
+                                int merge_count;
+
+                                if (int.TryParse(tmp.Trim(), out merge_count))
+                                {
+                                    // merge cells
+                                    tableShape.Table.Cell(rowCounter, columnCounter).Merge(tableShape.Table.Cell(rowCounter, columnCounter + merge_count - 1));
+                                    columnCounter += merge_count - 1;
+
+                                    // todo: process borders
+                                }
+                            }
                         }
                     }
                 }
@@ -460,6 +493,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 {
                 }
             }
+
+            Misc.AutoFitColumn(tableShape, settings);
 
             return true;
         }

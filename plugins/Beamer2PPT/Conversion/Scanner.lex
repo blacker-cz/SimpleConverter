@@ -51,7 +51,7 @@ envEnd      \\end{wsl}
 {envBegin}\{tabular\}\{     { tabular = true; BEGIN(tabular_arg); tbl = 0; unformattedText = ""; return (int) Tokens.BEGIN_TABULAR; }
 {envEnd}\{tabular\}         { tabular = false; return (int) Tokens.END_TABULAR; }
 \\item                      { BEGIN(pre_overlay); return (int) Tokens.ITEM; }
-\\multicolumn               {}
+\\multicolumn               { return (int) Tokens.MULTICOLUMN; }
 
 // Beamer specific
 // -----------------------------------------------------------------------------

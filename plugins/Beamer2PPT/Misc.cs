@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using Microsoft.Office.Core;
+using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 
 namespace SimpleConverter.Plugin.Beamer2PPT
 {
@@ -143,6 +145,58 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             // no match
             return 0.0f;
+        }
+
+        /// <summary>
+        /// Trim whitespace from end of shape content
+        /// </summary>
+        /// <param name="shape">Shape</param>
+        public static void TrimShape(PowerPoint.Shape shape)
+        {
+            if (shape.HasTextFrame == MsoTriState.msoTrue && shape.TextFrame2.HasText == MsoTriState.msoTrue)
+            {
+                // TextRange.TrimText() method is useless because it doesn't actually remove whitespaces from text range but returns its copy
+                // first compute number of whitespace characters at the end of shape
+                int size = shape.TextFrame2.TextRange.Text.Length - shape.TextFrame2.TextRange.Text.TrimEnd().Length;
+                if (size > 0)   // then if there is more then zero of these characters -> delete them
+                    shape.TextFrame2.TextRange.Characters[1 + shape.TextFrame2.TextRange.Text.Length - size, size].Delete();
+            }
+        }
+
+        /// <summary>
+        /// Update columns width to fit text (can only decrease size of columns!!)
+        /// </summary>
+        /// <param name="shape">Table shape</param>
+        /// <param name="settings">Tabular settings (with information about columns)</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static void AutoFitColumn(PowerPoint.Shape shape, TabularSettings settings)
+        {
+            if (shape.HasTable != MsoTriState.msoTrue)
+                throw new ArgumentException("Shape must have table.");
+
+            PowerPoint.TextFrame2 frame;
+
+            float width;
+
+            for (int column = 1; column <= shape.Table.Columns.Count; column++)
+            {
+                if (settings.Columns[column - 1].alignment != 'p' || (settings.Columns[column - 1].alignment == 'p' && settings.Columns[column - 1].width == 0))
+                {
+                    width = 0.0f;
+                    for (int row = 1; row <= shape.Table.Rows.Count; row++)
+                    {
+                        frame = shape.Table.Cell(row, column).Shape.TextFrame2;
+
+                        width = Math.Max(width, frame.TextRange.BoundWidth + frame.MarginLeft + frame.MarginRight + 1);
+                    }
+                }
+                else
+                {
+                    width = settings.Columns[column - 1].width;
+                }
+                
+                shape.Table.Columns[column].Width = width;
+            }
         }
     }
 }

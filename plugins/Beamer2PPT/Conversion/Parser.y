@@ -34,7 +34,8 @@
        COLOR "\color", BFSERIES "\bfseries", TTFAMILY "\ttfamily", ITSHAPE "\itshape", SCSHAPE "\scshape",
        TINY "\tiny", SCRIPTSIZE "\scriptsize", FOOTNOTESIZE "\footnotesize", SMALL "\small",
        NORMALSIZE "\normalsize", LARGE "\large", LARGE2 "\Large", LARGE3 "\LARGE", HUGE "\huge", HUGE2 "\Huge",
-       ITEM "\item", UNDERLINE "\underline", AND "\and", TEXTCOLOR "\textcolor", HLINE "\hline", CLINE "\cline"
+       ITEM "\item", UNDERLINE "\underline", AND "\and", TEXTCOLOR "\textcolor", HLINE "\hline", CLINE "\cline",
+       MULTICOLUMN "\multicolumn"
 
 %nonassoc <Text> STRING "plain text"
 %nonassoc <Text> OPTIONAL "optional parameter"
@@ -237,7 +238,6 @@ items_list :
                                     }
         ;
 
-// todo: need to add rule for \hline
 table_rows :
             table_cols              {
                                         Node tmp = new Node("tablerow");
@@ -288,7 +288,6 @@ table_line :
                                     }
         ;
 
-// todo: need to add rule for \multicolumn
 table_cols :
             slidecontent            {
                                         Node tmp = new Node("tablecolumn");
@@ -296,9 +295,25 @@ table_cols :
                                         $$ = new List<Node>();
                                         $$.Add(tmp);
                                     }
+        |   MULTICOLUMN '{' STRING '}' '{' STRING '}' '{' slidecontent '}' {
+                                        Node tmp = new Node("tablecolumn_merged");
+                                        tmp.Content = $3 as object;
+                                        tmp.OptionalParams = $6;
+                                        tmp.Children = $9;
+                                        $$ = new List<Node>();
+                                        $$.Add(tmp);
+                                    }
         |   table_cols '&' slidecontent     {
                                         Node tmp = new Node("tablecolumn");
                                         tmp.Children = $3;
+                                        $1.Add(tmp);
+                                        $$ = $1;
+                                    }
+        |   table_cols '&' MULTICOLUMN '{' STRING '}' '{' STRING '}' '{' slidecontent '}'   {
+                                        Node tmp = new Node("tablecolumn_merged");
+                                        tmp.Content = $5 as object;
+                                        tmp.OptionalParams = $8;
+                                        tmp.Children = $11;
                                         $1.Add(tmp);
                                         $$ = $1;
                                     }
@@ -309,7 +324,7 @@ commands : /* copy List<Node> from slidecontent to command Node*/
                                         $1.Children = $3;
                                         $$ = $1;
                                     }
-        |   groupcommand slidecontent       {  // todo: resolve shift/reduce conflicts (dangling else???)
+        |   groupcommand slidecontent       {
                                         $1.Children = $2;
                                         $$ = $1;
                                     }
@@ -440,7 +455,7 @@ overlay :                           {
                                     }
         ;
 
-// Simple formatted text; todo: check if this works how it should, resolve shift/reduce conflicts (dangling else??)
+// Simple formatted text
 // ----------------------------------------------------------------------------
 
 simpleformtext :                    {
