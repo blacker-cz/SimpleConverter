@@ -466,6 +466,21 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                 }
                             }
 
+                            if (rowcontent.Type == "tablecolumn")
+                            {
+                                if (columnCounter == 1 && settings.Borders.Contains(0)) // first column check also for border with index 0 (left border)
+                                {
+                                    tableShape.Table.Rows[rowCounter].Cells[columnCounter].Borders[PowerPoint.PpBorderType.ppBorderLeft].ForeColor.RGB = 0x0;
+                                    tableShape.Table.Rows[rowCounter].Cells[columnCounter].Borders[PowerPoint.PpBorderType.ppBorderLeft].DashStyle = MsoLineDashStyle.msoLineSolid;
+                                }
+
+                                if (settings.Borders.Contains(columnCounter))   // for every column set right border
+                                {
+                                    tableShape.Table.Rows[rowCounter].Cells[columnCounter].Borders[PowerPoint.PpBorderType.ppBorderRight].ForeColor.RGB = 0x0;
+                                    tableShape.Table.Rows[rowCounter].Cells[columnCounter].Borders[PowerPoint.PpBorderType.ppBorderRight].DashStyle = MsoLineDashStyle.msoLineSolid;
+                                }
+                            }
+
                             // merge cells
                             if (rowcontent.Type == "tablecolumn_merged")
                             {
@@ -488,9 +503,46 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 }
                 else if(node.Type == "hline")
                 {
+                    if (rowCounter == 0)
+                    {
+                        tableShape.Table.Rows[1].Cells.Borders[PowerPoint.PpBorderType.ppBorderTop].ForeColor.RGB = 0x0;
+                        tableShape.Table.Rows[1].Cells.Borders[PowerPoint.PpBorderType.ppBorderTop].DashStyle = MsoLineDashStyle.msoLineSolid;
+                    }
+                    else
+                    {
+                        tableShape.Table.Rows[rowCounter].Cells.Borders[PowerPoint.PpBorderType.ppBorderBottom].ForeColor.RGB = 0x0;
+                        tableShape.Table.Rows[rowCounter].Cells.Borders[PowerPoint.PpBorderType.ppBorderBottom].DashStyle = MsoLineDashStyle.msoLineSolid;
+                    }
                 }
                 else if (node.Type == "cline")
                 {
+                    Regex regex = new Regex(@"^([0-9]+)-([0-9]+)$", RegexOptions.IgnoreCase);
+
+                    string range = node.Content as string;
+
+                    Match match = regex.Match(range.Trim());
+
+                    if (match.Success)
+                    {
+                        int x, y;
+
+                        if (int.TryParse(match.Groups[1].Value, out x) && int.TryParse(match.Groups[2].Value, out y))
+                        {
+                            for (int i = Math.Min(x,y); i <= Math.Max(x,y); i++)
+                            {
+                                if (rowCounter == 0)
+                                {
+                                    tableShape.Table.Rows[1].Cells[i].Borders[PowerPoint.PpBorderType.ppBorderTop].ForeColor.RGB = 0x0;
+                                    tableShape.Table.Rows[1].Cells[i].Borders[PowerPoint.PpBorderType.ppBorderTop].DashStyle = MsoLineDashStyle.msoLineSolid;
+                                }
+                                else
+                                {
+                                    tableShape.Table.Rows[rowCounter].Cells[i].Borders[PowerPoint.PpBorderType.ppBorderBottom].ForeColor.RGB = 0x0;
+                                    tableShape.Table.Rows[rowCounter].Cells[i].Borders[PowerPoint.PpBorderType.ppBorderBottom].DashStyle = MsoLineDashStyle.msoLineSolid;
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
