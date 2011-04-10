@@ -215,7 +215,7 @@ override public void yyerror(string format, params object[] args)
 /// Print warning message
 /// </summary>
 /// <param name="message">Message</param>
-protected void printWarning(string message)
+private void printWarning(string message)
 {
     string tmp;
 
