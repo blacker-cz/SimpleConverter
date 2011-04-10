@@ -72,21 +72,21 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private TextFormat _format;
 
         /// <summary>
-        /// Folder where is located input file (used for searching for images)
+        /// Preambule settings
         /// </summary>
-        private string _inputFolder;
+        private PreambuleSettings _preambuleSettings;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="inputFolder">Folder where is located input file (used for searching for images)</param>
+        /// <param name="preambuleSettings">Preambule settings</param>
         /// <param name="slideNumber">Number of currently generated slide</param>
         /// <param name="baseFontSize">Base font size (optional)</param>
-        public SlideBuilder(string inputFolder, int slideNumber, float baseFontSize = 11.0f)
+        public SlideBuilder(PreambuleSettings preambuleSettings, int slideNumber, float baseFontSize = 11.0f)
         {
             _slideNumber = slideNumber;
             _baseFontSize = baseFontSize;
-            _inputFolder = inputFolder;
+            _preambuleSettings = preambuleSettings;
         }
 
         /// <summary>
@@ -94,17 +94,17 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         /// <param name="slide">Slide in PowerPoint presentation</param>
         /// <param name="slideNode">Node containing content of slide</param>
-        /// <param name="titlesettings">Title settings table (used for \maketitle command)</param>
         /// <param name="passNumber">Number of current pass (used for overlays)</param>
         /// <param name="pauseCounter">Number of used pauses</param>
         /// <param name="paused">output - processing of slide content was paused</param>
         /// <returns>true if slide is complete; false if needs another pass</returns>
-        public bool BuildSlide(PowerPoint.Slide slide, Node slideNode, Dictionary<string, List<Node>> titlesettings, int passNumber, int pauseCounter, out bool paused)
+        public bool BuildSlide(PowerPoint.Slide slide, Node slideNode, int passNumber, int pauseCounter, out bool paused)
         {
             _slide = slide;
-            _titlesettings = titlesettings;
             _passNumber = passNumber;
             _pauseCounter = pauseCounter;
+            // copy title settings
+            _titlesettings = new Dictionary<string,List<Node>>(_preambuleSettings.TitlepageSettings);
             _format = new TextFormat(_baseFontSize);
 
             if (!_called)
@@ -581,6 +581,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 }
             }
 
+            // resize table
             Misc.AutoFitColumn(tableShape, settings);
 
             return true;

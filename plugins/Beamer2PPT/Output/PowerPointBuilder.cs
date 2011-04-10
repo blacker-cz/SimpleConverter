@@ -72,9 +72,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private Dictionary<int, FrametitleRecord> _frametitleTable;
 
         /// <summary>
-        /// Table with global title page settings (author, title, date, etc.)
+        /// Preambule settings
         /// </summary>
-        private Dictionary<string, List<Node>> _titlePageSettings;
+        private PreambuleSettings _preambuleSettings;
 
         /// <summary>
         /// Internal counter for currently processed slide
@@ -116,7 +116,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             _sectionTable = sectionTable ?? new List<SectionRecord>();
             _frametitleTable = frametitleTable ?? new Dictionary<int, FrametitleRecord>();
 
-            _titlePageSettings = new Dictionary<string, List<Node>>();
+            _preambuleSettings = new PreambuleSettings();
 
             _inputFolder = Path.GetDirectoryName(filename);
 
@@ -153,6 +153,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 throw new DocumentBuilderException("Couldn't build document, something went wrong. Please try again.");
 
             ProcessPreambule(preambule, _document.OptionalParams);
+            _preambuleSettings.GraphicsPath.Add(_inputFolder);
 
             // create new presentation without window
             _pptPresentation = _pptApplication.Presentations.Add(MsoTriState.msoFalse);
@@ -215,22 +216,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <param name="documentclassOptionals">\document class optional parameters (size)</param>
         private void ProcessPreambule(Node preambule, string documentclassOptionals)
         {
-            // process preambule nodes
-            foreach (Node node in preambule.Children)
-            {
-                switch (node.Type)
-                {
-                    // title page settings
-                    case "author":
-                    case "title":
-                    case "date":
-                        _titlePageSettings[node.Type] = node.Children;
-                        break;
-                    // unknown or invalid node -> ignore
-                    default:
-                        break;
-                }
-            }
+            // parse preambule
+            _preambuleSettings.Parse(preambule);
 
             // process \documentclass optional parameters
             string[] parts = documentclassOptionals.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
@@ -257,7 +244,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     case "author":
                     case "title":
                     case "date":
-                        _titlePageSettings[node.Type] = node.Children;
+                        _preambuleSettings.TitlepageSettings[node.Type] = node.Children;
                         break;
                     // slide
                     case "slide":
@@ -289,7 +276,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 slideNextPass = true,
                 paused = false;
 
-            SlideBuilder slideBuilder = new SlideBuilder(_inputFolder, _currentSlide, _baseFontSize);
+            SlideBuilder slideBuilder = new SlideBuilder(_preambuleSettings, _currentSlide, _baseFontSize);
             TitleBuilder titleBuilder = new TitleBuilder(_baseFontSize);
 
             do
@@ -322,7 +309,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         if (paused)
                             continue;
 
-                        slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber, pauseCounter, out paused);
+                        slideNextPass = slideBuilder.BuildSlide(slide, slideNode, passNumber, pauseCounter, out paused);
 
                         continue;
                     }
@@ -330,7 +317,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 
                 slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutBlank);
 
-                slideNextPass = slideBuilder.BuildSlide(slide, slideNode, new Dictionary<string, List<Node>>(_titlePageSettings), passNumber, pauseCounter, out paused);
+                slideNextPass = slideBuilder.BuildSlide(slide, slideNode, passNumber, pauseCounter, out paused);
     
             } while (!titleNextPass || !slideNextPass); // --- end loop over all overlays
 
