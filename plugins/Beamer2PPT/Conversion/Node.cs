@@ -92,7 +92,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         public List<Node> Children { get; set; }
 
-        #region Search implementation // todo: test this
+        #region Search implementation
 
         /// <summary>
         /// Next node id (used for search)

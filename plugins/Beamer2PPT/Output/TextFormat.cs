@@ -255,7 +255,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         }
 
                         return 0;
-                    case "RGB": // todo: fix this
+                    case "RGB":
                         regex = new Regex(@"^([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})$", RegexOptions.IgnoreCase);
                         match = regex.Match(color.Trim());
 
