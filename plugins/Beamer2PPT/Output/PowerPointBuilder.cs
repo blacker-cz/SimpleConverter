@@ -37,11 +37,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private string _filename;
 
         /// <summary>
-        /// Folder containing input file
-        /// </summary>
-        private string _inputFolder;
-
-        /// <summary>
         /// Document tree
         /// </summary>
         private Node _document;
@@ -116,9 +111,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             _sectionTable = sectionTable ?? new List<SectionRecord>();
             _frametitleTable = frametitleTable ?? new Dictionary<int, FrametitleRecord>();
 
-            _preambuleSettings = new PreambuleSettings();
-
-            _inputFolder = Path.GetDirectoryName(filename);
+            _preambuleSettings = new PreambuleSettings(Path.GetDirectoryName(filename));
 
             // start PowerPoint
             try
@@ -153,7 +146,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 throw new DocumentBuilderException("Couldn't build document, something went wrong. Please try again.");
 
             ProcessPreambule(preambule, _document.OptionalParams);
-            _preambuleSettings.GraphicsPath.Add(_inputFolder);
 
             // create new presentation without window
             _pptPresentation = _pptApplication.Presentations.Add(MsoTriState.msoFalse);

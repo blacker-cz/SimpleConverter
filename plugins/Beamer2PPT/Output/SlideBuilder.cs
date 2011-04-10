@@ -190,9 +190,13 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         break;
                     case "image":
                         UpdateBottomShapeBorder(true);
-                        shape = null;
-                        // todo: process in separate method
+                        PowerPoint.Shape imageShape;
+                        // todo: save previous text shape for reshaping
+
+                        GenerateImage(currentNode, out imageShape);
+
                         // reposition shapes and next text shape create on right side of image, then everything after first line copy to new shape below image
+                        shape = null;
                         break;
                     case "bulletlist":
                     case "numberedlist":
@@ -204,11 +208,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         skip = true;
                         UpdateBottomShapeBorder(true);
                         PowerPoint.Shape tableShape;
+                        // todo: save previous text shape for reshaping
 
-                        if (!GenerateTable(currentNode, out tableShape))
+                        if (!GenerateTable(currentNode, out tableShape))    // probably will need to call reshaper before return too
                             return false;   // table processing was paused
 
                         // todo: call reshaper in here :)
+
+                        shape = null;
                         break;
                     case "descriptionlist":
                         // todo: implement this probably as simple table
@@ -260,7 +267,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// Check if TextRange object ends with new line (and ignore other whitespace characters during check)
         /// </summary>
         /// <param name="textRange">Text range</param>
-        /// <returns>true if yes; false if otherwise</returns>
+        /// <returns>true if yes; false otherwise</returns>
         private bool EndsWithNewLine(TextRange2 textRange)
         {
             Regex reg = new Regex("\r[\t ]*$");
@@ -333,7 +340,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// Generate table from its node
         /// </summary>
         /// <param name="tableNode">Table node</param>
-        /// <param name="tableShape">output - Shape of generated table (used for reshaper)</param>
+        /// <param name="tableShape">output - Shape of generated table (used for reshaper), null if no table was generated</param>
         /// <returns>true if completed; false if paused</returns>
         private bool GenerateTable(Node tableNode, out PowerPoint.Shape tableShape)
         {
@@ -594,6 +601,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 if (pausedAfter == 0)
                 {
                     tableShape.Delete();
+                    tableShape = null;
                 }
                 else
                 {
@@ -610,6 +618,74 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         }
 
         /// <summary>
+        /// Insert image from its node
+        /// </summary>
+        /// <param name="imageNode">Image node</param>
+        /// <param name="imageShape">output - Shape of inserted image (used for reshaper), null if no image was inserted</param>
+        private void GenerateImage(Node imageNode, out PowerPoint.Shape imageShape)
+        {
+            imageShape = null;
+
+            // find inserted image
+            string imagePath = Misc.FindImage(imageNode.Content as string, _preambuleSettings.GraphicsPath);
+            if (imagePath == null)
+                return;
+
+            imageShape = _slide.Shapes.AddPicture(imagePath, MsoTriState.msoFalse, MsoTriState.msoTrue, 36.0f, _bottomShapeBorder + 5.0f);
+
+            float width = 0, height = 0, scale = 0;
+
+            // parse optional parameters
+            string[] optParams = imageNode.OptionalParams.Replace(" ", "").Split(new Char[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string item in optParams)
+            {
+                string[] pair = item.Split('=');
+
+                switch (pair[0])
+                {
+                    case "width":
+                        if (pair.Length > 1)
+                            width = Misc.ParseLength(pair[1]);
+                        break;
+                    case "height":
+                        if (pair.Length > 1)
+                            height = Misc.ParseLength(pair[1]);
+                        break;
+                    case "scale":
+                        if (pair.Length > 1)
+                            float.TryParse(pair[1], out scale);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            // resize image according to optinal params
+
+            if (width != 0 && height != 0)  // width and height was set in optinal parameters
+            {
+                imageShape.LockAspectRatio = MsoTriState.msoFalse;
+                imageShape.Height = height;
+                imageShape.Width = width;
+            }
+            else if (width != 0)  // only width was set
+            {
+                imageShape.LockAspectRatio = MsoTriState.msoTrue;
+                imageShape.Width = width;
+            }
+            else if (height != 0)   // only height was set
+            {
+                imageShape.LockAspectRatio = MsoTriState.msoTrue;
+                imageShape.Height = height;
+            }
+            else if (scale != 0) // scale was set
+            {
+                imageShape.LockAspectRatio = MsoTriState.msoTrue;
+                imageShape.Width *= scale;
+            }
+        }
+
+        /// <summary>
         /// Reposition shapes on slide
         /// </summary>
         /// <param name="upperShape"></param>
@@ -617,6 +693,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <param name="lowerShape"></param>
         private void Reshaper(PowerPoint.Shape upperShape, PowerPoint.Shape middleShape, PowerPoint.Shape lowerShape)
         {
+            // note: probably save 3 shapes to list and then reshape them in one go
+            //
             // draft: will remove last line from shape and paste it in new one
             //if (shape != null && shape.HasTextFrame == MsoTriState.msoTrue)
             //{

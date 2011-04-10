@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using Microsoft.Office.Core;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
+using System.IO;
 
 namespace SimpleConverter.Plugin.Beamer2PPT
 {
@@ -24,7 +25,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </example>
         /// <param name="overlaySpecification">Overlay specification</param>
         /// <returns>Set of pass numbers</returns>
-        public static ISet<int> ParseOverlay(string overlaySpecification)
+        internal static ISet<int> ParseOverlay(string overlaySpecification)
         {
             ISet<int> overlays = new HashSet<int>();
 
@@ -96,7 +97,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         /// <param name="overlays">Overlays list</param>
         /// <returns>Maximal overlay</returns>
-        public static int MaxOverlay(ISet<int> overlays)
+        internal static int MaxOverlay(ISet<int> overlays)
         {
             if (overlays.Count == 0)
                 return 1;
@@ -109,7 +110,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         /// <param name="part">Length string</param>
         /// <returns>Length on slide</returns>
-        public static float ParseLength(string part)
+        internal static float ParseLength(string part)
         {
             // note:
             //      1 pt = 1 pt
@@ -151,7 +152,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// Trim whitespace from end of shape content
         /// </summary>
         /// <param name="shape">Shape</param>
-        public static void TrimShape(PowerPoint.Shape shape)
+        internal static void TrimShape(PowerPoint.Shape shape)
         {
             if (shape.HasTextFrame == MsoTriState.msoTrue && shape.TextFrame2.HasText == MsoTriState.msoTrue)
             {
@@ -169,7 +170,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <param name="shape">Table shape</param>
         /// <param name="settings">Tabular settings (with information about columns)</param>
         /// <exception cref="ArgumentException"></exception>
-        public static void AutoFitColumn(PowerPoint.Shape shape, TabularSettings settings)
+        internal static void AutoFitColumn(PowerPoint.Shape shape, TabularSettings settings)
         {
             if (shape.HasTable != MsoTriState.msoTrue)
                 throw new ArgumentException("Shape must have table.");
@@ -197,6 +198,41 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 
                 shape.Table.Columns[column].Width = width;
             }
+        }
+
+        /// <summary>
+        /// Find image on given path.
+        /// Supported file extensions: jpg, jpeg, png, gif
+        /// </summary>
+        /// <param name="imageName">Image name (file name which can be without extension)</param>
+        /// <param name="paths">Set of base paths</param>
+        /// <returns>Path to existing image or null if not found</returns>
+        internal static string FindImage(string imageName, ISet<string> paths)
+        {
+            if (Path.GetExtension(imageName) == "")     // file was given without extension
+            {
+                foreach (string path in paths)
+                {
+                    if (File.Exists(Path.Combine(path, imageName + ".jpg")))
+                        return Path.Combine(path, imageName + ".jpg");
+                    if (File.Exists(Path.Combine(path, imageName + ".png")))
+                        return Path.Combine(path, imageName + ".png");
+                    if (File.Exists(Path.Combine(path, imageName + ".gif")))
+                        return Path.Combine(path, imageName + ".gif");
+                    if (File.Exists(Path.Combine(path, imageName + ".jpeg")))
+                        return Path.Combine(path, imageName + ".jpeg");
+                }
+            }
+            else    // file was given with extension
+            {
+                foreach (string path in paths)
+                {
+                    if (File.Exists(Path.Combine(path, imageName)))
+                        return Path.Combine(path, imageName);
+                }
+            }
+
+            return null;
         }
     }
 }

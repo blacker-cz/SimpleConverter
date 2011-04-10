@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace SimpleConverter.Plugin.Beamer2PPT
 {
+    /// <summary>
+    /// Class containing settings from preambule of document
+    /// </summary>
     class PreambuleSettings
     {
         /// <summary>
@@ -18,12 +22,19 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         public ISet<string> GraphicsPath { get; set; }
 
         /// <summary>
+        /// Input file path
+        /// </summary>
+        public string InputDir { get; set; }
+
+        /// <summary>
         /// Public constructor
         /// </summary>
-        public PreambuleSettings()
+        public PreambuleSettings(string inputDir)
         {
             TitlepageSettings = new Dictionary<string, List<Node>>();
             GraphicsPath = new HashSet<string>();
+            InputDir = inputDir;
+            GraphicsPath.Add(InputDir);
         }
 
         /// <summary>
@@ -50,7 +61,13 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         foreach (Node child in node.Children)
                         {
                             if (child.Type == "path" && (child.Content as string).Length > 0)
-                                GraphicsPath.Add(child.Content as string);
+                            {
+                                string path = Path.Combine(InputDir, child.Content as string);
+
+                                // add path only if directory exists
+                                if(Directory.Exists(path))
+                                    GraphicsPath.Add(child.Content as string);
+                            }
                         }
                         break;
                     // unknown or invalid node -> ignore

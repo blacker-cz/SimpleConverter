@@ -42,7 +42,7 @@
 %nonassoc <Text> OVERLAY "overlay specification"
 
 // setup types for some non-terminals
-%type <documentNode> command groupcommand standalonecommand commands slide titlesettings body environment documentclass preambule
+%type <documentNode> command groupcommand standalonecommand commands slide titlesettings body environment documentclass preambule image
 %type <nodeList> simpleformtext slidecontent bodycontent items_list table_rows table_cols table_line path_list
 %type <Text> optional overlay
 %type <nodeSet> table_line
@@ -216,6 +216,18 @@ slidecontent :                      {   /* return List<Node> - create node in sp
                                             $1.Add($2);
                                         }
                                         $$ = $1;
+                                    }
+        |   slidecontent image      {
+                                        $1.Add($2);
+                                        $$ = $1;
+                                    }
+        ;
+
+image :
+            INCLUDEGRAPHICS optional '{' STRING '}'     {
+                                        $$ = new Node("image");
+                                        $$.Content = $4 as object;
+                                        $$.OptionalParams = $2;
                                     }
         ;
 
