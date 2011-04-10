@@ -32,7 +32,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
         /// <summary>
         /// Discovered number of maximum passes (from overlay specification and pause commands)
-        /// todo: with overlay set to max; with pause set to current pass + 1, only if > _maxPass
         /// </summary>
         private int _maxPass;
 
@@ -362,13 +361,15 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             int rowCounter = 0, columnCounter = 0;
 
-            // note: if pause is encountered, we need to remove all empty rows after the pause
-
             Stack<Node> nodes = new Stack<Node>();
 
             Node currentNode;
 
             PowerPoint.Shape shape; // cell shape
+
+            // pause processing variables
+            bool paused = false;
+            int pausedAfter = 0;
 
             foreach (Node node in tableNode.Children)
             {
@@ -442,10 +443,13 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                             _format.AppendText(shape, "\r");
                                         break;
                                     case "pause":
-                                        if (Pause())
+                                        if (!paused && Pause())
                                         {
-                                            // todo: remove all other rows after generating and resizing complete table
-                                            return false;
+                                            paused = true;
+                                            if (columnCounter == 1 && shape.TextFrame2.TextRange.Text.Length == 0)
+                                                pausedAfter = rowCounter - 1;
+                                            else
+                                                pausedAfter = rowCounter;
                                         }
                                         break;
                                     case "today":
@@ -583,6 +587,24 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             // resize table
             Misc.AutoFitColumn(tableShape, settings);
+
+            // if processing was paused remove all lines after pause commands (columns are not supported yet)
+            if (paused)
+            {
+                if (pausedAfter == 0)
+                {
+                    tableShape.Delete();
+                }
+                else
+                {
+                    for (int i = tableShape.Table.Rows.Count; i > pausedAfter; i--)
+                    {
+                        tableShape.Table.Rows[i].Delete();
+                    }
+                }
+
+                return false;
+            }
 
             return true;
         }
