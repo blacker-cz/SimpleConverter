@@ -493,9 +493,44 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                 {
                                     // merge cells
                                     tableShape.Table.Cell(rowCounter, columnCounter).Merge(tableShape.Table.Cell(rowCounter, columnCounter + merge_count - 1));
-                                    columnCounter += merge_count - 1;
 
-                                    // todo: process borders
+                                    TabularSettings mset = TabularSettings.Parse(rowcontent.OptionalParams, true);
+
+                                    // left border
+                                    if (mset.Borders.Contains(0))
+                                    {
+                                        tableShape.Table.Cell(rowCounter, columnCounter).Borders[PowerPoint.PpBorderType.ppBorderLeft].ForeColor.RGB = 0x0;
+                                        tableShape.Table.Cell(rowCounter, columnCounter).Borders[PowerPoint.PpBorderType.ppBorderLeft].DashStyle = MsoLineDashStyle.msoLineSolid;
+                                    }
+
+                                    // right border
+                                    if (mset.Borders.Contains(1))
+                                    {
+                                        tableShape.Table.Cell(rowCounter, columnCounter + merge_count - 1).Borders[PowerPoint.PpBorderType.ppBorderRight].ForeColor.RGB = 0x0;
+                                        tableShape.Table.Cell(rowCounter, columnCounter + merge_count - 1).Borders[PowerPoint.PpBorderType.ppBorderRight].DashStyle = MsoLineDashStyle.msoLineSolid;
+                                    }
+
+                                    // set cell alignment
+                                    switch (mset.Columns[0].alignment)
+                                    {
+                                        case 'l':
+                                            shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignLeft;
+                                            break;
+                                        case 'c':
+                                            shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignCenter;
+                                            break;
+                                        case 'r':
+                                            shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignRight;
+                                            break;
+                                        case 'p':
+                                            shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignJustify;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    // skip merged columns
+                                    columnCounter += merge_count - 1;
                                 }
                             }
                         }
@@ -549,6 +584,24 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             Misc.AutoFitColumn(tableShape, settings);
 
             return true;
+        }
+
+        /// <summary>
+        /// Reposition shapes on slide
+        /// </summary>
+        /// <param name="upperShape"></param>
+        /// <param name="middleShape"></param>
+        /// <param name="lowerShape"></param>
+        private void Reshaper(PowerPoint.Shape upperShape, PowerPoint.Shape middleShape, PowerPoint.Shape lowerShape)
+        {
+            // draft: will remove last line from shape and paste it in new one
+            //if (shape != null && shape.HasTextFrame == MsoTriState.msoTrue)
+            //{
+            //    shape.TextFrame2.TextRange.Lines[shape.TextFrame2.TextRange.Lines.Count].Cut();
+            //    PowerPoint.Shape sshape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
+            //    sshape.TextFrame2.TextRange.Paste();
+            //}
+
         }
     }
 }

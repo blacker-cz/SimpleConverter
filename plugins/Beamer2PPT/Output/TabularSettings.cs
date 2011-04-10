@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Office.Core;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace SimpleConverter.Plugin.Beamer2PPT
 {
@@ -31,7 +32,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <summary>
         /// Constructor
         /// </summary>
-        public TabularSettings()
+        private TabularSettings()
         {
             Columns = new List<Column>();
             Borders = new HashSet<int>();
@@ -40,20 +41,63 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <summary>
         /// Public constructor
         /// </summary>
-        /// <param name="tabularSettings"></param>
-        public TabularSettings(string tabularSettings) : this()
+        /// <param name="tabularSettings">String with tabular (or multicolumn) settings</param>
+        /// <param name="multicolumnHeader">Flag for parsing multicolumn header instead of tabular (optional)</param>
+        public TabularSettings(string tabularSettings, bool multicolumnHeader = false)
+            : this()
         {
-            ParseHeader(tabularSettings);
+            if (!multicolumnHeader)
+                ParseHeader(tabularSettings);
+            else
+                ParseMulticolumn(tabularSettings);
         }
 
         /// <summary>
         /// Static parse method
         /// </summary>
-        /// <param name="tabularSettings"></param>
+        /// <param name="tabularSettings">String with tabular (or multicolumn) settings</param>
+        /// <param name="multicolumnHeader">Flag for parsing multicolumn header instead of tabular (optional)</param>
         /// <returns>Instance of tabular settings class</returns>
-        public static TabularSettings Parse(string tabularSettings)
+        public static TabularSettings Parse(string tabularSettings, bool multicolumnHeader = false)
         {
-            return new TabularSettings(tabularSettings);
+            return new TabularSettings(tabularSettings, multicolumnHeader);
+        }
+
+        /// <summary>
+        /// Parse multicolumn header
+        /// </summary>
+        /// <param name="multicolumnSettings">String with multicolumn settings</param>
+        /// <exception cref="DocumentBuilderException"></exception>
+        private void ParseMulticolumn(string multicolumnSettings)
+        {
+            Regex regex = new Regex(@"^(\|*) *(c|r|l|([0-9]+(\.[0-9]*)? *(cm|mm|in|pt))) *(\|*)$", RegexOptions.IgnoreCase);
+
+            Match match = regex.Match(multicolumnSettings.Trim());
+
+            if (match.Success)
+            {
+                if (match.Groups[1].Value.Length != 0)
+                    Borders.Add(0);
+
+                if (match.Groups[6].Value.Length != 0)
+                    Borders.Add(1);
+
+                switch (match.Groups[2].Value)
+                {
+                    case "c":
+                    case "r":
+                    case "l":
+                        Columns.Add(new Column(match.Groups[2].Value[0]));
+                        break;
+                    default:
+                        Columns.Add(new Column('p', Misc.ParseLength(match.Groups[3].Value)));
+                        break;
+                }
+            }
+            else
+            {
+                throw new DocumentBuilderException("Unrecognized multicolumn definition.");
+            }
         }
 
         /// <summary>
