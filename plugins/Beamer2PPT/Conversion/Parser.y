@@ -35,7 +35,7 @@
        TINY "\tiny", SCRIPTSIZE "\scriptsize", FOOTNOTESIZE "\footnotesize", SMALL "\small",
        NORMALSIZE "\normalsize", LARGE "\large", LARGE2 "\Large", LARGE3 "\LARGE", HUGE "\huge", HUGE2 "\Huge",
        ITEM "\item", UNDERLINE "\underline", AND "\and", TEXTCOLOR "\textcolor", HLINE "\hline", CLINE "\cline",
-       MULTICOLUMN "\multicolumn"
+       MULTICOLUMN "\multicolumn", GRAPHICSPATH "\graphicspath", INCLUDEGRAPHICS "\includegraphics"
 
 %nonassoc <Text> STRING "plain text"
 %nonassoc <Text> OPTIONAL "optional parameter"
@@ -43,7 +43,7 @@
 
 // setup types for some non-terminals
 %type <documentNode> command groupcommand standalonecommand commands slide titlesettings body environment documentclass preambule
-%type <nodeList> simpleformtext slidecontent bodycontent items_list table_rows table_cols table_line
+%type <nodeList> simpleformtext slidecontent bodycontent items_list table_rows table_cols table_line path_list
 %type <Text> optional overlay
 %type <nodeSet> table_line
 
@@ -87,6 +87,27 @@ preambule :                         {
                                     }
         |   preambule titlesettings     {
                                         $1.Children.Add($2);
+                                        $$ = $1;
+                                    }
+        |   preambule GRAPHICSPATH '{' path_list '}'     {
+                                        Node tmp = new Node("graphicspath");
+                                        tmp.Children = $4;
+                                        $1.Children.Add(tmp);
+                                        $$ = $1;
+                                    }
+        ;
+
+path_list :
+            '{' STRING '}'          {
+                                        $$ = new List<Node>();
+                                        Node tmp = new Node("path");
+                                        tmp.Content = $2 as object;
+                                        $$.Add(tmp);
+                                    }
+        |   path_list '{' STRING '}'    {
+                                        Node tmp = new Node("path");
+                                        tmp.Content = $3 as object;
+                                        $1.Add(tmp);
                                         $$ = $1;
                                     }
         ;

@@ -88,8 +88,8 @@ envEnd      \\end{wsl}
 
 // Images
 // -----------------------------------------------------------------------------
-\\includegraphics   {}
-\\graphicspath      {}
+\\includegraphics   { BEGIN(pre_optional); return (int) Tokens.INCLUDEGRAPHICS; }
+\\graphicspath      { return (int) Tokens.GRAPHICSPATH; }
 
 // Other
 // -----------------------------------------------------------------------------
