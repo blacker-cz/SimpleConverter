@@ -154,9 +154,16 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             Node currentNode;
 
+            Node endListNode = new Node("__end_list");
+
             PowerPoint.Shape shape = null;
 
+            // skip expanding of child nodes to stack
             bool skip;
+
+            // stack with type of lists (true - numbered, false - bullet)
+            Stack<bool> openedLists = new Stack<bool>();
+            int itemCounter = 0;
 
             // process nodes on stack
             while (nodes.Count != 0)
@@ -200,9 +207,51 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         break;
                     case "bulletlist":
                     case "numberedlist":
-                        UpdateBottomShapeBorder(true);
-                        shape = null;
-                        // todo: process in separate method or here?
+                        if (openedLists.Count == 0)
+                        {
+                            // initialize list here
+                            UpdateBottomShapeBorder(true);
+                            shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
+
+                            itemCounter = 0;
+                        }
+
+                        if (currentNode.Type == "bulletlist")
+                            openedLists.Push(false);
+                        else
+                            openedLists.Push(true);
+
+                        if (openedLists.Count > 1 && nodes.Peek().Type == "__end_item")
+                        {
+                            Node tmp = nodes.Pop();
+                            nodes.Push(endListNode);
+                            nodes.Push(tmp);
+                        }
+                        else
+                        {
+                            nodes.Push(endListNode);    // push end list node to node stack
+                        }
+
+                        break;
+                    case "__end_list":
+                        openedLists.Pop();
+                        if (openedLists.Count == 0) // if all lists ended, end shape
+                            shape = null;
+                        break;
+                    case "item":
+                        Node endItemNode = new Node("__end_item");
+                        endItemNode.OverlaySpec = currentNode.OverlaySpec;
+
+                        if (shape.TextFrame2.TextRange.Text.Length != 0)
+                            _format.AppendText(shape, "\r");
+
+                        nodes.Push(endItemNode);
+                        itemCounter++;
+                        break;
+                    case "__end_item":
+                        // todo: fix indent
+                        shape.TextFrame2.TextRange.Paragraphs[itemCounter, 1].ParagraphFormat.IndentLevel = openedLists.Count;
+                        shape.TextFrame2.TextRange.Paragraphs[itemCounter, 1].ParagraphFormat.Bullet.Type = openedLists.Peek() ? MsoBulletType.msoBulletNumbered : MsoBulletType.msoBulletUnnumbered;
                         break;
                     case "table":
                         skip = true;

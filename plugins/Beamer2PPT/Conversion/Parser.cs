@@ -4,7 +4,7 @@
 
 // GPPG version 1.4.3
 // Machine:  LUKAS-PC
-// DateTime: 10.4.2011 22:24:19
+// DateTime: 12.4.2011 20:06:36
 // UserName: Lukas
 // Input file <D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 10.4.2011 20:31:21>
 

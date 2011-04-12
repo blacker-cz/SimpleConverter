@@ -57,6 +57,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 // invalidate overlay list
                 _overlayList = null;
             }
+            get { return _overlaySpec; }
         }
 
         /// <summary>

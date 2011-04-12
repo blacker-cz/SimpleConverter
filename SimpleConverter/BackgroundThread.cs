@@ -113,14 +113,16 @@ namespace SimpleConverter
                 if (file.Valid)
                 {
 #if !DEBUG
+                    try
                     {
 #endif
                         _plugin.ConvertDocument(file.Filepath, _outputPath);
 #if !DEBUG
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         // todo: print error message
+                        System.Windows.MessageBox.Show(ex.Message);
                         break;
                     }
 #endif
