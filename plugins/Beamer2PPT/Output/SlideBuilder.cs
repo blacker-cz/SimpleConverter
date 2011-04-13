@@ -154,16 +154,10 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             Node currentNode;
 
-            Node endListNode = new Node("__end_list");
-
             PowerPoint.Shape shape = null;
 
             // skip expanding of child nodes to stack
             bool skip;
-
-            // stack with type of lists (true - numbered, false - bullet)
-            Stack<bool> openedLists = new Stack<bool>();
-            int itemCounter = 0;
 
             // process nodes on stack
             while (nodes.Count != 0)
@@ -192,7 +186,12 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                             return false;
                         break;
                     case "today":
-                        // todo: check shape existence
+                        if (shape == null)
+                        {
+                            UpdateBottomShapeBorder(true);
+                            _format.Invalidate();
+                            shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
+                        }
                         shape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
                         break;
                     case "image":
@@ -207,51 +206,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         break;
                     case "bulletlist":
                     case "numberedlist":
-                        if (openedLists.Count == 0)
-                        {
-                            // initialize list here
-                            UpdateBottomShapeBorder(true);
-                            shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
+                        skip = true;
+                        UpdateBottomShapeBorder(true);
+                        shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
 
-                            itemCounter = 0;
-                        }
+                        if (!GenerateList(currentNode.Children, shape, 1, currentNode.Type == "bulletlist" ? MsoBulletType.msoBulletUnnumbered : MsoBulletType.msoBulletNumbered))
+                            return false;
 
-                        if (currentNode.Type == "bulletlist")
-                            openedLists.Push(false);
-                        else
-                            openedLists.Push(true);
-
-                        if (openedLists.Count > 1 && nodes.Peek().Type == "__end_item")
-                        {
-                            Node tmp = nodes.Pop();
-                            nodes.Push(endListNode);
-                            nodes.Push(tmp);
-                        }
-                        else
-                        {
-                            nodes.Push(endListNode);    // push end list node to node stack
-                        }
-
-                        break;
-                    case "__end_list":
-                        openedLists.Pop();
-                        if (openedLists.Count == 0) // if all lists ended, end shape
-                            shape = null;
-                        break;
-                    case "item":
-                        Node endItemNode = new Node("__end_item");
-                        endItemNode.OverlaySpec = currentNode.OverlaySpec;
-
-                        if (shape.TextFrame2.TextRange.Text.Length != 0)
-                            _format.AppendText(shape, "\r");
-
-                        nodes.Push(endItemNode);
-                        itemCounter++;
-                        break;
-                    case "__end_item":
-                        // todo: fix indent
-                        shape.TextFrame2.TextRange.Paragraphs[itemCounter, 1].ParagraphFormat.IndentLevel = openedLists.Count;
-                        shape.TextFrame2.TextRange.Paragraphs[itemCounter, 1].ParagraphFormat.Bullet.Type = openedLists.Peek() ? MsoBulletType.msoBulletNumbered : MsoBulletType.msoBulletUnnumbered;
+                        shape = null;
                         break;
                     case "table":
                         skip = true;
@@ -731,6 +693,154 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             {
                 imageShape.LockAspectRatio = MsoTriState.msoTrue;
                 imageShape.Width *= scale;
+            }
+        }
+
+        /// <summary>
+        /// Generate list
+        /// </summary>
+        /// <param name="items">List of items</param>
+        /// <param name="shape">Text shape</param>
+        /// <param name="level">Indentation level</param>
+        /// <param name="type">Type of list (bulleted/numbered)</param>
+        /// <returns>true if completed; false if paused</returns>
+        private bool GenerateList(List<Node> items, PowerPoint.Shape shape, int level, MsoBulletType type)
+        {
+            Stack<Node> nodes = new Stack<Node>();
+
+            Node currentNode;
+
+            // skip expanding of child nodes to stack
+            bool skip;
+
+            // show bullet in item
+            bool show_bullet;
+
+            bool visible = true;
+
+            int itemStartAt;
+            int itemsCount = 0;
+            int paragraphs;
+
+            foreach (Node item in items)
+            {
+                show_bullet = true;
+                itemStartAt = shape.TextFrame2.TextRange.Text.Length;
+                paragraphs = 0;
+                itemsCount++;
+
+                // copy content to stack
+                foreach (Node node in item.Children.Reverse<Node>())
+                {
+                    nodes.Push(node);
+                }
+
+                // process nodes on stack
+                while (nodes.Count != 0)
+                {
+                    currentNode = nodes.Pop();
+                    skip = false;
+
+                    // process node depending on its type
+                    switch (currentNode.Type)
+                    {
+                        case "string":
+                            paragraphs += (int) Misc.CountLinesInString(currentNode.Content as string);
+
+                            _format.AppendText(shape, currentNode.Content as string);
+                            break;
+                        case "paragraph":
+                            paragraphs++;
+                            _format.AppendText(shape, "\r");
+                            break;
+                        case "pause":
+                            if (Pause())
+                                return false;
+                            break;
+                        case "today":
+                            shape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
+                            break;
+                        case "bulletlist":
+                        case "numberedlist":
+                            skip = true;
+
+                            FormatListItem(shape, type, itemStartAt, level, paragraphs, itemsCount, show_bullet);
+
+                            _format.AppendText(shape, "\r");
+
+                            if (!GenerateList(currentNode.Children, shape, level + 1, currentNode.Type == "bulletlist" ? MsoBulletType.msoBulletUnnumbered : MsoBulletType.msoBulletNumbered))
+                                return false;
+
+                            paragraphs = 0;
+                            itemStartAt = shape.TextFrame2.TextRange.Text.Length;
+                            show_bullet = false;
+
+                            break;
+                        default: // other -> check for simple formats
+                            SimpleTextFormat(nodes, currentNode);
+                            break;
+                    }
+
+                    if (currentNode.Children == null || skip)
+                        continue;
+
+                    // push child nodes to stack
+                    foreach (Node node in currentNode.Children.Reverse<Node>())
+                    {
+                        nodes.Push(node);
+                    }
+                }
+
+                FormatListItem(shape, type, itemStartAt, level, paragraphs, itemsCount, show_bullet);
+
+                _format.AppendText(shape, "\r");
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Setup list item (even partial) type, indent etc.
+        /// </summary>
+        /// <param name="shape">List text shape</param>
+        /// <param name="type">Type of bullets</param>
+        /// <param name="itemStartAt">Item starts at character</param>
+        /// <param name="level">Indent level</param>
+        /// <param name="paragraphs">Number of paragraphs</param>
+        /// <param name="itemsCount">Number of items</param>
+        /// <param name="show_bullet">Show bullet</param>
+        private void FormatListItem(PowerPoint.Shape shape, MsoBulletType type, int itemStartAt, int level, int paragraphs, int itemsCount, bool show_bullet)
+        {
+            if (paragraphs == 0)
+            {
+                shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].ParagraphFormat.Bullet.Type = type;
+                shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].ParagraphFormat.IndentLevel = level + 1;
+                if (!show_bullet)
+                {
+                    shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].ParagraphFormat.Bullet.Visible = MsoTriState.msoFalse;
+                    shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].ParagraphFormat.IndentLevel = level + 2;
+                }
+                if (type == MsoBulletType.msoBulletNumbered && show_bullet)
+                    shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].ParagraphFormat.Bullet.StartValue = itemsCount;
+            }
+            else
+            {
+                if (show_bullet)
+                {
+                    shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[1, 1].ParagraphFormat.Bullet.Type = type;
+                    shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[1, 1].ParagraphFormat.IndentLevel = level + 1;
+                    if (type == MsoBulletType.msoBulletNumbered)
+                        shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[1, 1].ParagraphFormat.Bullet.StartValue = itemsCount;
+                    shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[2, paragraphs].ParagraphFormat.Bullet.Type = type;
+                    shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[2, paragraphs].ParagraphFormat.Bullet.Visible = MsoTriState.msoFalse;
+                    shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[2, paragraphs].ParagraphFormat.IndentLevel = level + 2;
+                }
+                else
+                {
+                    shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs.ParagraphFormat.Bullet.Type = type;
+                    shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs.ParagraphFormat.Bullet.Visible = MsoTriState.msoFalse;
+                    shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs.ParagraphFormat.IndentLevel = level + 2;
+                }
             }
         }
 

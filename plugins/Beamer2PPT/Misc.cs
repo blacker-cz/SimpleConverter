@@ -234,5 +234,22 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             return null;
         }
+
+        /// <summary>
+        /// Count lines in string
+        /// </summary>
+        /// <param name="s">String</param>
+        /// <returns>Number of lines</returns>
+        internal static long CountLinesInString(string s)
+        {
+            long count = 0;
+            int start = 0;
+            while ((start = s.IndexOf('\n', start)) != -1)
+            {
+                count++;
+                start++;
+            }
+            return count;
+        }
     }
 }
