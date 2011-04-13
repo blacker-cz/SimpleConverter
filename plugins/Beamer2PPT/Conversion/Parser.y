@@ -164,6 +164,13 @@ bodycontent :                       {
                                         $1.Add($2);
                                         $$ = $1;
                                     }
+        // recovery between slides
+        |   bodycontent STRING      {
+                                        $$ = $1;
+                                    }
+        |   bodycontent error       {
+                                        $$ = $1;
+                                    }
         ;
 
 slide :
@@ -191,7 +198,6 @@ slide :
                                         SlideCount++;
                                     }
         ;
-
 
 slidecontent :                      {   /* return List<Node> - create node in specific command; append right side to the left side*/
                                         $$ = new List<Node>();

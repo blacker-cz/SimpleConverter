@@ -93,7 +93,7 @@ envEnd      \\end{wsl}
 
 // Other
 // -----------------------------------------------------------------------------
-\\titlepage     {}
+\\titlepage     { return (int) Tokens.TITLEPAGE; }
 \\hline         { return (int) Tokens.HLINE; }
 \\cline         { return (int) Tokens.CLINE; }
 \\section       { return (int) Tokens.SECTION; }
@@ -103,8 +103,20 @@ envEnd      \\end{wsl}
 // New paragraph
 \\\\|\\cr       { BEGIN(pre_optional); if(tabular) return (int) Tokens.ENDROW; else return (int) Tokens.NL; }
 
+\\#                       BEGIN(str); unformattedText += @"#"; spaces = 0; nls = 0;
+\\\$                      BEGIN(str); unformattedText += @"$"; spaces = 0; nls = 0;
+\\%                       BEGIN(str); unformattedText += @"%"; spaces = 0; nls = 0;
+\\textasciicircum\{\}     BEGIN(str); unformattedText += @"^"; spaces = 0; nls = 0;
+\\&                       BEGIN(str); unformattedText += @"&"; spaces = 0; nls = 0;
+\\_                       BEGIN(str); unformattedText += @"_"; spaces = 0; nls = 0;
+\\\{                      BEGIN(str); unformattedText += @"{"; spaces = 0; nls = 0;
+\\\}                      BEGIN(str); unformattedText += @"}"; spaces = 0; nls = 0;
+\\~\{\}                   BEGIN(str); unformattedText += @"~"; spaces = 0; nls = 0;
+\\textbackslash\{\}       BEGIN(str); unformattedText += @"\"; spaces = 0; nls = 0;
+\\textpipe(\{\})?         BEGIN(str); unformattedText += @"|"; spaces = 0; nls = 0;
+
 // Short space, todo copy to plain text loop
-\\[ ]           {}
+\\[ ]           { BEGIN(str); unformattedText += @" "; spaces = 1; }
 \{              { return '{'; }
 \}              { return '}'; }
 &               { return '&'; }
@@ -154,7 +166,7 @@ envEnd      \\end{wsl}
 
 // Plain text
 // -----------------------------------------------------------------------------
-[^#\$%\^&_\{\}~\\[:IsWhiteSpace:]]    BEGIN(str); yyless(0); unformattedText = ""; /*spaces = 0;*/ nls = 0;
+[^#\$%\^&_\{\}~\\\n\r]    BEGIN(str); yyless(0); unformattedText = ""; /*spaces = 0;*/ nls = 0;
 
 <str> {
         [^#\$%\^&_\{\}~\\ \n\t\r]*      { unformattedText += yytext; spaces = 0; nls = 0; }
@@ -191,7 +203,7 @@ envEnd      \\end{wsl}
         \\LaTeX[ ]?                unformattedText += @"LaTeX"; spaces = 0; nls = 0; // todo: fix possible parameters
         %.*\n?{ws}                 {/* ignore comment inside plaintext */}
         // end of plain text
-        [#\$\^&_\{\}~\\]       BEGIN(INITIAL); yyless(0); yylval.Text = unformattedText; return (int) Tokens.STRING;
+        [#\$\^&_\{\}~\\]       BEGIN(INITIAL); yyless(0); if(unformattedText.Trim().Length > 0) { yylval.Text = unformattedText; return (int) Tokens.STRING; }
     }
 
 // unknown commands etc.
