@@ -716,16 +716,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             // show bullet in item
             bool show_bullet;
 
-            bool visible = true;
-
-            int itemStartAt;
+            int itemStartAt, realItemStartAt;
             int itemsCount = 0;
             int paragraphs;
 
             foreach (Node item in items)
             {
                 show_bullet = true;
-                itemStartAt = shape.TextFrame2.TextRange.Text.Length;
+                realItemStartAt = itemStartAt = shape.TextFrame2.TextRange.Text.Length;
                 paragraphs = 0;
                 itemsCount++;
 
@@ -755,7 +753,10 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                             break;
                         case "pause":
                             if (Pause())
+                            {
+                                FormatListItem(shape, type, itemStartAt, level, paragraphs, itemsCount, show_bullet);
                                 return false;
+                            }
                             break;
                         case "today":
                             shape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
@@ -792,6 +793,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 }
 
                 FormatListItem(shape, type, itemStartAt, level, paragraphs, itemsCount, show_bullet);
+
+                int min = item.OverlayList.Count != 0 ? item.OverlayList.Min() : int.MaxValue;
+                _maxPass = Math.Max(Misc.MaxOverlay(item.OverlayList), _maxPass);    // set maximal number of passes from overlay specification
+                if (!(item.OverlayList.Count == 0 || item.OverlayList.Contains(_passNumber) || min < 0 && Math.Abs(min) < _passNumber))
+                {
+                    shape.TextFrame2.TextRange.Characters[realItemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - realItemStartAt - 1].Paragraphs.Font.Fill.Visible = MsoTriState.msoFalse;
+                    shape.TextFrame2.TextRange.Characters[realItemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - realItemStartAt - 1].Paragraphs.ParagraphFormat.Bullet.Visible = MsoTriState.msoFalse;
+                }
 
                 _format.AppendText(shape, "\r");
             }
