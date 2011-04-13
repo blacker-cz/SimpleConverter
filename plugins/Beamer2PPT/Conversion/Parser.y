@@ -72,9 +72,10 @@ preambule :                         {
                                         $$ = new Node("preambule");
                                         $$.Children = new List<Node>();
                                     }
-        |   preambule USEPACKAGE '{' STRING '}'     {   // really need to process??
+        |   preambule USEPACKAGE optional '{' STRING '}'     {
                                         Node tmp = new Node("package");
-                                        tmp.Content = $4 as object;
+                                        tmp.Content = $5 as object;
+                                        tmp.OptionalParams = $3;
                                         $1.Children.Add(tmp);
                                         $$ = $1;
                                     }
@@ -93,6 +94,9 @@ preambule :                         {
                                         Node tmp = new Node("graphicspath");
                                         tmp.Children = $4;
                                         $1.Children.Add(tmp);
+                                        $$ = $1;
+                                    }
+        |   preambule error         {   // error recovery in preambule
                                         $$ = $1;
                                     }
         ;
@@ -387,7 +391,7 @@ command :
                                         $$.OverlaySpec = $2;
                                         $$.OptionalParams = $3;
                                     }
-        |   UNDERLINE overlay optional  { // beamer actually doesn't support this but we do :D
+        |   UNDERLINE overlay optional  { // beamer actually does not support this but we do
                                         $$ = new Node("underline");
                                         $$.OverlaySpec = $2;
                                         $$.OptionalParams = $3;

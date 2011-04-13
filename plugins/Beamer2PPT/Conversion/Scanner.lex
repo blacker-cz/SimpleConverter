@@ -1,4 +1,4 @@
-%x str, overlay, optional, pre_overlay, pre_optional, tabular_arg
+%x str, overlay, optional, pre_overlay, pre_optional, tabular_arg, boverlay, boptional, bpre_overlay, bpre_optional
 
 %using SimpleConverter.Contract;
 
@@ -199,6 +199,28 @@ envEnd      \\end{wsl}
 {envEnd}\{[^\}]+\}     { printWarning("Unknown environment " + yytext); }
 
 \\[[:IsLetter:]]+      { printWarning("Unknown command " + yytext); }
+
+// Unknown command overlay specification - eat and ignore
+// -----------------------------------------------------------------------------
+<bpre_overlay> {
+        {wsl}<                  BEGIN(boverlay);
+        {wsl}[^<]               BEGIN(bpre_optional); yyless(0);
+    }
+<boverlay> {
+        [^>]*                   {}
+        >                       BEGIN(bpre_optional);
+    }
+
+//  Unknown command optional parameters - eat and ignore
+// -----------------------------------------------------------------------------
+<bpre_optional> {
+        {wsl}\[                 BEGIN(boptional);
+        {wsl}[^[]               BEGIN(INITIAL); yyless(0);
+    }
+<boptional> {
+        [^\]]*                  {}
+        \]                      BEGIN(INITIAL);
+    }
 
 <<EOF>>                            {/* to process, or not to process? */}
 %%

@@ -99,10 +99,10 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if $(ConfigurationName) == Debug (
-gplex /listing /summary /verbose /out:$(ProjectDir)Conversion\Scanner.cs $(ProjectDir)Conversion\Scanner.lex
+gplex /listing /unicode /codePage:utf-8 /summary /verbose /out:$(ProjectDir)Conversion\Scanner.cs $(ProjectDir)Conversion\Scanner.lex
 gppg $(ProjectDir)Conversion\Parser.y /gplex /nolines /conflicts /report /verbose &gt; $(ProjectDir)Conversion\Parser.cs
 ) else (
-gplex /listing /out:$(ProjectDir)Conversion\Scanner.cs $(ProjectDir)Conversion\Scanner.lex
+gplex /listing /unicode /codePage:utf-8 /out:$(ProjectDir)Conversion\Scanner.cs $(ProjectDir)Conversion\Scanner.lex
 gppg $(ProjectDir)Conversion\Parser.y /gplex /nolines &gt; $(ProjectDir)Conversion\Parser.cs
 )
 </PreBuildEvent>

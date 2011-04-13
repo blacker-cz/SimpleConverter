@@ -70,6 +70,10 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                             }
                         }
                         break;
+                    case "usepackage":
+                        if (node.Content as string == "inputenc" && node.OptionalParams != "utf8")
+                            Messenger.Instance.SendMessage("Unsupported code page, some characters may be broken", Contract.MessageLevel.WARNING);
+                        break;
                     // unknown or invalid node -> ignore
                     default:
                         break;
