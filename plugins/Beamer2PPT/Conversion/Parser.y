@@ -231,6 +231,10 @@ slidecontent :                      {   /* return List<Node> - create node in sp
                                         $1.Add($2);
                                         $$ = $1;
                                     }
+        |   slidecontent TITLEPAGE  {
+                                        $1.Add(new Node("titlepage"));
+                                        $$ = $1;
+                                    }
         ;
 
 image :

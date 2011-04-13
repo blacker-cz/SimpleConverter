@@ -166,6 +166,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
         /// <summary>
         /// Update columns width to fit text (can only decrease size of columns!!)
+        /// Looks like sometimes it doesn't work how it should.
         /// </summary>
         /// <param name="shape">Table shape</param>
         /// <param name="settings">Tabular settings (with information about columns)</param>

@@ -166,7 +166,7 @@ envEnd      \\end{wsl}
 
 // Plain text
 // -----------------------------------------------------------------------------
-[^#\$%\^&_\{\}~\\\n\r]    BEGIN(str); yyless(0); unformattedText = ""; /*spaces = 0;*/ nls = 0;
+[^#\$%\^&_\{\}~\\]    BEGIN(str); yyless(0); unformattedText = ""; /*spaces = 0;*/ nls = 0;
 
 <str> {
         [^#\$%\^&_\{\}~\\ \n\t\r]*      { unformattedText += yytext; spaces = 0; nls = 0; }

@@ -159,6 +159,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             // skip expanding of child nodes to stack
             bool skip;
 
+            // list of shapes used for reshaper
+            List<PowerPoint.Shape> reshapeShapes = new List<PowerPoint.Shape>();
+
             // process nodes on stack
             while (nodes.Count != 0)
             {
@@ -174,6 +177,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                             UpdateBottomShapeBorder(true);
                             _format.Invalidate();
                             shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
+                            reshapeShapes.Add(shape);
+                            // todo: check if string start with newline - if yes, than don't add it to reshape collection and reshape what we have (also trim whitespace before append)
                         }
                         _format.AppendText(shape, currentNode.Content as string);
                         break;
@@ -191,6 +196,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                             UpdateBottomShapeBorder(true);
                             _format.Invalidate();
                             shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
+                            reshapeShapes.Add(shape);
                         }
                         shape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
                         break;
@@ -200,6 +206,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         // todo: save previous text shape for reshaping
 
                         GenerateImage(currentNode, out imageShape);
+                        reshapeShapes.Add(imageShape);
 
                         // reposition shapes and next text shape create on right side of image, then everything after first line copy to new shape below image
                         shape = null;
@@ -217,13 +224,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         break;
                     case "table":
                         skip = true;
+                        // todo: check if previous shape doesn't end with newline
                         UpdateBottomShapeBorder(true);
                         PowerPoint.Shape tableShape;
-                        // todo: save previous text shape for reshaping
 
                         if (!GenerateTable(currentNode, out tableShape))    // probably will need to call reshaper before return too
                             return false;   // table processing was paused
 
+                        reshapeShapes.Add(tableShape);
                         // todo: call reshaper in here :)
 
                         shape = null;
@@ -245,6 +253,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     nodes.Push(item);
                 }
             }
+
+            // final reshaper call on slide
+            Reshaper(reshapeShapes);
 
             return true;
         }
@@ -672,6 +683,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             }
 
             // resize image according to optinal params
+            // todo: double image size depending on settings
 
             if (width != 0 && height != 0)  // width and height was set in optinal parameters
             {
@@ -856,10 +868,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <summary>
         /// Reposition shapes on slide
         /// </summary>
-        /// <param name="upperShape"></param>
-        /// <param name="middleShape"></param>
-        /// <param name="lowerShape"></param>
-        private void Reshaper(PowerPoint.Shape upperShape, PowerPoint.Shape middleShape, PowerPoint.Shape lowerShape)
+        private void Reshaper(List<PowerPoint.Shape> shapes)
         {
             // note: probably save 3 shapes to list and then reshape them in one go
             //
@@ -871,6 +880,55 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             //    sshape.TextFrame2.TextRange.Paste();
             //}
 
+            // note: must work for two shapes too, also for table next to image or table next to table
+
+            if (shapes.Count == 2 || shapes.Count == 3)
+            {
+                // text shape + image or table
+                if(shapes[0].HasTextFrame == MsoTriState.msoTrue && shapes[1].HasTextFrame == MsoTriState.msoFalse) {
+                    // check if second shape can possibly fit after first one
+                    if(shapes[0].Left + shapes[0].TextFrame2.TextRange.Lines[shapes[0].TextFrame2.TextRange.Lines.Count].BoundWidth + shapes[0].TextFrame2.MarginLeft + shapes[0].TextFrame2.MarginRight + 5.0f + shapes[1].Width <= 648.0f + 36.0f) {
+                        // remove last line from text shape and move it to the new shape
+                        PowerPoint.Shape lastlineshape;
+
+                        if (shapes[0].TextFrame2.TextRange.Lines.Count > 1)
+                        {
+                            shapes[0].TextFrame2.TextRange.Lines[shapes[0].TextFrame2.TextRange.Lines.Count].Cut();
+                            lastlineshape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, shapes[0].Left, shapes[0].Top + shapes[0].Height + 5.0f, 648.0f, 10.0f);
+                            lastlineshape.TextFrame2.TextRange.Paste();
+                        }
+                        else
+                        {
+                            lastlineshape = shapes[0];
+                        }
+
+                        // change shape width according ot its bounding box
+                        lastlineshape.Width = lastlineshape.TextFrame2.TextRange.BoundWidth + lastlineshape.TextFrame2.MarginRight + lastlineshape.TextFrame2.MarginLeft + 1;
+
+                        shapes[1].Top = lastlineshape.Top;
+                        shapes[1].Left = lastlineshape.Left + lastlineshape.Width + 5.0f;
+                    }
+
+                    // todo: process third shape
+                }
+                // image or table + image or table
+                else if (shapes[0].HasTextFrame == MsoTriState.msoFalse && shapes[1].HasTextFrame == MsoTriState.msoFalse)
+                {
+                    // check if second shape can possibly fit after first one
+                    if (shapes[0].Left + shapes[0].Width + 5.0f + shapes[1].Width <= 648.0f + 36.0f)
+                    {
+                        shapes[1].Top = shapes[0].Top;
+                        shapes[1].Left = shapes[0].Left + shapes[0].Width + 5.0f;
+                    }
+
+                    // todo: process third shape
+                }
+                // image or table + text shape
+                else if (shapes[0].HasTextFrame == MsoTriState.msoFalse && shapes[1].HasTextFrame == MsoTriState.msoTrue)
+                {
+
+                }
+            }
         }
     }
 }
