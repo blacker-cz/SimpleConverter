@@ -4,9 +4,9 @@
 
 // GPPG version 1.4.5
 // Machine:  LUKAS-PC
-// DateTime: 13.4.2011 18:08:27
+// DateTime: 14.4.2011 15:02:16
 // UserName: Lukas
-// Input file <D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 13.4.2011 16:24:28>
+// Input file <D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 14.4.2011 13:01:44>
 
 // options: conflicts no-lines diagnose & report gplex conflicts
 
@@ -48,12 +48,12 @@ public abstract class ScanBase : AbstractScanner<ValueType,LexLocation> {
 
 public class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
-  // Verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 13.4.2011 16:24:28
+  // Verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 14.4.2011 13:01:44
     public Node Document { get; private set; }
     public int SlideCount { get; private set; }
     public List<SectionRecord> SectionTable { get; private set; }
     public Dictionary<int, FrametitleRecord> FrametitleTable { get; private set; }
-  // End verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 13.4.2011 16:24:28
+  // End verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 14.4.2011 13:01:44
 
 #pragma warning disable 649
   private static Dictionary<int, string> aliasses;
@@ -618,6 +618,8 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 23: // bodycontent -> bodycontent, "plain text"
 {
+                                        if(ValueStack[ValueStack.Depth-1].Text.Trim().Length != 0)
+                                            Messenger.Instance.SendMessage(LocationStack[LocationStack.Depth-1].StartLine + ":" + LocationStack[LocationStack.Depth-1].StartColumn + " - Unexpected 'plain text' - ignoring.", MessageLevel.WARNING);
                                         CurrentSemanticValue.nodeList = ValueStack[ValueStack.Depth-2].nodeList;
                                     }
         break;

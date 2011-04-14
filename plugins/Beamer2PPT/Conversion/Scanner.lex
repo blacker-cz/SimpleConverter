@@ -1,4 +1,5 @@
 %x str, overlay, optional, pre_overlay, pre_optional, tabular_arg, boverlay, boptional, bpre_overlay, bpre_optional
+%s body
 
 %using SimpleConverter.Contract;
 
@@ -13,6 +14,7 @@ envEnd      \\end{wsl}
 %{
     // global variables
     bool tabular = false;   // info if we are in tabular env., inclusive states don't seem to work and exclusive are out of question
+    bool inBody = false;    // info if we are in body of document (needed for processing white space characters)
 %}
 
 %%
@@ -38,8 +40,8 @@ envEnd      \\end{wsl}
 
 // Environments ( + environments specific)
 // -----------------------------------------------------------------------------
-{envBegin}\{document\}      { return (int) Tokens.BEGIN_DOCUMENT; }
-{envEnd}\{document\}        { return (int) Tokens.END_DOCUMENT; }
+{envBegin}\{document\}      { inBody = true; BEGIN(body); return (int) Tokens.BEGIN_DOCUMENT; }
+{envEnd}\{document\}        { inBody = false; BEGIN(INITIAL); return (int) Tokens.END_DOCUMENT; }
 {envBegin}\{frame\}         { return (int) Tokens.BEGIN_FRAME; }
 {envEnd}\{frame\}           { return (int) Tokens.END_FRAME; }
 {envBegin}\{itemize\}       { return (int) Tokens.BEGIN_ITEMIZE; }
@@ -141,11 +143,11 @@ envEnd      \\end{wsl}
 // -----------------------------------------------------------------------------
 <pre_optional> {
         {wsl}\[                 BEGIN(optional); unformattedText = "";
-        {wsl}[^[]               BEGIN(INITIAL); yyless(0);
+        {wsl}[^[]               if(inBody) BEGIN(body); else BEGIN(INITIAL); yyless(0);
     }
 <optional> {
         [^\]]*                  unformattedText += yytext;
-        \]                      BEGIN(INITIAL); yylval.Text = unformattedText; return (int) Tokens.OPTIONAL;
+        \]                      if(inBody) BEGIN(body); else BEGIN(INITIAL); yylval.Text = unformattedText; return (int) Tokens.OPTIONAL;
     }
 
 // Tabular settings
@@ -166,7 +168,9 @@ envEnd      \\end{wsl}
 
 // Plain text
 // -----------------------------------------------------------------------------
-[^#\$%\^&_\{\}~\\]    BEGIN(str); yyless(0); unformattedText = ""; /*spaces = 0;*/ nls = 0;
+<body> [^#\$%\^&_\{\}~\\]    BEGIN(str); yyless(0); unformattedText = ""; /*spaces = 0;*/ nls = 0;
+
+[^#\$%\^&_\{\}~\\[:IsWhiteSpace:]]    BEGIN(str); yyless(0); unformattedText = ""; /*spaces = 0;*/ nls = 0;
 
 <str> {
         [^#\$%\^&_\{\}~\\ \n\t\r]*      { unformattedText += yytext; spaces = 0; nls = 0; }
@@ -188,7 +192,7 @@ envEnd      \\end{wsl}
                                             unformattedText += "\n";
                                         }
                                    }
-        // escape sequences todo: copy to INITIAL and start str
+        // escape sequences
         \\#                        unformattedText += @"#"; spaces = 0; nls = 0;
         \\\$                       unformattedText += @"$"; spaces = 0; nls = 0;
         \\%                        unformattedText += @"%"; spaces = 0; nls = 0;
@@ -203,7 +207,21 @@ envEnd      \\end{wsl}
         \\LaTeX[ ]?                unformattedText += @"LaTeX"; spaces = 0; nls = 0; // todo: fix possible parameters
         %.*\n?{ws}                 {/* ignore comment inside plaintext */}
         // end of plain text
-        [#\$\^&_\{\}~\\]       BEGIN(INITIAL); yyless(0); if(unformattedText.Trim().Length > 0) { yylval.Text = unformattedText; return (int) Tokens.STRING; }
+        [#\$\^&_\{\}~\\]           {
+                                        if(inBody)
+                                            BEGIN(body);
+                                        else
+                                            BEGIN(INITIAL);
+
+                                        yyless(0);
+
+                                        // return text only if it contains text or new line
+                                        if(unformattedText.IndexOf('\n') != -1 || unformattedText.Trim().Length != 0) 
+                                        {
+                                            yylval.Text = unformattedText;
+                                            return (int) Tokens.STRING;
+                                        }
+                                   }
     }
 
 // unknown commands etc.
@@ -227,14 +245,21 @@ envEnd      \\end{wsl}
 // -----------------------------------------------------------------------------
 <bpre_optional> {
         {wsl}\[                 BEGIN(boptional);
-        {wsl}[^[]               BEGIN(INITIAL); yyless(0);
+        {wsl}[^[]               if(inBody) BEGIN(body); else BEGIN(INITIAL); yyless(0);
     }
 <boptional> {
         [^\]]*                  {}
-        \]                      BEGIN(INITIAL);
+        \]                      if(inBody) BEGIN(body); else BEGIN(INITIAL);
     }
 
 <<EOF>>                            {/* to process, or not to process? */}
+
+/* ------------------------------------------ */
+%{
+	yylloc = new QUT.Gppg.LexLocation(tokLin, tokCol, tokELin, tokECol);
+%}
+/* ------------------------------------------ */
+
 %%
 
 override public void yyerror(string format, params object[] args)

@@ -252,5 +252,30 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             }
             return count;
         }
+
+
+        /// <summary>
+        /// Check if text ends with new line (ignore other white space characters during check)
+        /// </summary>
+        /// <param name="text">Text</param>
+        /// <returns>true if text ends with new line; false otherwise</returns>
+        internal static bool EndsWithNewLine(string text)
+        {
+            Regex regex = new Regex("(\r\n|\r|\n)[\t ]*$");
+
+            return regex.IsMatch(text);
+        }
+
+        /// <summary>
+        /// Check if text starts with new line (ignore other white space characters during check)
+        /// </summary>
+        /// <param name="text">Text</param>
+        /// <returns>true if text starts with new line; false otherwise</returns>
+        internal static bool StartsWithNewLine(string text)
+        {
+            Regex regex = new Regex("^[\t ]*(\r\n|\r|\n)");
+
+            return regex.IsMatch(text);
+        }
     }
 }

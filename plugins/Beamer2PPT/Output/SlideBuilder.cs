@@ -168,6 +168,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 currentNode = nodes.Pop();
                 skip = false;
 
+                // fixme: check if this call for reshaper is really needed
+                Reshaper(reshapeShapes);
+
                 // process node depending on its type
                 switch (currentNode.Type)
                 {
@@ -177,13 +180,35 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                             UpdateBottomShapeBorder(true);
                             _format.Invalidate();
                             shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
+                            string tmp = currentNode.Content as string;
+                            if (Misc.StartsWithNewLine(tmp))    // if new shape starts with new line, then call reshaper on previous shapes
+                            {
+                                Reshaper(reshapeShapes);
+                                reshapeShapes.Clear();
+                                tmp = tmp.TrimStart();
+                                if (tmp.Length == 0)    // only empty paragraph -> don't start new shape
+                                {
+                                    shape.Delete();
+                                    shape = null;
+                                }
+                                else
+                                {
+                                    _format.AppendText(shape, tmp);
+                                }
+                            }
+                            else
+                            {
+                                _format.AppendText(shape, tmp);
+                            }
                             reshapeShapes.Add(shape);
-                            // todo: check if string start with newline - if yes, than don't add it to reshape collection and reshape what we have (also trim whitespace before append)
                         }
-                        _format.AppendText(shape, currentNode.Content as string);
+                        else
+                        {
+                            _format.AppendText(shape, currentNode.Content as string);
+                        }
                         break;
                     case "paragraph":
-                        if(shape != null)
+                        if(shape != null && shape.HasTextFrame == MsoTriState.msoTrue && !Misc.EndsWithNewLine(shape.TextFrame2.TextRange.Text))
                             _format.AppendText(shape, "\r");
                         break;
                     case "pause":
@@ -201,19 +226,27 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         shape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
                         break;
                     case "image":
+                        // previous shape ends with new paragraph - image will start on new line
+                        if (shape != null && shape.HasTextFrame == MsoTriState.msoTrue && Misc.EndsWithNewLine(shape.TextFrame2.TextRange.Text))
+                        {
+                            Reshaper(reshapeShapes);
+                            reshapeShapes.Clear();
+                        }
                         UpdateBottomShapeBorder(true);
                         PowerPoint.Shape imageShape;
-                        // todo: save previous text shape for reshaping
 
                         GenerateImage(currentNode, out imageShape);
                         reshapeShapes.Add(imageShape);
 
-                        // reposition shapes and next text shape create on right side of image, then everything after first line copy to new shape below image
                         shape = null;
                         break;
                     case "bulletlist":
                     case "numberedlist":
                         skip = true;
+
+                        Reshaper(reshapeShapes);
+                        reshapeShapes.Clear();
+                        
                         UpdateBottomShapeBorder(true);
                         shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
 
@@ -224,19 +257,38 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         break;
                     case "table":
                         skip = true;
-                        // todo: check if previous shape doesn't end with newline
+                        // previous shape ends with new paragraph - table will start on new line
+                        if (shape != null && shape.HasTextFrame == MsoTriState.msoTrue && Misc.EndsWithNewLine(shape.TextFrame2.TextRange.Text))
+                        {
+                            Reshaper(reshapeShapes);
+                            reshapeShapes.Clear();
+                        }
                         UpdateBottomShapeBorder(true);
                         PowerPoint.Shape tableShape;
 
                         if (!GenerateTable(currentNode, out tableShape))    // probably will need to call reshaper before return too
                             return false;   // table processing was paused
 
-                        reshapeShapes.Add(tableShape);
-                        // todo: call reshaper in here :)
+                        if (tableShape == null) // table wasn't generated so call reshaper and next shape will start at new "line"
+                        {
+                            Reshaper(reshapeShapes);
+                            reshapeShapes.Clear();
+                        }
+                        else
+                        {
+                            reshapeShapes.Add(tableShape);
+                        }
 
                         shape = null;
                         break;
                     case "descriptionlist":
+                        skip = true;
+
+                        Reshaper(reshapeShapes);
+                        reshapeShapes.Clear();
+                        
+                        UpdateBottomShapeBorder(true);
+
                         // todo: implement this probably as simple table
                         break;
                     default: // other -> check for simple formats
@@ -283,17 +335,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             {
                 _bottomShapeBorder = 15.0f;
             }
-        }
-
-        /// <summary>
-        /// Check if TextRange object ends with new line (and ignore other whitespace characters during check)
-        /// </summary>
-        /// <param name="textRange">Text range</param>
-        /// <returns>true if yes; false otherwise</returns>
-        private bool EndsWithNewLine(TextRange2 textRange)
-        {
-            Regex reg = new Regex("\r[\t ]*$");
-            return reg.IsMatch(textRange.Text);
         }
 
         /// <summary>
@@ -651,9 +692,19 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             // find inserted image
             string imagePath = Misc.FindImage(imageNode.Content as string, _preambuleSettings.GraphicsPath);
             if (imagePath == null)
-                return;
+            {
+                throw new DocumentBuilderException("Image '" + imageNode.Content + "' not found!");
+            }
 
-            imageShape = _slide.Shapes.AddPicture(imagePath, MsoTriState.msoFalse, MsoTriState.msoTrue, 36.0f, _bottomShapeBorder + 5.0f);
+            try     // just to be sure
+            {
+                imageShape = _slide.Shapes.AddPicture(imagePath, MsoTriState.msoFalse, MsoTriState.msoTrue, 36.0f, _bottomShapeBorder + 5.0f);
+            }
+            catch (Exception)
+            {
+                // throw image not found exception
+                throw new DocumentBuilderException("Image '" + imageNode.Content + "' not found!");
+            }
 
             float width = 0, height = 0, scale = 0;
 
@@ -881,35 +932,47 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             //}
 
             // note: must work for two shapes too, also for table next to image or table next to table
+            //       after reshaping leave in list only last of reshaped items
 
-            if (shapes.Count == 2 || shapes.Count == 3)
+            while (shapes.Remove(null)) // remove all null shapes from list
+                ;
+
+            PowerPoint.Shape lastMovableShape;
+
+            if (shapes.Count == 2)
             {
+                lastMovableShape = shapes[1];
+
                 // text shape + image or table
                 if(shapes[0].HasTextFrame == MsoTriState.msoTrue && shapes[1].HasTextFrame == MsoTriState.msoFalse) {
-                    // check if second shape can possibly fit after first one
-                    if(shapes[0].Left + shapes[0].TextFrame2.TextRange.Lines[shapes[0].TextFrame2.TextRange.Lines.Count].BoundWidth + shapes[0].TextFrame2.MarginLeft + shapes[0].TextFrame2.MarginRight + 5.0f + shapes[1].Width <= 648.0f + 36.0f) {
-                        // remove last line from text shape and move it to the new shape
-                        PowerPoint.Shape lastlineshape;
 
+                    // check if second shape can possibly fit after first one
+                    if (shapes[0].Left + shapes[0].TextFrame2.TextRange.Lines[shapes[0].TextFrame2.TextRange.Lines.Count].BoundWidth + shapes[0].TextFrame2.MarginLeft + shapes[0].TextFrame2.MarginRight + 5.0f + shapes[1].Width <= 648.0f + 36.0f)
+                    {
+                        PowerPoint.Shape lastLineShape;
+
+                        // remove last line from text shape and move it to the new shape
                         if (shapes[0].TextFrame2.TextRange.Lines.Count > 1)
                         {
                             shapes[0].TextFrame2.TextRange.Lines[shapes[0].TextFrame2.TextRange.Lines.Count].Cut();
-                            lastlineshape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, shapes[0].Left, shapes[0].Top + shapes[0].Height + 5.0f, 648.0f, 10.0f);
-                            lastlineshape.TextFrame2.TextRange.Paste();
+                            lastLineShape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, shapes[0].Left, shapes[0].Top + shapes[0].Height + 5.0f, 648.0f, 10.0f);
+                            lastLineShape.TextFrame2.TextRange.Paste();
+                            lastMovableShape = lastLineShape;
                         }
                         else
                         {
-                            lastlineshape = shapes[0];
+                            lastLineShape = shapes[0];
                         }
 
                         // change shape width according ot its bounding box
-                        lastlineshape.Width = lastlineshape.TextFrame2.TextRange.BoundWidth + lastlineshape.TextFrame2.MarginRight + lastlineshape.TextFrame2.MarginLeft + 1;
+                        lastLineShape.Width = lastLineShape.TextFrame2.TextRange.BoundWidth + lastLineShape.TextFrame2.MarginRight + lastLineShape.TextFrame2.MarginLeft + 1;
 
-                        shapes[1].Top = lastlineshape.Top;
-                        shapes[1].Left = lastlineshape.Left + lastlineshape.Width + 5.0f;
+                        shapes[1].Top = lastLineShape.Top;
+                        shapes[1].Left = lastLineShape.Left + lastLineShape.Width + 5.0f;
                     }
 
-                    // todo: process third shape
+                    shapes.Clear();
+                    shapes.Add(lastMovableShape);
                 }
                 // image or table + image or table
                 else if (shapes[0].HasTextFrame == MsoTriState.msoFalse && shapes[1].HasTextFrame == MsoTriState.msoFalse)
@@ -921,12 +984,38 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         shapes[1].Left = shapes[0].Left + shapes[0].Width + 5.0f;
                     }
 
-                    // todo: process third shape
+                    shapes.Clear();
+                    shapes.Add(lastMovableShape);
                 }
                 // image or table + text shape
                 else if (shapes[0].HasTextFrame == MsoTriState.msoFalse && shapes[1].HasTextFrame == MsoTriState.msoTrue)
                 {
+                    // get bounding box of first word
+                    float wordBoundWidth = shapes[1].TextFrame2.TextRange.Words[1, 1].BoundWidth + shapes[1].TextFrame2.MarginLeft + shapes[1].TextFrame2.MarginRight;
 
+                    // check if at least one word from textbox will fit after first shape
+                    if (shapes[0].Left + shapes[0].Width + 5.0f + wordBoundWidth <= 648.0f + 36.0f)
+                    {
+                        shapes[1].TextFrame2.AutoSize = MsoAutoSize.msoAutoSizeShapeToFitText;
+                        shapes[1].Top = shapes[0].Top;
+                        shapes[1].Left = shapes[0].Left + shapes[0].Width + 5.0f;
+                        shapes[1].Width = 648.0f + 36.0f - shapes[1].Left;
+
+                        if (shapes[1].TextFrame2.TextRange.Lines.Count > 1)
+                        {
+                            shapes[1].TextFrame2.TextRange.Lines[2, shapes[1].TextFrame2.TextRange.Lines.Count - 1].Cut();
+                            PowerPoint.Shape lastLinesShape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, shapes[0].Left, shapes[0].Top + shapes[0].Height + 5.0f, 648.0f, 10.0f);
+                            lastLinesShape.TextFrame2.TextRange.Paste();
+                            lastMovableShape = lastLinesShape;
+                        }
+                    }
+
+                    shapes.Clear();
+                    shapes.Add(lastMovableShape);
+                }
+                else    // text shape + text shape (shouldn't happen)
+                {
+                    shapes.RemoveRange(0, 2);   // don't reshape and remove them from list
                 }
             }
         }

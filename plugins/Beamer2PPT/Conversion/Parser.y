@@ -166,6 +166,8 @@ bodycontent :                       {
                                     }
         // recovery between slides
         |   bodycontent STRING      {
+                                        if($2.Trim().Length != 0)
+                                            Messenger.Instance.SendMessage(@2.StartLine + ":" + @2.StartColumn + " - Unexpected 'plain text' - ignoring.", MessageLevel.WARNING);
                                         $$ = $1;
                                     }
         |   bodycontent error       {
