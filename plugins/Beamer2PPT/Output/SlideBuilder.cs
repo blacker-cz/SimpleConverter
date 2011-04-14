@@ -168,8 +168,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 currentNode = nodes.Pop();
                 skip = false;
 
-                // fixme: check if this call for reshaper is really needed
-                Reshaper(reshapeShapes);
+                if(reshapeShapes.Count > 1)
+                    Reshaper(reshapeShapes);
 
                 // process node depending on its type
                 switch (currentNode.Type)
@@ -210,6 +210,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     case "paragraph":
                         if(shape != null && shape.HasTextFrame == MsoTriState.msoTrue && !Misc.EndsWithNewLine(shape.TextFrame2.TextRange.Text))
                             _format.AppendText(shape, "\r");
+
+                        // also do reshaping
+                        Reshaper(reshapeShapes);
+                        reshapeShapes.Clear();
+
                         break;
                     case "pause":
                         if (Pause())
@@ -289,7 +294,10 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         
                         UpdateBottomShapeBorder(true);
 
-                        // todo: implement this probably as simple table
+                        if (!GenerateDescriptionList(currentNode.Children))
+                            return false;
+
+                        shape = null;
                         break;
                     default: // other -> check for simple formats
                         SimpleTextFormat(nodes, currentNode);
@@ -917,23 +925,115 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         }
 
         /// <summary>
+        /// Generate description list
+        /// </summary>
+        /// <param name="items">List of items</param>
+        /// <returns>true if completed; false if paused</returns>
+        private bool GenerateDescriptionList(List<Node> items)
+        {
+            // create table shape with one row and two columns
+            PowerPoint.Shape shape = _slide.Shapes.AddTable(1, 2, 36.0f, _bottomShapeBorder + 5.0f, 648.0f);
+            // style without background and borders
+            shape.Table.ApplyStyle("2D5ABB26-0587-4C30-8999-92F81FD0307C");
+
+            // set columns width in ratio 1:2
+            shape.Table.Columns[1].Width = 166;
+            shape.Table.Columns[2].Width = 482;
+
+            Stack<Node> nodes = new Stack<Node>();
+
+            Node currentNode;
+
+            int itemsCounter = 0;
+
+            PowerPoint.Shape termShape, definitionShape;
+
+            foreach (Node node in items)
+            {
+                if (node.Type == "item")
+                {
+                    itemsCounter++;
+
+                    foreach (Node item in node.Children.Reverse<Node>())
+                    {
+                        nodes.Push(item);
+                    }
+
+                    // get cell shape
+                    termShape = shape.Table.Cell(itemsCounter, 1).Shape;
+                    definitionShape = shape.Table.Cell(itemsCounter, 2).Shape;
+
+                    // set term
+                    termShape.TextFrame2.TextRange.InsertAfter(node.OptionalParams as string);
+                    termShape.TextFrame2.TextRange.Font.Bold = MsoTriState.msoTrue;
+                    termShape.TextFrame2.TextRange.Font.Size = _baseFontSize * 2.0f;
+
+                    // set definition
+                    _format.Invalidate();
+
+                    // process nodes on stack
+                    while (nodes.Count != 0)
+                    {
+                        currentNode = nodes.Pop();
+
+                        // process node depending on its type
+                        switch (currentNode.Type)
+                        {
+                            case "string":
+                                _format.AppendText(definitionShape, currentNode.Content as string);
+                                break;
+                            case "paragraph":
+                                if (shape != null)
+                                    _format.AppendText(definitionShape, "\r");
+                                break;
+                            case "pause":
+                                if (Pause())
+                                    return false;
+                                break;
+                            case "today":
+                                definitionShape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
+                                break;
+                            default: // other -> check for simple formats
+                                SimpleTextFormat(nodes, currentNode);
+                                break;
+                        }
+
+                        if (currentNode.Children == null)
+                            continue;
+
+                        // push child nodes to stack
+                        foreach (Node item in currentNode.Children.Reverse<Node>())
+                        {
+                            nodes.Push(item);
+                        }
+                    }
+
+                    // add row to the end of table
+                    shape.Table.Rows.Add();
+
+                    // check overlays
+                    int min = node.OverlayList.Count != 0 ? node.OverlayList.Min() : int.MaxValue;
+                    _maxPass = Math.Max(Misc.MaxOverlay(node.OverlayList), _maxPass);    // set maximal number of passes from overlay specification
+                    if (!(node.OverlayList.Count == 0 || node.OverlayList.Contains(_passNumber) || min < 0 && Math.Abs(min) < _passNumber))
+                    {
+                        termShape.TextFrame2.TextRange.Font.Fill.Visible = MsoTriState.msoFalse;
+                        definitionShape.TextFrame2.TextRange.Font.Fill.Visible = MsoTriState.msoFalse;
+                    }
+                }
+            }
+
+            // delete last row
+            shape.Table.Rows[shape.Table.Rows.Count].Delete();
+
+            return true;
+        }
+
+        /// <summary>
         /// Reposition shapes on slide
         /// </summary>
+        /// <param name="shapes">List of shapes to reposition (must contain two shapes for repositioning)</param>
         private void Reshaper(List<PowerPoint.Shape> shapes)
         {
-            // note: probably save 3 shapes to list and then reshape them in one go
-            //
-            // draft: will remove last line from shape and paste it in new one
-            //if (shape != null && shape.HasTextFrame == MsoTriState.msoTrue)
-            //{
-            //    shape.TextFrame2.TextRange.Lines[shape.TextFrame2.TextRange.Lines.Count].Cut();
-            //    PowerPoint.Shape sshape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
-            //    sshape.TextFrame2.TextRange.Paste();
-            //}
-
-            // note: must work for two shapes too, also for table next to image or table next to table
-            //       after reshaping leave in list only last of reshaped items
-
             while (shapes.Remove(null)) // remove all null shapes from list
                 ;
 
