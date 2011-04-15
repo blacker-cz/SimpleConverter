@@ -21,11 +21,15 @@ namespace SimpleConverter
 
         void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            // todo: process some exceptions in here
             //process exception
-            //e.Exception
+#if !DEBUG
+            MessageBox.Show("Application encountered following unrecoverable error and will now shut down:\n\n\"" + e.Exception.Message + "\"", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
-            //e.Handled = true;
+            e.Handled = true;
+            
+            // kill application
+            this.MainWindow.Close();
+#endif
         }
     }
 }

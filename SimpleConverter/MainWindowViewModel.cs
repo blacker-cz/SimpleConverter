@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using System.Windows;
 
 namespace SimpleConverter
 {
@@ -219,7 +220,14 @@ namespace SimpleConverter
         public void StartConversionClicked()
         {
             // todo: disable add/remove file, settings, plugin change, convert, browse (maybe switch browse textbox to read-only); enable stop batch
-            _backgroundThread.Run(_currentPlugin, Files, OutputPath);
+            try
+            {
+                _backgroundThread.Run(_currentPlugin, Files, OutputPath);
+            }
+            catch (Factory.InvalidArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>
@@ -229,7 +237,8 @@ namespace SimpleConverter
         public void ConversionDone()
         {
             // todo: enable disabled and disable enabled :)
-            //_backgroundThread.Join();
+            _backgroundThread.Join();
+            MessageBox.Show("hola");
         }
 
         /// <summary>

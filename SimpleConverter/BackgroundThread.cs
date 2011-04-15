@@ -10,7 +10,6 @@ namespace SimpleConverter
 {
     /// <summary>
     /// Background batch conversion
-    /// todo: maybe switch from threads to BackgroundWorker class
     /// </summary>
     class BackgroundThread
     {
@@ -50,6 +49,11 @@ namespace SimpleConverter
         public event ThreadEndedDelegate ThreadEndedEvent;
 
         /// <summary>
+        /// Synchronization context
+        /// </summary>
+        private SynchronizationContext _synchronizationContext = SynchronizationContext.Current;
+
+        /// <summary>
         /// Public constructor
         /// </summary>
         public BackgroundThread()
@@ -59,9 +63,9 @@ namespace SimpleConverter
         /// <summary>
         /// Run background conversion
         /// </summary>
-        /// <param name="plugin"></param>
-        /// <param name="files"></param>
-        /// <param name="outputPath"></param>
+        /// <param name="plugin">Plugin instance</param>
+        /// <param name="files">List of files to convert</param>
+        /// <param name="outputPath">Output folder for generated files</param>
         /// <returns>true at success; false otherwise</returns>
         public bool Run(IPlugin plugin, IEnumerable<ListFile> files, string outputPath = "")
         {
@@ -72,7 +76,7 @@ namespace SimpleConverter
                 _thread.Join();
 
             if (plugin == null)
-                throw new InvalidArgumentException();
+                throw new InvalidArgumentException("There is a problem with plugin selection, please try reselect plugin.");
 
             if (files == null || files.Count<ListFile>() == 0)
                 throw new InvalidArgumentException("Can't start conversion when there is no file to convert.");
@@ -138,7 +142,24 @@ namespace SimpleConverter
             // fire thread ended event
             try
             {
-                ThreadEndedEvent();
+                if (SynchronizationContext.Current == _synchronizationContext)
+                {
+                    // Execute the ThreadEndedEvent event on the current thread
+                    ThreadEndedEvent();
+                }
+                else
+                {
+                    // Post the ThreadEndedEvent event on the creator thread
+                    _synchronizationContext.Post(new SendOrPostCallback(delegate(object state)
+                    {
+                        ThreadEndedDelegate handler = ThreadEndedEvent;
+
+                        if (handler != null)
+                        {
+                            handler();
+                        }
+                    }), null);
+                }
             }
             catch (NullReferenceException)
             {
@@ -154,6 +175,17 @@ namespace SimpleConverter
             {
                 _abort = true;
             }
+        }
+
+        /// <summary>
+        /// Join thread
+        /// </summary>
+        public void Join()
+        {
+            if (_thread != null)
+                _thread.Join();
+
+            _thread = null;
         }
     }
 
