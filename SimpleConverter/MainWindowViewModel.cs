@@ -232,7 +232,6 @@ namespace SimpleConverter
 
         /// <summary>
         /// Conversion in background thread ended
-        /// This event will start in another thread
         /// </summary>
         public void ConversionDone()
         {

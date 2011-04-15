@@ -84,7 +84,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             reader.Close();
 
-            if (!ok)    // todo: print message or not?
+            if (!ok)
                 return;
 
             Messenger.Instance.SendMessage("Parsing done!");
@@ -149,8 +149,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <returns>True if is supported, false otherwise</returns>
         public bool ValidateFile(string filename)
         {
-            // todo: refactor this!!
-            if (System.IO.Path.GetExtension(filename) == ".tex")
+            if (System.IO.Path.GetExtension(filename) == ".tex" && System.IO.File.Exists(filename))
                 return true;
             return false;
         }

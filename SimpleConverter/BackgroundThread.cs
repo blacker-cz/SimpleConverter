@@ -132,8 +132,9 @@ namespace SimpleConverter
                 }
 
             }
-            catch (InitException ex) { }
-            catch (DocumentException ex) { }
+            // methods raising these exceptions should add message to log, so no need to do anything in here
+            catch (InitException) { }
+            catch (DocumentException) { }
             finally
             {
                 _plugin.Done();

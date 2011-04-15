@@ -169,6 +169,10 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             text = text.Replace("\r\n", "\r");
             text = text.Replace("\n", "\r");
 
+            // filter spaces (no space at beginning of line, and no space after space)
+            if(text.StartsWith(" ") && (range.Text.EndsWith(" ") || range.Text.Length == 0 || range.Text.EndsWith("\r")))
+                text = text.TrimStart(' ');
+
             range.InsertAfter(text);
 
             // apply formatting only if there were changes (experimental!)
