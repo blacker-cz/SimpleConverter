@@ -28,6 +28,16 @@ namespace SimpleConverter.Contract
         void ConvertDocument(string filename, string outputDirectory = "");
 
         /// <summary>
+        /// Initialize plugin before document conversion
+        /// </summary>
+        void Init();
+
+        /// <summary>
+        /// Conversion is completed, free plugin resources
+        /// </summary>
+        void Done();
+
+        /// <summary>
         /// Content of the settings tab
         /// </summary>
         /// <returns></returns>

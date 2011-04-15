@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using SimpleConverter.Contract;
 
 namespace SimpleConverter.Plugin.Beamer2PPT
 {
@@ -7,7 +8,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
     /// Custom exception used for PowerPoint manipulation errors
     /// </summary>
     [Serializable]
-    class PowerPointApplicationException : Exception
+    class PowerPointApplicationException : InitException
     {
         public PowerPointApplicationException(string message)
             : base(message) { }
@@ -23,7 +24,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
     /// Custom exception used for output document building errors
     /// </summary>
     [Serializable]
-    class DocumentBuilderException : Exception
+    class DocumentBuilderException : DocumentException
     {
         public DocumentBuilderException(string message)
             : base(message) { }

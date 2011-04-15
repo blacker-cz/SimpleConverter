@@ -29,7 +29,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <summary>
         /// Current progress
         /// </summary>
-        private int _currentProgress = BasicProgress;
+        private int _currentProgress;
 
         /// <summary>
         /// Filename of output file (without extension)
@@ -91,28 +91,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="filename">Filename of input file (used for output file)</param>
-        /// <param name="outputPath">Output directory</param>
-        /// <param name="document">Document tree</param>
-        /// <param name="slideCount">Number of slides in document tree</param>
-        /// <param name="sectionTable">Table of document sections</param>
-        /// <param name="frametitleTable">Table of frame titles</param>
         /// <exception cref="PowerPointApplicationException"></exception>
-        public PowerPointBuilder(string filename, string outputPath, Node document, int slideCount, List<SectionRecord> sectionTable, Dictionary<int, FrametitleRecord> frametitleTable)
+        public PowerPointBuilder()
         {
-            if (outputPath.Length == 0)
-                _filename = Path.Combine(Directory.GetCurrentDirectory(), "output", Path.GetFileNameWithoutExtension(filename));
-            else
-                _filename = Path.Combine(outputPath, Path.GetFileNameWithoutExtension(filename));
-
-            _document = document;
-            _slideCount = slideCount;
-
-            _sectionTable = sectionTable ?? new List<SectionRecord>();
-            _frametitleTable = frametitleTable ?? new Dictionary<int, FrametitleRecord>();
-
-            _preambuleSettings = new PreambuleSettings(Path.GetDirectoryName(filename));
-
             // start PowerPoint
             try
             {
@@ -135,11 +116,35 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <summary>
         /// Build presentation from document tree.
         /// </summary>
-        public void Build()
+        /// <param name="filename">Filename of input file (used for output file)</param>
+        /// <param name="outputPath">Output directory</param>
+        /// <param name="document">Document tree</param>
+        /// <param name="slideCount">Number of slides in document tree</param>
+        /// <param name="sectionTable">Table of document sections</param>
+        /// <param name="frametitleTable">Table of frame titles</param>
+        public void Build(string filename, string outputPath, Node document, int slideCount, List<SectionRecord> sectionTable, Dictionary<int, FrametitleRecord> frametitleTable)
         {
-            // some ideas:
-            //      - probably two tables for title settings, one local, second one global; use Dictionary<string, Node>;
-            //                      clone global to local on slide start; edit global outside of slide, edit local inside of slide
+
+            #region Initialize internal variables
+            if (outputPath.Length == 0)
+                _filename = Path.Combine(Directory.GetCurrentDirectory(), "output", Path.GetFileNameWithoutExtension(filename));
+            else
+                _filename = Path.Combine(outputPath, Path.GetFileNameWithoutExtension(filename));
+
+            _document = document;
+            _slideCount = slideCount;
+
+            _sectionTable = sectionTable ?? new List<SectionRecord>();
+            _frametitleTable = frametitleTable ?? new Dictionary<int, FrametitleRecord>();
+
+            _preambuleSettings = new PreambuleSettings(Path.GetDirectoryName(filename));
+
+            _currentSlide = 0;
+            _slideIndex = 0;
+
+            _currentProgress = BasicProgress;
+
+            #endregion // Initialize internal variables
 
             Node preambule = _document.FindFirstNode("preambule");
             if (preambule == null)
@@ -172,6 +177,13 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             }
 
             Messenger.Instance.SendMessage("Output saved to: \"" + _pptPresentation.FullName + "\"");
+
+            try
+            {
+                _pptPresentation.Close();
+                _pptPresentation = null;
+            }
+            catch { }
         }
 
         /// <summary>
@@ -195,10 +207,16 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         public void Close()
         {
             if (_pptPresentation != null)
+            {
                 _pptPresentation.Close();
+                _pptPresentation = null;
+            }
 
             if (_pptApplication != null)
+            {
                 _pptApplication.Quit();
+                _pptApplication = null;
+            }
         }
 
         /// <summary>

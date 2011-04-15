@@ -13,6 +13,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
     {
         private System.Windows.FrameworkElement _visual;
 
+        private PowerPointBuilder _builder;
+
         #region IPlugin implementation
 
         public event SendMessageDelegate SendMessageEvent;
@@ -26,6 +28,35 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         {
             // register Messenger
             Messenger.Instance.Add(this);
+        }
+
+        /// <summary>
+        /// Initialize plugin before document conversion.
+        /// Start PowerPoint
+        /// </summary>
+        public void Init()
+        {
+            try
+            {
+                _builder = new PowerPointBuilder();
+                // setup progress delegate
+                _builder.Progress = new ProgressDelegate(ProgressInfo);
+            }
+            catch (PowerPointApplicationException ex)
+            {
+                Messenger.Instance.SendMessage(ex.Message, MessageLevel.ERROR);
+                throw ex;    // propagate exception (to end document processing loop)
+            }
+        }
+
+        /// <summary>
+        /// Conversion is completed, free plugin resources
+        /// </summary>
+        public void Done()
+        {
+            // close PowerPoint and opened presentations
+            _builder.Close();
+            _builder = null;
         }
 
         /// <summary>
@@ -65,6 +96,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(parser.Document.GetType());
             System.IO.StreamWriter writer = new System.IO.StreamWriter(@"document.xml");
             x.Serialize(writer, parser.Document);
+            writer.Close();
 
             Messenger.Instance.SendMessage(@"Document tree serialized to ""document.xml""");
 #endif
@@ -83,32 +115,16 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             Messenger.Instance.SendMessage("Started building output.");
 
-            PowerPointBuilder builder;
+            if (_builder == null)
+                throw new InvalidOperationException("Plugin wasn't initialized yet");
 
             try
             {
-                builder = new PowerPointBuilder(filename, outputDirectory, parser.Document, parser.SlideCount, parser.SectionTable, parser.FrametitleTable);
-                // setup progress delegate
-                builder.Progress = new ProgressDelegate(ProgressInfo);
-            }
-            catch (PowerPointApplicationException ex)
-            {
-                Messenger.Instance.SendMessage(ex.Message, MessageLevel.ERROR);
-                throw new Exception(ex.Message, ex);    // propagate exception (to end document processing loop)
-            }
-
-            try
-            {
-                builder.Build();
+                _builder.Build(filename, outputDirectory, parser.Document, parser.SlideCount, parser.SectionTable, parser.FrametitleTable);
             }
             catch (DocumentBuilderException ex)
             {
                 Messenger.Instance.SendMessage(ex.Message, MessageLevel.ERROR);
-            }
-            finally
-            {
-                // close PowerPoint and opened presentations
-                builder.Close();
             }
 
             #endregion // Building output document

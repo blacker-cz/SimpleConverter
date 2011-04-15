@@ -23,6 +23,14 @@ namespace SimpleConverter.Plugin.Dummy
             _random = new Random(DateTime.Now.Millisecond);
         }
 
+        public void Init()
+        {
+        }
+
+        public void Done()
+        {
+        }
+
         public void ConvertDocument(string filename, string outputDirectory = "")
         {
             throw new NotImplementedException();

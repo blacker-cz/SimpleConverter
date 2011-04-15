@@ -108,31 +108,31 @@ namespace SimpleConverter
         /// </summary>
         private void Worker()
         {
-            foreach (ListFile file in _files)
+
+            try
             {
-                if (file.Valid)
+                _plugin.Init();
+
+                foreach (ListFile file in _files)
                 {
-#if !DEBUG
-                    try
+                    if (file.Valid)
                     {
-#endif
                         _plugin.ConvertDocument(file.Filepath, _outputPath);
-#if !DEBUG
                     }
-                    catch (Exception ex)
+
+                    lock (_lock)
                     {
-                        // todo: print error message
-                        System.Windows.MessageBox.Show(ex.Message);
-                        break;
+                        if (_abort)
+                            break;
                     }
-#endif
                 }
 
-                lock (_lock)
-                {
-                    if (_abort)
-                        break;
-                }
+            }
+            catch (InitException ex) { }
+            catch (DocumentException ex) { }
+            finally
+            {
+                _plugin.Done();
             }
 
             // fire thread ended event
