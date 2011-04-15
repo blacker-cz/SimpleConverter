@@ -238,7 +238,6 @@ namespace SimpleConverter
         {
             // todo: enable disabled and disable enabled :)
             _backgroundThread.Join();
-            MessageBox.Show("hola");
         }
 
         /// <summary>
