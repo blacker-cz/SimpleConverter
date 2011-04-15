@@ -280,7 +280,7 @@ namespace SimpleConverter
             // WPF doesn't have folder browser dialog, so we have to use the one from Windows.Forms
             System.Windows.Forms.FolderBrowserDialog dlg = new System.Windows.Forms.FolderBrowserDialog();
             dlg.SelectedPath = OutputPath;
-            dlg.Description = "Select output directory.";   // todo: better description
+            dlg.Description = "Select output directory.";
             dlg.ShowNewFolderButton = true;
 
             System.Windows.Forms.DialogResult result = dlg.ShowDialog();

@@ -30,7 +30,7 @@ namespace SimpleConverter
             catch (Factory.PluginLoaderException e)
             {
                 this.Close();
-                MessageBox.Show("Application encountered following error:\n\n\"" + e.Message + "\"", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Application encountered following error and will now end:\n\n\"" + e.Message + "\"", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

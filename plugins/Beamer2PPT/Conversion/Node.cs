@@ -84,7 +84,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <summary>
         /// Node content.
         /// Used only for leaves (type of content depends on type of node).
-        /// todo: change to string?
         /// </summary>
         public object Content { get; set; }
 
