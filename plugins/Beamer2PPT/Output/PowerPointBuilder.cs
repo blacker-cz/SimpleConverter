@@ -161,10 +161,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             ProcessBody(body);
 
-            // todo: set type of file depending on settings window
             try
             {
-                _pptPresentation.SaveAs(_filename, PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation);
+                _pptPresentation.SaveAs(_filename, Settings.Instance.SaveAs);
             }
             catch (Exception)
             {
@@ -176,7 +175,21 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 RaiseProgress();
             }
 
-            Messenger.Instance.SendMessage("Output saved to: \"" + _pptPresentation.FullName + "\"");
+            // print save message
+            switch (Settings.Instance.SaveAs)
+            {
+                case Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsDefault:
+                case Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation:
+                case Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsPresentation:
+                    Messenger.Instance.SendMessage("Output saved to: \"" + _pptPresentation.FullName + "\"");
+                    break;
+                case Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsPDF:
+                    Messenger.Instance.SendMessage("Output saved to: \"" + _filename + ".pdf\"");
+                    break;
+                default:
+                    Messenger.Instance.SendMessage("Output saved to output directory.");
+                    break;
+            }
 
             try
             {

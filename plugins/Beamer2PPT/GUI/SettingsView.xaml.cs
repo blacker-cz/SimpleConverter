@@ -22,6 +22,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         public SettingsView()
         {
             InitializeComponent();
+
+            this.DataContext = new SettingsViewViewModel();
         }
     }
 }

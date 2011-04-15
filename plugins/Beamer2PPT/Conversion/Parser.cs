@@ -4,9 +4,9 @@
 
 // GPPG version 1.4.5
 // Machine:  LUKAS-PC
-// DateTime: 14.4.2011 15:02:16
+// DateTime: 15.4.2011 19:01:26
 // UserName: Lukas
-// Input file <D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 14.4.2011 13:01:44>
+// Input file <D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 15.4.2011 16:55:37>
 
 // options: conflicts no-lines diagnose & report gplex conflicts
 
@@ -48,12 +48,12 @@ public abstract class ScanBase : AbstractScanner<ValueType,LexLocation> {
 
 public class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
-  // Verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 14.4.2011 13:01:44
+  // Verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 15.4.2011 16:55:37
     public Node Document { get; private set; }
     public int SlideCount { get; private set; }
     public List<SectionRecord> SectionTable { get; private set; }
     public Dictionary<int, FrametitleRecord> FrametitleTable { get; private set; }
-  // End verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 14.4.2011 13:01:44
+  // End verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 15.4.2011 16:55:37
 
 #pragma warning disable 649
   private static Dictionary<int, string> aliasses;
@@ -562,7 +562,7 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
                                     }
         break;
       case 13: // titlesettings -> "\author", '{', simpleformtext, '}'
-{ // todo: can contain \and command
+{
                                         CurrentSemanticValue.documentNode = new Node("author");
                                         CurrentSemanticValue.documentNode.Children = ValueStack[ValueStack.Depth-2].nodeList;
                                     }
@@ -1103,7 +1103,10 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 97: // simpleformtext -> simpleformtext, "\and"
 {
-                                        ValueStack[ValueStack.Depth-2].nodeList.Add(new Node("and"));
+                                        // process \and command as tabulator
+                                        Node tmp = new Node("string");
+                                        tmp.Content = "\t" as object;
+                                        ValueStack[ValueStack.Depth-2].nodeList.Add(tmp);
                                         CurrentSemanticValue.nodeList = ValueStack[ValueStack.Depth-2].nodeList;
                                     }
         break;
