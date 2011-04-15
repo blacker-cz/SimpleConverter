@@ -121,7 +121,7 @@ titlesettings :
                                         $$ = new Node("title");
                                         $$.Children = $3;
                                     }
-        |   AUTHOR '{' simpleformtext '}'   { // todo: can contain \and command
+        |   AUTHOR '{' simpleformtext '}'   {
                                         $$ = new Node("author");
                                         $$.Children = $3;
                                     }
@@ -545,7 +545,10 @@ simpleformtext :                    {
                                         $$ = $1;
                                     }
         |   simpleformtext AND      {
-                                        $1.Add(new Node("and"));
+                                        // process \and command as tabulator
+                                        Node tmp = new Node("string");
+                                        tmp.Content = "\t" as object;
+                                        $1.Add(tmp);
                                         $$ = $1;
                                     }
         ;

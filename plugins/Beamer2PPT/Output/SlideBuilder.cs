@@ -16,7 +16,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private PowerPoint.Slide _slide;
 
         /// <summary>
-        /// Table with title settings (used for \maketitle)
+        /// Table with title settings (used for \titlepage)
         /// </summary>
         private Dictionary<string, List<Node>> _titlesettings;
 
@@ -299,6 +299,17 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
                         shape = null;
                         break;
+                    case "titlepage":
+
+                        Reshaper(reshapeShapes);
+                        reshapeShapes.Clear();
+                        
+                        UpdateBottomShapeBorder(true);
+
+                        GenerateTitlePage();
+
+                        shape = null;
+                        break;
                     default: // other -> check for simple formats
                         SimpleTextFormat(nodes, currentNode);
                         break;
@@ -472,12 +483,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         {
                             columnCounter++;
 
-                            // copy column content to stack
-                            foreach (Node item in rowcontent.Children.Reverse<Node>())
-                            {
-                                nodes.Push(item);
-                            }
-
                             if (columnCounter > cols)
                                 throw new DocumentBuilderException("Invalid table definition.");
 
@@ -505,6 +510,12 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
                             _format.Invalidate();
 
+                            // copy column content to stack
+                            foreach (Node item in rowcontent.Children.Reverse<Node>())
+                            {
+                                nodes.Push(item);
+                            }
+
                             // process nodes on stack
                             while (nodes.Count != 0)
                             {
@@ -517,8 +528,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                         _format.AppendText(shape, currentNode.Content as string);
                                         break;
                                     case "paragraph":
-                                        if (shape != null)
-                                            _format.AppendText(shape, "\r");
+                                        _format.AppendText(shape, "\r");
                                         break;
                                     case "pause":
                                         if (!paused && Pause())
@@ -983,12 +993,15 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                 _format.AppendText(definitionShape, currentNode.Content as string);
                                 break;
                             case "paragraph":
-                                if (shape != null)
-                                    _format.AppendText(definitionShape, "\r");
+                                _format.AppendText(definitionShape, "\r");
                                 break;
                             case "pause":
                                 if (Pause())
                                     return false;
+                                break;
+                            case "bulletlist":
+                            case "numberedlist":
+                                // todo: what to do?
                                 break;
                             case "today":
                                 definitionShape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
@@ -1026,6 +1039,78 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             shape.Table.Rows[shape.Table.Rows.Count].Delete();
 
             return true;
+        }
+
+        /// <summary>
+        /// Generate title page
+        /// </summary>
+        private void GenerateTitlePage()
+        {
+            if (_titlesettings.Count == 0)  // no title settings -> don't generate shape
+                return;
+
+            PowerPoint.Shape shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 50.0f, 648.0f, 10.0f);
+            // set alignment to center
+            shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignCenter;
+
+            string[] keys = { "title", "author", "date" };
+
+            Stack<Node> nodes = new Stack<Node>();
+            Node currentNode;
+
+            foreach (string key in keys)
+            {
+                if (_titlesettings.ContainsKey(key))
+                {
+                    if (key == "title")
+                        SimpleTextFormat(nodes, new Node("huge"));
+
+                    if (key == "author")
+                        SimpleTextFormat(nodes, new Node("large"));
+
+                    // copy column content to stack
+                    foreach (Node item in _titlesettings[key].Reverse<Node>())
+                    {
+                        nodes.Push(item);
+                    }
+
+                    // process nodes on stack
+                    while (nodes.Count != 0)
+                    {
+                        currentNode = nodes.Pop();
+
+                        // process node depending on its type
+                        switch (currentNode.Type)
+                        {
+                            case "string":
+                                _format.AppendText(shape, currentNode.Content as string);
+                                break;
+                            case "paragraph":
+                                _format.AppendText(shape, "\r");
+                                break;
+                            case "today":
+                                shape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
+                                break;
+                            default: // other -> check for simple formats
+                                SimpleTextFormat(nodes, currentNode);
+                                break;
+                        }
+
+                        if (currentNode.Children == null)
+                            continue;
+
+                        // push child nodes to stack
+                        foreach (Node item in currentNode.Children.Reverse<Node>())
+                        {
+                            nodes.Push(item);
+                        }
+                    }
+
+                    _format.Invalidate();
+
+                    _format.AppendText(shape, "\r\r\r\r");
+                }
+            }
         }
 
         /// <summary>
