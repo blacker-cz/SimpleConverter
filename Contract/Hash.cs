@@ -10,11 +10,12 @@ namespace SimpleConverter.Contract
     class Hash
     {
         /// <summary>
-        /// Compute MD5 hash for input string
+        /// Compute hash for input string.
+        /// First compute MD5 then split md5 hash in to 4 32bit parts and xor them.
         /// </summary>
         /// <param name="input">Input string</param>
-        /// <returns>MD5 hash</returns>
-        public static string md5(string input)
+        /// <returns>Hash in base 36</returns>
+        public static string ComputeHash(string input)
         {
             MD5 md5Hasher = MD5.Create();
 
@@ -22,15 +23,30 @@ namespace SimpleConverter.Contract
 
             md5Hasher.Clear();  // clear to prevent memory leaks
 
-            StringBuilder sBuilder = new StringBuilder();
+            uint a, b, c, d, hash;
+            a = BitConverter.ToUInt32(data, 0);
+            b = BitConverter.ToUInt32(data, 4);
+            c = BitConverter.ToUInt32(data, 8);
+            d = BitConverter.ToUInt32(data, 12);
+            hash = a ^ b;
 
-            // build hexadecimal representation
-            for (int i = 0; i < data.Length; i++)
+            string chars = "0123456789abcdefghijklmnopqrstuvwxyz";
+
+            uint r;
+            string hashString = "";
+
+            // in r we have the offset of the char that was converted to the new base
+            while (hash >= 36)
             {
-                sBuilder.Append(data[i].ToString("x2"));
+                r = hash % 36;
+                hashString = chars[(int) r] + hashString;
+                hash = hash / 36;
             }
 
-            return sBuilder.ToString();
+            // the last number to convert
+            hashString = chars[(int) hash] + hashString;
+
+            return hashString;
         }
     }
 }

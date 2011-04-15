@@ -21,7 +21,7 @@ namespace SimpleConverter.Contract
             Description = description;
 
             // automatically build key from plugin name and version
-            Key = Hash.md5(name + version);
+            Key = Hash.ComputeHash(name + version);
         }
 
         public string Name { get; private set; }

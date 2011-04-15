@@ -85,7 +85,7 @@ namespace SimpleConverter.Factory
             {
                 foreach (var plugin in LoadedPlugins)
                 {
-                    if (plugin.Metadata.Key == index)
+                    if (index.Equals(plugin.Metadata.Key, StringComparison.OrdinalIgnoreCase))
                         return plugin.Value;
                 }
 
