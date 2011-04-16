@@ -7,6 +7,9 @@ using System.Globalization;
 
 namespace SimpleConverter.Plugin.Beamer2PPT
 {
+    /// <summary>
+    /// Convertor for converting string bool value to bool value
+    /// </summary>
     class BooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

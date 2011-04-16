@@ -12,17 +12,18 @@
     <Grid>
         <Label Content="Output file type:" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label1" VerticalAlignment="Top" />
         <ComboBox Height="23" ItemsSource="{Binding Path=SaveTypes}" DisplayMemberPath="Name" SelectedValue="{Binding Path=SelectedSaveType, Mode=TwoWay}" SelectedValuePath="Type" Margin="114,15,0,0" Name="comboBoxSaveAsType" VerticalAlignment="Top" HorizontalAlignment="Left" Width="245" />
-        <CheckBox HorizontalAlignment="Left" Margin="17,46,0,0" Name="checkBoxAdjustSize" VerticalAlignment="Top" Width="394" IsChecked="{Binding AdjustSize, Mode=TwoWay}">
+        <CheckBox HorizontalAlignment="Left" Margin="17,46,0,0" Name="checkBoxAdjustSize" VerticalAlignment="Top" Width="410" IsChecked="{Binding AdjustSize, Mode=TwoWay}">
             <AccessText TextWrapping="Wrap" Margin="5,0,0,0">Adjust size of images and table columns to match difference between PowerPoint and Beamer slide size</AccessText>
         </CheckBox>
-        <Label Content="Nested elements processing (e.g. tables, images, description lists):" HorizontalAlignment="Left" Margin="12,84,0,0" Name="label2" VerticalAlignment="Top" />
-        <StackPanel Width="400" Margin="17,116,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <Label Content="Nested elements processing* (e.g. tables, images, description lists):" HorizontalAlignment="Left" Margin="12,84,0,0" Name="label2" VerticalAlignment="Top" />
+        <StackPanel Width="410" Margin="17,116,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <RadioButton IsChecked="{Binding Path=NestedAsText, Converter={StaticResource booleanConverter}, ConverterParameter=true, Mode=TwoWay}" GroupName="Nested Elements Processing">
-                <AccessText TextWrapping="Wrap" Margin="5,0,0,0">Process nested elements as simple text TODO!!!! description here</AccessText>
+                <AccessText TextWrapping="Wrap" Margin="5,0,0,0">When processing nested elements process them only as formatted text (support pauses and some overlays) - preferred</AccessText>
             </RadioButton>
             <RadioButton Margin="0,5,0,0" IsChecked="{Binding Path=NestedAsText, Converter={StaticResource booleanConverter}, ConverterParameter=false, Mode=TwoWay}" GroupName="Nested Elements Processing">
-                <AccessText TextWrapping="Wrap" Margin="5,0,0,0">Process nested elements after processing whole document TODO!!! description here</AccessText>
+                <AccessText TextWrapping="Wrap" Margin="5,0,0,0">Try to extract nested elements and render them at bottom of generated slide (doesn't support pauses) </AccessText>
             </RadioButton>
         </StackPanel>
+        <Label Content="* plugin natively supports only nesting of numbered and bulleted lists" HorizontalAlignment="Left" Margin="12,191,0,0" Name="label3" VerticalAlignment="Top" />
     </Grid>
 </UserControl>
