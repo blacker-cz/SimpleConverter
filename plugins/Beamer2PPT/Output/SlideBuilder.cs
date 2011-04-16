@@ -76,6 +76,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private PreambuleSettings _preambuleSettings;
 
         /// <summary>
+        /// Queue for nested elements generated at bottom of slide
+        /// </summary>
+        private Queue<Node> _postProcessing;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="preambuleSettings">Preambule settings</param>
@@ -105,6 +110,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             // copy title settings
             _titlesettings = new Dictionary<string,List<Node>>(_preambuleSettings.TitlepageSettings);
             _format = new TextFormat(_baseFontSize);
+            _postProcessing = new Queue<Node>();
 
             if (!_called)
             {
@@ -119,16 +125,15 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 _localPauseCounter = _localPauseCounterStart;
             }
 
-            // concept:
-            //      iterate through nodes
-            //      save font settings on stack (when entering - push new setting to stack; when leaving font settings node - pop from stack)
-            //      if node is string - append to current shape
-            //      if node is table/image or another shape-like object, process them separatedly
-            //      at least one method for table processing and one method for image processing
-
             UpdateBottomShapeBorder();
 
             paused = !ProcessSlideContent(slideNode);
+
+            if (!Settings.Instance.NestedAsText)    // extract nested elements
+            {
+                _localPauseCounter = int.MinValue;  // ignore pauses in post processed shapes
+                PostProcessing();
+            }
 
             return _passNumber >= _maxPass;
         }
@@ -271,8 +276,13 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         UpdateBottomShapeBorder(true);
                         PowerPoint.Shape tableShape;
 
-                        if (!GenerateTable(currentNode, out tableShape))    // probably will need to call reshaper before return too
+                        if (!GenerateTable(currentNode, out tableShape))
+                        {
+                            reshapeShapes.Add(tableShape);  // reshape before ending this pass
+                            Reshaper(reshapeShapes);
+
                             return false;   // table processing was paused
+                        }
 
                         if (tableShape == null) // table wasn't generated so call reshaper and next shape will start at new "line"
                         {
@@ -456,6 +466,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             PowerPoint.Shape shape; // cell shape
 
+            // skip expanding children to stack
+            bool skip = false;
+
             // pause processing variables
             bool paused = false;
             int pausedAfter = 0;
@@ -521,6 +534,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                             {
                                 currentNode = nodes.Pop();
 
+                                skip = false;
+
                                 // process node depending on its type
                                 switch (currentNode.Type)
                                 {
@@ -540,6 +555,17 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                                 pausedAfter = rowCounter;
                                         }
                                         break;
+                                    case "numberedlist":
+                                    case "bulletlist":
+                                    case "descriptionlist":
+                                    case "image":
+                                    case "table":
+                                        if (!Settings.Instance.NestedAsText)
+                                        {
+                                            skip = true;
+                                            _postProcessing.Enqueue(currentNode);
+                                        }
+                                        break;
                                     case "today":
                                         shape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
                                         break;
@@ -548,7 +574,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                         break;
                                 }
 
-                                if (currentNode.Children == null)
+                                if (currentNode.Children == null || skip)
                                     continue;
 
                                 // push child nodes to stack
@@ -842,6 +868,15 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         case "today":
                             shape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
                             break;
+                        case "descriptionlist":
+                        case "table":
+                        case "image":
+                            if (!Settings.Instance.NestedAsText)
+                            {
+                                skip = true;
+                                _postProcessing.Enqueue(currentNode);
+                            }
+                            break;
                         case "bulletlist":
                         case "numberedlist":
                             skip = true;
@@ -956,34 +991,44 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             int itemsCounter = 0;
 
-            PowerPoint.Shape termShape, definitionShape;
+            // how deep we are in nested lists
+            int nested = 0;
+
+            // skip expanding child nodes
+            bool skip = false;
+
+            PowerPoint.Shape termShape = null, definitionShape = null;
 
             foreach (Node node in items)
             {
                 if (node.Type == "item")
                 {
-                    itemsCounter++;
-
                     foreach (Node item in node.Children.Reverse<Node>())
                     {
                         nodes.Push(item);
                     }
 
-                    // get cell shape
-                    termShape = shape.Table.Cell(itemsCounter, 1).Shape;
-                    definitionShape = shape.Table.Cell(itemsCounter, 2).Shape;
+                    if (nested == 0)
+                    {
+                        itemsCounter++;
 
-                    // set term
-                    termShape.TextFrame2.TextRange.InsertAfter(node.OptionalParams as string);
-                    termShape.TextFrame2.TextRange.Font.Bold = MsoTriState.msoTrue;
-                    termShape.TextFrame2.TextRange.Font.Size = _baseFontSize * 2.0f;
+                        // get cell shape
+                        termShape = shape.Table.Cell(itemsCounter, 1).Shape;
+                        definitionShape = shape.Table.Cell(itemsCounter, 2).Shape;
 
+                        // set term
+                        termShape.TextFrame2.TextRange.InsertAfter(node.OptionalParams as string);
+                        termShape.TextFrame2.TextRange.Font.Bold = MsoTriState.msoTrue;
+                        termShape.TextFrame2.TextRange.Font.Size = _baseFontSize * 2.0f;
+                    }
                     // set definition
                     _format.Invalidate();
 
                     // process nodes on stack
                     while (nodes.Count != 0)
                     {
+                        skip = false;
+
                         currentNode = nodes.Pop();
 
                         // process node depending on its type
@@ -999,9 +1044,38 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                 if (Pause())
                                     return false;
                                 break;
+                            case "image":
+                                if (!Settings.Instance.NestedAsText)
+                                {
+                                    skip = true;
+                                    _postProcessing.Enqueue(currentNode);
+                                }
+                                break;
+                            case "table":
+                                if (!Settings.Instance.NestedAsText)
+                                {
+                                    skip = true;
+                                    _postProcessing.Enqueue(currentNode);
+                                }
+                                break;
+                            case "descriptionlist":
                             case "bulletlist":
                             case "numberedlist":
-                                // todo: what to do?
+                                if (Settings.Instance.NestedAsText)
+                                {
+                                    // increment nested counter and add __end_list node
+                                    nested++;
+                                    nodes.Push(new Node("__end_list"));
+                                }
+                                else
+                                {
+                                    // add node to post processing queue
+                                    skip = true;
+                                    _postProcessing.Enqueue(currentNode);
+                                }
+                                break;
+                            case "__end_list":
+                                nested--;
                                 break;
                             case "today":
                                 definitionShape.TextFrame.TextRange.InsertDateTime(PowerPoint.PpDateTimeFormat.ppDateTimeFigureOut, MsoTriState.msoTrue);
@@ -1011,7 +1085,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                 break;
                         }
 
-                        if (currentNode.Children == null)
+                        if (currentNode.Children == null || skip)
                             continue;
 
                         // push child nodes to stack
@@ -1021,16 +1095,19 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         }
                     }
 
-                    // add row to the end of table
-                    shape.Table.Rows.Add();
-
-                    // check overlays
-                    int min = node.OverlayList.Count != 0 ? node.OverlayList.Min() : int.MaxValue;
-                    _maxPass = Math.Max(Misc.MaxOverlay(node.OverlayList), _maxPass);    // set maximal number of passes from overlay specification
-                    if (!(node.OverlayList.Count == 0 || node.OverlayList.Contains(_passNumber) || min < 0 && Math.Abs(min) < _passNumber))
+                    if (nested == 0)
                     {
-                        termShape.TextFrame2.TextRange.Font.Fill.Visible = MsoTriState.msoFalse;
-                        definitionShape.TextFrame2.TextRange.Font.Fill.Visible = MsoTriState.msoFalse;
+                        // add row to the end of table
+                        shape.Table.Rows.Add();
+
+                        // check overlays
+                        int min = node.OverlayList.Count != 0 ? node.OverlayList.Min() : int.MaxValue;
+                        _maxPass = Math.Max(Misc.MaxOverlay(node.OverlayList), _maxPass);    // set maximal number of passes from overlay specification
+                        if (!(node.OverlayList.Count == 0 || node.OverlayList.Contains(_passNumber) || min < 0 && Math.Abs(min) < _passNumber))
+                        {
+                            termShape.TextFrame2.TextRange.Font.Fill.Visible = MsoTriState.msoFalse;
+                            definitionShape.TextFrame2.TextRange.Font.Fill.Visible = MsoTriState.msoFalse;
+                        }
                     }
                 }
             }
@@ -1109,6 +1186,49 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     _format.Invalidate();
 
                     _format.AppendText(shape, "\r\r\r\r");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Post processing - generate shapes (elements) from queue
+        /// </summary>
+        private void PostProcessing()
+        {
+            Node node;
+
+            while (_postProcessing.Count > 0)
+            {
+                node = _postProcessing.Dequeue();
+
+                switch (node.Type)
+                {
+                    case "image":
+                        UpdateBottomShapeBorder(false);
+                        PowerPoint.Shape imageShape;
+
+                        GenerateImage(node, out imageShape);
+                        break;
+                    case "bulletlist":
+                    case "numberedlist":
+                        UpdateBottomShapeBorder(false);
+                        PowerPoint.Shape shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
+
+                        GenerateList(node.Children, shape, 1, node.Type == "bulletlist" ? MsoBulletType.msoBulletUnnumbered : MsoBulletType.msoBulletNumbered);
+                        break;
+                    case "table":
+                        UpdateBottomShapeBorder(false);
+                        PowerPoint.Shape tableShape;
+
+                        GenerateTable(node, out tableShape);
+                        break;
+                    case "descriptionlist":
+                        UpdateBottomShapeBorder(false);
+
+                        GenerateDescriptionList(node.Children);
+                        break;
+                    default:
+                        break;
                 }
             }
         }

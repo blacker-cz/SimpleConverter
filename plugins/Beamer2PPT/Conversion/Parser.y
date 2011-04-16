@@ -237,6 +237,7 @@ slidecontent :                      {   /* return List<Node> - create node in sp
                                         $1.Add(new Node("titlepage"));
                                         $$ = $1;
                                     }
+        |   error      { YYABORT; }
         ;
 
 image :
