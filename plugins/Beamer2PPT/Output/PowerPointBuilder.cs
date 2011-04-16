@@ -249,7 +249,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             {
                 float size = Misc.ParseLength(part);
                 if (size > 0)
-                    _baseFontSize = size;
+                    _baseFontSize = Settings.Instance.AdjustSize ? size / 2 : size;
             }
         }
 

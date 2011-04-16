@@ -21,7 +21,7 @@
 // todo: cleanup this hell :D
 %token DOCUMENTCLASS "\documentclass", USEPACKAGE "\usepackage", USETHEME "\usetheme",
        TITLE "\title", AUTHOR "\author", TODAY "\today", DATE "\date", TITLEPAGE "\titlepage",
-       BEGIN_DOCUMENT "\begin{document}", END_DOCUMENT "\end{document}",
+       BEGIN_DOCUMENT "\begin{document}", END_DOCUMENT "\end{document}", INSTITUTE "\institute",
        BEGIN_FRAME "\begin{frame}", END_FRAME "\end{frame}", FRAME "\frame", FRAMETITLE "\frametitle",
        FRAMESUBTITLE "\framesubtitle", PAUSE "\pause",
        BEGIN_ITEMIZE "\begin{itemize}", END_ITEMIZE "\end{itemize}", BEGIN_ENUMERATE "\begin{enumerate}",
@@ -121,9 +121,15 @@ titlesettings :
                                         $$ = new Node("title");
                                         $$.Children = $3;
                                     }
-        |   AUTHOR '{' simpleformtext '}'   {
+        |   AUTHOR optional '{' simpleformtext '}'   {
                                         $$ = new Node("author");
-                                        $$.Children = $3;
+                                        $$.OptionalParams = $2;
+                                        $$.Children = $4;
+                                    }
+        |   INSTITUTE optional '{' simpleformtext '}'   {
+                                        $$ = new Node("institute");
+                                        $$.OptionalParams = $2;
+                                        $$.Children = $4;
                                     }
         |   DATE '{' simpleformtext '}' {
                                         $$ = new Node("date");
@@ -194,9 +200,10 @@ slide :
                                         SetFrameTitle(SlideCount, $3);
                                         SetFrameSubtitle(SlideCount, $6);
                                     }
-        |   FRAME '{' slidecontent '}'   {
+        |   FRAME optional '{' slidecontent '}'   {
                                         $$ = new Node("slide");
-                                        $$.Children = $3;
+                                        $$.OptionalParams = $2;
+                                        $$.Children = $4;
                                         SlideCount++;
                                     }
         ;
@@ -248,19 +255,21 @@ image :
                                     }
         ;
 
-// todo: need to consider table environment
 environment :
-            BEGIN_ITEMIZE items_list END_ITEMIZE    {
+            BEGIN_ITEMIZE optional items_list END_ITEMIZE    {   // todo: add optinal support [<+->]
                                         $$ = new Node("bulletlist");
-                                        $$.Children = $2;
+                                        $$.Children = $3;
+                                        $$.OptionalParams = $2;
                                     }
-        |   BEGIN_ENUMERATE items_list END_ENUMERATE    {
+        |   BEGIN_ENUMERATE optional items_list END_ENUMERATE    {
                                         $$ = new Node("numberedlist");
-                                        $$.Children = $2;
+                                        $$.Children = $3;
+                                        $$.OptionalParams = $2;
                                     }
-        |   BEGIN_DESCRIPTION items_list END_DESCRIPTION    {
+        |   BEGIN_DESCRIPTION optional items_list END_DESCRIPTION    {
                                         $$ = new Node("descriptionlist");
-                                        $$.Children = $2;
+                                        $$.Children = $3;
+                                        $$.OptionalParams = $2;
                                     }
         |   BEGIN_TABULAR STRING table_rows END_TABULAR    {
                                         $$ = new Node("table");

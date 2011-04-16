@@ -132,6 +132,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 _localPauseCounter = _localPauseCounterStart;
             }
 
+            _bottomShapeBorder = 0.0f;
+
             UpdateBottomShapeBorder();
 
             paused = !ProcessSlideContent(slideNode);
@@ -942,6 +944,9 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// <param name="show_bullet">Show bullet</param>
         private void FormatListItem(PowerPoint.Shape shape, MsoBulletType type, int itemStartAt, int level, int paragraphs, int itemsCount, bool show_bullet)
         {
+            if (shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1 <= 0)
+                return;
+
             if (paragraphs == 0)
             {
                 shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].ParagraphFormat.Bullet.Type = type;

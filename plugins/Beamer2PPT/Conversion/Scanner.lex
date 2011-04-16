@@ -34,7 +34,8 @@ envEnd      \\end{wsl}
 \\documentclass { BEGIN(pre_optional); return (int) Tokens.DOCUMENTCLASS; }
 \\usepackage    { BEGIN(pre_optional); return (int) Tokens.USEPACKAGE; }
 \\title         { return (int) Tokens.TITLE; }
-\\author        { return (int) Tokens.AUTHOR; }
+\\author        { BEGIN(pre_optional); return (int) Tokens.AUTHOR; }
+\\institute     { BEGIN(pre_optional); return (int) Tokens.INSTITUTE; }
 \\today         { return (int) Tokens.TODAY; }
 \\date          { return (int) Tokens.DATE; }
 
@@ -44,11 +45,11 @@ envEnd      \\end{wsl}
 {envEnd}\{document\}        { inBody = false; BEGIN(INITIAL); return (int) Tokens.END_DOCUMENT; }
 {envBegin}\{frame\}         { return (int) Tokens.BEGIN_FRAME; }
 {envEnd}\{frame\}           { return (int) Tokens.END_FRAME; }
-{envBegin}\{itemize\}       { return (int) Tokens.BEGIN_ITEMIZE; }
+{envBegin}\{itemize\}       { BEGIN(pre_optional); return (int) Tokens.BEGIN_ITEMIZE; }
 {envEnd}\{itemize\}         { return (int) Tokens.END_ITEMIZE; }
-{envBegin}\{enumerate\}     { return (int) Tokens.BEGIN_ENUMERATE; }
+{envBegin}\{enumerate\}     { BEGIN(pre_optional); return (int) Tokens.BEGIN_ENUMERATE; }
 {envEnd}\{enumerate\}       { return (int) Tokens.END_ENUMERATE; }
-{envBegin}\{description\}   { return (int) Tokens.BEGIN_DESCRIPTION; }
+{envBegin}\{description\}   { BEGIN(pre_optional); return (int) Tokens.BEGIN_DESCRIPTION; }
 {envEnd}\{description\}     { return (int) Tokens.END_DESCRIPTION; }
 {envBegin}\{tabular\}\{     { tabular = true; BEGIN(tabular_arg); tbl = 0; unformattedText = ""; return (int) Tokens.BEGIN_TABULAR; }
 {envEnd}\{tabular\}         { tabular = false; return (int) Tokens.END_TABULAR; }
@@ -57,7 +58,7 @@ envEnd      \\end{wsl}
 
 // Beamer specific
 // -----------------------------------------------------------------------------
-\\frame         { return (int) Tokens.FRAME; }
+\\frame         { BEGIN(pre_optional); return (int) Tokens.FRAME; }
 \\frametitle    { BEGIN(pre_overlay); return (int) Tokens.FRAMETITLE; }
 \\framesubtitle { BEGIN(pre_overlay); return (int) Tokens.FRAMESUBTITLE; }
 \\pause         { return (int) Tokens.PAUSE; }
@@ -118,7 +119,7 @@ envEnd      \\end{wsl}
 \\textpipe(\{\})?         BEGIN(str); unformattedText += @"|"; spaces = 0; nls = 0;
 
 // Short space, todo copy to plain text loop
-\\[ ]           { BEGIN(str); unformattedText += @" "; spaces = 1; }
+\\[ ]           { BEGIN(str); unformattedText += @" "; spaces = 1; nls = 0; }
 \{              { return '{'; }
 \}              { return '}'; }
 &               { return '&'; }
@@ -168,9 +169,9 @@ envEnd      \\end{wsl}
 
 // Plain text
 // -----------------------------------------------------------------------------
-<body> [^#\$%\^&_\{\}~\\]    BEGIN(str); yyless(0); unformattedText = ""; /*spaces = 0;*/ nls = 0;
+<body> [^#\$%\^&_\{\}\\]    BEGIN(str); yyless(0); unformattedText = ""; spaces = 0; nls = 0;
 
-[^#\$%\^&_\{\}~\\[:IsWhiteSpace:]]    BEGIN(str); yyless(0); unformattedText = ""; /*spaces = 0;*/ nls = 0;
+[^#\$%\^&_\{\}\\[:IsWhiteSpace:]]    BEGIN(str); yyless(0); unformattedText = ""; spaces = 0; nls = 0;
 
 <str> {
         [^#\$%\^&_\{\}~\\ \n\t\r]*      { unformattedText += yytext; spaces = 0; nls = 0; }
@@ -180,6 +181,7 @@ envEnd      \\end{wsl}
                                             unformattedText += @" ";
                                    }
         \r                         { /* ignore */ }
+        ~                          {    spaces++; unformattedText += @" "; }
         \n                         {    // eat multiple new lines
                                         nls++;
                                         if(nls == 1 && spaces == 0) {   // if one empty line add space
@@ -188,7 +190,8 @@ envEnd      \\end{wsl}
                                         }
                                         if(nls == 2) {  // if two empty lines remove space and add new line
                                             // need to remove last space
-                                            unformattedText.Remove(unformattedText.Length - 1, 1);
+                                            if(unformattedText.Length > 0 && unformattedText.EndsWith(" "))
+                                                unformattedText.Remove(unformattedText.Length - 1, 1);
                                             unformattedText += "\n";
                                         }
                                    }
@@ -207,7 +210,7 @@ envEnd      \\end{wsl}
         \\LaTeX[ ]?                unformattedText += @"LaTeX"; spaces = 0; nls = 0; // todo: fix possible parameters
         %.*\n?{ws}                 {/* ignore comment inside plaintext */}
         // end of plain text
-        [#\$\^&_\{\}~\\]           {
+        [#\$\^&_\{\}\\]            {
                                         if(inBody)
                                             BEGIN(body);
                                         else
