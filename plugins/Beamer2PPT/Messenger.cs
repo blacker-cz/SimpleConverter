@@ -12,7 +12,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
     /// Implements composite and singleton patterns.
     /// todo: think about moving messenger (with interface) to contract
     /// </summary>
-    class Messenger : IMessenger
+    sealed class Messenger : IMessenger
     {
         /// <summary>
         /// Singleton instance

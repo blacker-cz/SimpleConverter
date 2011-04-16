@@ -13,7 +13,7 @@ namespace SimpleConverter.Factory
     /// 
     /// Implements singleton pattern.
     /// </summary>
-    public class Loader
+    public sealed class Loader
     {
         /// <summary>
         /// Dynamically loaded plugins

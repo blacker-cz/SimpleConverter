@@ -12,14 +12,19 @@ namespace SimpleConverter.Plugin.Beamer2PPT
     /// 
     /// Implements singleton pattern.
     /// </summary>
-    class Settings
+    sealed class Settings
     {
         #region Singleton implementation
 
         /// <summary>
         /// Singleton instance.
         /// </summary>
-        private static Settings instance;
+        private static volatile Settings instance;
+
+        /// <summary>
+        /// Synchronization node used for lock
+        /// </summary>
+        private static object _syncRoot = new Object();
 
         /// <summary>
         /// Public instance property.
@@ -30,7 +35,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             {
                 if (instance == null)
                 {
-                    instance = new Settings();
+                    lock (_syncRoot)
+                    {
+                        if (instance == null)
+                            instance = new Settings();
+                    }
                 }
 
                 return instance;
