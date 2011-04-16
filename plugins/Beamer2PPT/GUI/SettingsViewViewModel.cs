@@ -59,6 +59,15 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             get { return Settings.Instance.AdjustSize; }
             set { Settings.Instance.AdjustSize = value; }
         }
+
+        /// <summary>
+        /// How to process nested elements
+        /// </summary>
+        public bool NestedAsText
+        {
+            get { return Settings.Instance.NestedAsText; }
+            set { Settings.Instance.NestedAsText = value; }
+        }
     }
 
     /// <summary>

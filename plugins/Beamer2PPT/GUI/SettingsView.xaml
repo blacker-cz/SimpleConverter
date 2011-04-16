@@ -2,14 +2,27 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:my="clr-namespace:SimpleConverter.Plugin.Beamer2PPT"
              mc:Ignorable="d" 
              d:DesignHeight="286" d:DesignWidth="538">
+    <UserControl.Resources>
+        <my:BooleanConverter x:Key="booleanConverter" />
+    </UserControl.Resources>
     <Grid>
         <Label Content="Output file type:" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label1" VerticalAlignment="Top" />
         <ComboBox Height="23" ItemsSource="{Binding Path=SaveTypes}" DisplayMemberPath="Name" SelectedValue="{Binding Path=SelectedSaveType, Mode=TwoWay}" SelectedValuePath="Type" Margin="114,15,0,0" Name="comboBoxSaveAsType" VerticalAlignment="Top" HorizontalAlignment="Left" Width="245" />
         <CheckBox HorizontalAlignment="Left" Margin="17,46,0,0" Name="checkBoxAdjustSize" VerticalAlignment="Top" Width="394" IsChecked="{Binding AdjustSize, Mode=TwoWay}">
             <AccessText TextWrapping="Wrap" Margin="5,0,0,0">Adjust size of images and table columns to match difference between PowerPoint and Beamer slide size</AccessText>
         </CheckBox>
+        <Label Content="Nested elements processing (e.g. tables, images, description lists):" HorizontalAlignment="Left" Margin="12,84,0,0" Name="label2" VerticalAlignment="Top" />
+        <StackPanel Width="400" Margin="17,116,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <RadioButton IsChecked="{Binding Path=NestedAsText, Converter={StaticResource booleanConverter}, ConverterParameter=true, Mode=TwoWay}" GroupName="Nested Elements Processing">
+                <AccessText TextWrapping="Wrap" Margin="5,0,0,0">Process nested elements as simple text TODO!!!! description here</AccessText>
+            </RadioButton>
+            <RadioButton Margin="0,5,0,0" IsChecked="{Binding Path=NestedAsText, Converter={StaticResource booleanConverter}, ConverterParameter=false, Mode=TwoWay}" GroupName="Nested Elements Processing">
+                <AccessText TextWrapping="Wrap" Margin="5,0,0,0">Process nested elements after processing whole document TODO!!! description here</AccessText>
+            </RadioButton>
+        </StackPanel>
     </Grid>
 </UserControl>
