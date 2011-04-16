@@ -785,7 +785,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             }
 
             // resize image according to optinal params
-            // todo: double image size depending on settings
 
             if (width != 0 && height != 0)  // width and height was set in optinal parameters
             {
