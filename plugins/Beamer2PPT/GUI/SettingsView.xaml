@@ -7,6 +7,9 @@
              d:DesignHeight="286" d:DesignWidth="538">
     <Grid>
         <Label Content="Output file type:" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label1" VerticalAlignment="Top" />
-        <ComboBox Height="23" ItemsSource="{Binding Path=SaveTypes}" DisplayMemberPath="Name" SelectedValue="{Binding Path=SelectedSaveType, Mode=TwoWay}" SelectedValuePath="Type" HorizontalAlignment="Right" Margin="0,15,179,0" Name="comboBox1" VerticalAlignment="Top" Width="245" />
+        <ComboBox Height="23" ItemsSource="{Binding Path=SaveTypes}" DisplayMemberPath="Name" SelectedValue="{Binding Path=SelectedSaveType, Mode=TwoWay}" SelectedValuePath="Type" Margin="114,15,0,0" Name="comboBoxSaveAsType" VerticalAlignment="Top" HorizontalAlignment="Left" Width="245" />
+        <CheckBox HorizontalAlignment="Left" Margin="17,46,0,0" Name="checkBoxAdjustSize" VerticalAlignment="Top" Width="394" IsChecked="{Binding AdjustSize, Mode=TwoWay}">
+            <AccessText TextWrapping="Wrap" Margin="5,0,0,0">Adjust size of images and table columns to match difference between PowerPoint and Beamer slide size</AccessText>
+        </CheckBox>
     </Grid>
 </UserControl>

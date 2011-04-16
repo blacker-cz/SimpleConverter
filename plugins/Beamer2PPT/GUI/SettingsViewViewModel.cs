@@ -48,10 +48,16 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         public PowerPoint.PpSaveAsFileType SelectedSaveType
         {
             get { return Settings.Instance.SaveAs; }
-            set
-            {
-                Settings.Instance.SaveAs = value;
-            }
+            set { Settings.Instance.SaveAs = value; }
+        }
+
+        /// <summary>
+        /// Adjust image/table column size
+        /// </summary>
+        public bool AdjustSize
+        {
+            get { return Settings.Instance.AdjustSize; }
+            set { Settings.Instance.AdjustSize = value; }
         }
     }
 

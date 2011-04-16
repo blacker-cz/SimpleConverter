@@ -129,6 +129,10 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 if (!float.TryParse(match.Groups[1].Value, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out length))
                     return 0.0f;
 
+                // if adjust size is checked -> double length
+                if (Settings.Instance.AdjustSize)
+                    length *= 2.0f;
+
                 switch (match.Groups[3].Value.ToLower())
                 {
                     case "pt":
