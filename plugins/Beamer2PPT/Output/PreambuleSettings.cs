@@ -55,6 +55,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     case "author":
                     case "title":
                     case "date":
+                    case "institute":
                         TitlepageSettings[node.Type] = node.Children;
                         break;
                     case "graphicspath":

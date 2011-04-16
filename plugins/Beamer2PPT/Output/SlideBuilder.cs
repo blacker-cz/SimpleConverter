@@ -1137,11 +1137,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             if (_titlesettings.Count == 0)  // no title settings -> don't generate shape
                 return;
 
-            PowerPoint.Shape shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 50.0f, 648.0f, 10.0f);
+            PowerPoint.Shape shape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 20.0f, 648.0f, 10.0f);
             // set alignment to center
             shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignCenter;
 
-            string[] keys = { "title", "author", "date" };
+            string[] keys = { "title", "author", "institute", "date" };
 
             Stack<Node> nodes = new Stack<Node>();
             Node currentNode;
@@ -1196,9 +1196,12 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
                     _format.Invalidate();
 
-                    _format.AppendText(shape, "\r\r\r\r");
+                    _format.AppendText(shape, "\r\r\r");
                 }
             }
+
+            // trim shape
+            Misc.TrimShape(shape);
         }
 
         /// <summary>

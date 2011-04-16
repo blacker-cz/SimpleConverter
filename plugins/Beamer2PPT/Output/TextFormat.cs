@@ -173,7 +173,10 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             if(text.StartsWith(" ") && (range.Text.EndsWith(" ") || range.Text.Length == 0 || range.Text.EndsWith("\r")))
                 text = text.TrimStart(' ');
 
-            range.InsertAfter(text);
+            if (text.Length > 0)
+                range.InsertAfter(text);
+            else
+                return;
 
             // apply formatting only if there were changes (experimental!)
             if (_changed)
