@@ -18,10 +18,10 @@
         <Label Content="Nested elements processing* (e.g. tables, images, description lists):" HorizontalAlignment="Left" Margin="12,84,0,0" Name="label2" VerticalAlignment="Top" />
         <StackPanel Width="410" Margin="17,116,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <RadioButton IsChecked="{Binding Path=NestedAsText, Converter={StaticResource booleanConverter}, ConverterParameter=true, Mode=TwoWay}" GroupName="Nested Elements Processing">
-                <AccessText TextWrapping="Wrap" Margin="5,0,0,0">When processing nested elements process them only as formatted text (support pauses and some overlays, images are ignored) - preferred</AccessText>
+                <AccessText TextWrapping="Wrap" Margin="5,0,0,0">Process nested elements as formatted text and keep them where they are (support pauses and some overlays, images are ignored) - preferred</AccessText>
             </RadioButton>
             <RadioButton Margin="0,5,0,0" IsChecked="{Binding Path=NestedAsText, Converter={StaticResource booleanConverter}, ConverterParameter=false, Mode=TwoWay}" GroupName="Nested Elements Processing">
-                <AccessText TextWrapping="Wrap" Margin="5,0,0,0">Try to extract nested elements and render them at bottom of generated slide (doesn't support pauses) </AccessText>
+                <AccessText TextWrapping="Wrap" Margin="5,0,0,0">Extract nested elements and place them at the bottom of the slide (doesn't support pauses) </AccessText>
             </RadioButton>
         </StackPanel>
         <Label Content="* plugin natively supports only nesting of numbered and bulleted lists" HorizontalAlignment="Left" Margin="12,191,0,0" Name="label3" VerticalAlignment="Top" />

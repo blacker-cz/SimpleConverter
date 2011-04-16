@@ -8,8 +8,13 @@ using System.Text.RegularExpressions;
 
 namespace SimpleConverter.Plugin.Beamer2PPT
 {
+    /// <summary>
+    /// Class for generating slide content
+    /// </summary>
     class SlideBuilder
     {
+        #region Private variables
+
         /// <summary>
         /// Currently created slide
         /// </summary>
@@ -79,6 +84,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// Queue for nested elements generated at bottom of slide
         /// </summary>
         private Queue<Node> _postProcessing;
+
+        #endregion // Private variables
 
         /// <summary>
         /// Constructor
