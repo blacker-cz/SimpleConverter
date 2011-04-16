@@ -119,10 +119,14 @@ namespace SimpleConverter
 
                 foreach (ListFile file in _files)
                 {
-                    if (file.Valid)
+                    try
                     {
-                        _plugin.ConvertDocument(file.Filepath, _outputPath);
+                        if (file.Valid)
+                        {
+                            _plugin.ConvertDocument(file.Filepath, _outputPath);
+                        }
                     }
+                    catch (DocumentException) { }
 
                     lock (_lock)
                     {
@@ -134,7 +138,6 @@ namespace SimpleConverter
             }
             // methods raising these exceptions should add message to log, so no need to do anything in here
             catch (InitException) { }
-            catch (DocumentException) { }
             finally
             {
                 _plugin.Done();
