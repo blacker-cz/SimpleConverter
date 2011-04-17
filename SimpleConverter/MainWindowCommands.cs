@@ -13,7 +13,20 @@ namespace SimpleConverter
     {
         protected readonly MainWindowViewModel _viewModel;
 
-        public bool Disabled { get; set; }
+        private bool _disabled;
+
+        public bool Disabled
+        {
+            get { return _disabled; }
+            set
+            {
+                if (_disabled != value)
+                {
+                    _disabled = value;
+                    CommandManager.InvalidateRequerySuggested();
+                }
+            }
+        }
 
         public BaseCommand(MainWindowViewModel viewModel, bool disabled = false)
         {
@@ -84,6 +97,19 @@ namespace SimpleConverter
         public override void Execute(object parameter)
         {
             _viewModel.BrowseClicked();
+        }
+    }
+
+    /// <summary>
+    /// Command handler class for Stop batch button
+    /// </summary>
+    public class StopBatchCommand : BaseCommand
+    {
+        public StopBatchCommand(MainWindowViewModel viewModel, bool disabled = false) : base(viewModel, disabled) { }
+
+        public override void Execute(object parameter)
+        {
+            _viewModel.StopBatch();
         }
     }
 }

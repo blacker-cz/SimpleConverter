@@ -37,7 +37,8 @@ namespace SimpleConverter
         private BaseCommand _startConversionCommand,
                          _addFileCommand,
                          _removeFileCommand,
-                         _browseCommand;
+                         _browseCommand,
+                         _stopBatchCommand;
 
         /// <summary>
         /// Background thread object reference
@@ -60,6 +61,8 @@ namespace SimpleConverter
 #endif
             SelectedPlugin = Factory.Loader.Instance.Plugins.First<Contract.IPluginMetaData>();
             SelectPluginEnabled = true;
+            SettingsTabEnabled = true;
+            SelectedTab = 0;
 
             // load output path from user settings
             _outputPath = Properties.Settings.Default.OutputPath;
@@ -90,24 +93,39 @@ namespace SimpleConverter
         /// <summary>
         /// Command binding for start conversion command
         /// </summary>
-        public ICommand StartConversionCommand { get { return _startConversionCommand ?? (_startConversionCommand = new StartConversionCommand(this)); } }
+        public BaseCommand StartConversionCommand { get { return _startConversionCommand ?? (_startConversionCommand = new StartConversionCommand(this)); } }
 
         /// <summary>
         /// Command binding for add file command
         /// </summary>
-        public ICommand AddFileCommand { get { return _addFileCommand ?? (_addFileCommand = new AddFileCommand(this)); } }
+        public BaseCommand AddFileCommand { get { return _addFileCommand ?? (_addFileCommand = new AddFileCommand(this)); } }
 
         /// <summary>
         /// Command binding for remove file command
         /// </summary>
-        public ICommand RemoveFileCommand { get { return _removeFileCommand ?? (_removeFileCommand = new RemoveFileCommand(this)); } }
+        public BaseCommand RemoveFileCommand { get { return _removeFileCommand ?? (_removeFileCommand = new RemoveFileCommand(this)); } }
 
         /// <summary>
         /// Command binding for browse command
         /// </summary>
-        public ICommand BrowseCommand { get { return _browseCommand ?? (_browseCommand = new BrowseCommand(this)); } }
+        public BaseCommand BrowseCommand { get { return _browseCommand ?? (_browseCommand = new BrowseCommand(this)); } }
+
+        /// <summary>
+        /// Command binding for stop batch command
+        /// </summary>
+        public BaseCommand StopBatchCommand { get { return _stopBatchCommand ?? (_stopBatchCommand = new StopBatchCommand(this, true)); } }
 
         #endregion // Binding for button commands
+
+        /// <summary>
+        /// Allow drop flag
+        /// </summary>
+        public bool AllowDrop { get { return !AddFileCommand.Disabled; } }
+
+        /// <summary>
+        /// Output path textbox flag
+        /// </summary>
+        public bool OutputPathEnabled { get { return !BrowseCommand.Disabled; } }
 
         /// <summary>
         /// Selected plugin in combobox
@@ -188,6 +206,16 @@ namespace SimpleConverter
             }
         }
 
+        /// <summary>
+        /// Flag for enabling/disabling settings tab
+        /// </summary>
+        public bool SettingsTabEnabled { get; private set; }
+
+        /// <summary>
+        /// Selected tab
+        /// </summary>
+        public int SelectedTab { get; set; }
+
         #region Event handlers
 
         /// <summary>
@@ -222,6 +250,19 @@ namespace SimpleConverter
             // todo: disable add/remove file, settings, plugin change, convert, browse (maybe switch browse textbox to read-only); enable stop batch
             try
             {
+                AddFileCommand.Disabled = true;
+                RemoveFileCommand.Disabled = true;
+                StartConversionCommand.Disabled = true;
+                BrowseCommand.Disabled = true;
+                StopBatchCommand.Disabled = false;
+
+                SelectPluginEnabled = false;
+                SettingsTabEnabled = false;
+
+                SelectedTab = 1;
+
+                InvokePropertyChanged(null);
+
                 _backgroundThread.Run(_currentPlugin, Files, OutputPath);
             }
             catch (Factory.InvalidArgumentException ex)
@@ -235,8 +276,18 @@ namespace SimpleConverter
         /// </summary>
         public void ConversionDone()
         {
-            // todo: enable disabled and disable enabled :)
+            AddFileCommand.Disabled = false;
+            RemoveFileCommand.Disabled = false;
+            StartConversionCommand.Disabled = false;
+            BrowseCommand.Disabled = false;
+            StopBatchCommand.Disabled = true;
+
+            SelectPluginEnabled = true;
+            SettingsTabEnabled = true;
+
             _backgroundThread.Join();
+
+            InvokePropertyChanged(null);
         }
 
         /// <summary>
@@ -247,7 +298,6 @@ namespace SimpleConverter
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.Multiselect = true;
             dlg.CheckFileExists = true;
-            // todo: set file extensions depending on plugin?
 
             // Show open file dialog box
             bool? result = dlg.ShowDialog();
@@ -258,6 +308,21 @@ namespace SimpleConverter
                 foreach (var item in dlg.FileNames)
                 {
                     Files.Add(new ListFile(item, _currentPlugin.ValidateFile(item)));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add file to list (used by drop event)
+        /// </summary>
+        /// <param name="files">File path</param>
+        public void AddFiles(string[] files)
+        {
+            if (AllowDrop)  // check if add file is allowed
+            {
+                foreach (string file in files)
+                {
+                    Files.Add(new ListFile(file, _currentPlugin.ValidateFile(file)));
                 }
             }
         }
@@ -290,6 +355,14 @@ namespace SimpleConverter
             }
 
             dlg.Dispose();
+        }
+
+        /// <summary>
+        /// Stop background thread processing
+        /// </summary>
+        public void StopBatch()
+        {
+            _backgroundThread.Abort();
         }
 
         #endregion // Button Click Handlers

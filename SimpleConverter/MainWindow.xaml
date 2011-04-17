@@ -14,7 +14,7 @@
             <ColumnDefinition Width="169" />
             <ColumnDefinition Width="111" />
         </Grid.ColumnDefinitions>
-        <ListBox Name="listBoxFiles" Margin="12,12,9,0" Grid.ColumnSpan="2" AllowDrop="True" ItemsSource="{Binding Files}" SelectedItem="{Binding Path=SelectedFile}">
+        <ListBox Name="listBoxFiles" Margin="12,12,9,0" Grid.ColumnSpan="2" AllowDrop="{Binding AllowDrop}" ItemsSource="{Binding Files}" SelectedItem="{Binding Path=SelectedFile}" Drop="listBoxFiles_Drop">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="Background" Value="{Binding ValidColor}" />
@@ -33,10 +33,10 @@
                 <KeyBinding Command="{Binding RemoveFileCommand}" Key="Delete" />
             </ListBox.InputBindings>
         </ListBox>
-        <TabControl Margin="12,6,12,12" Name="tabControl" Grid.ColumnSpan="3" Grid.Row="2" Grid.RowSpan="2">
-            <TabItem Header="Settings" Name="tabSettings" Content="{Binding PluginView}">
+        <TabControl Margin="12,6,12,12" Name="tabControl" Grid.ColumnSpan="3" Grid.Row="2" Grid.RowSpan="2" SelectedIndex="{Binding SelectedTab}">
+            <TabItem Header="Settings" Name="tabSettings" Content="{Binding PluginView}" IsEnabled="{Binding SettingsTabEnabled, Mode=OneWay}">
             </TabItem>
-            <TabItem Header="Progress" Name="tabProgress" IsEnabled="True">
+            <TabItem Header="Progress" Name="tabProgress">
                 <Grid>
                     <ListView Height="120" Margin="6,6,6,0" Name="listView1" VerticalAlignment="Top" ItemsSource="{Binding Messages}" SelectionMode="Single" Focusable="False">
                         <ListView.View>
@@ -58,7 +58,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <ComboBox Grid.Row="1" Margin="9,0,12,9" Name="comboBoxPlugins" Background="{x:Null}" Grid.ColumnSpan="2" Grid.RowSpan="2" Panel.ZIndex="-1" Grid.Column="1" ItemsSource="{Binding Plugins}" SelectedItem="{Binding Path=SelectedPlugin, Mode=TwoWay}" Height="53" VerticalAlignment="Bottom" ToolTip="Select conversion plugin" IsEnabled="{Binding SelectPluginEnabled, Mode=OneWay}">
+        <ComboBox Grid.Row="1" Margin="9,0,12,9" Name="comboBoxPlugins" Background="{x:Null}" Grid.ColumnSpan="2" Grid.RowSpan="2" IsEnabled="{Binding SelectPluginEnabled, Mode=OneWay}" Panel.ZIndex="-1" Grid.Column="1" ItemsSource="{Binding Plugins}" SelectedItem="{Binding Path=SelectedPlugin, Mode=TwoWay}" Height="53" VerticalAlignment="Bottom" ToolTip="Select conversion plugin">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="3,3,0,8" HorizontalAlignment="Stretch">
@@ -72,9 +72,9 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
         <Button Content="Convert" Height="35" HorizontalAlignment="Left" Margin="0,51,0,0" Name="buttonConvert" VerticalAlignment="Top" Width="99" Grid.Column="2" ToolTip="Start conversion" Command="{Binding StartConversionCommand}" />
-        <Button Content="Stop batch" Height="35" HorizontalAlignment="Left" Margin="0,92,0,0" Name="buttonStop" VerticalAlignment="Top" Width="99" IsEnabled="False" Grid.Column="2" ToolTip="Stop current conversion job" />
+        <Button Content="Stop batch" Height="35" HorizontalAlignment="Left" Margin="0,92,0,0" Name="buttonStop" VerticalAlignment="Top" Width="99" Grid.Column="2" ToolTip="Stop current conversion job" Command="{Binding StopBatchCommand}" />
         <Button Content="Add file" Grid.Column="2" Height="33" HorizontalAlignment="Left" Margin="0,12,0,0" Name="buttonAddFile" VerticalAlignment="Top" Width="74" ToolTip="Add file to conversion job" Command="{Binding AddFileCommand}" />
-        <TextBox Grid.Row="1" Margin="12,7,9,35" Name="textBox1" Grid.ColumnSpan="2" Text="{Binding OutputPath}"  />
+        <TextBox Grid.Row="1" Margin="12,7,9,35" Name="textBox1" Grid.ColumnSpan="2" Text="{Binding OutputPath}" IsEnabled="{Binding OutputPathEnabled, Mode=OneWay}" />
         <Button Content="Browse" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" Margin="0,7,0,0" Name="buttonBrowse" Width="99" Height="26" VerticalAlignment="Top" ToolTip="Browse for output directory" Command="{Binding BrowseCommand}" />
         <Button Content="X" Grid.Column="2" Height="33" HorizontalAlignment="Left" Margin="80,12,0,0" Name="buttonRemove" VerticalAlignment="Top" Width="19" ToolTip="Remove file from conversion job" Command="{Binding RemoveFileCommand}" />
     </Grid>

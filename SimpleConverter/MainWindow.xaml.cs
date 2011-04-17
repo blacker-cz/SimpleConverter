@@ -33,5 +33,18 @@ namespace SimpleConverter
                 MessageBox.Show("Application encountered following error and will now end:\n\n\"" + e.Message + "\"", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        /// <summary>
+        /// Drop event handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listBoxFiles_Drop(object sender, DragEventArgs e)
+        {
+            MainWindowViewModel mv = this.DataContext as MainWindowViewModel;
+
+            if( e.Data.GetDataPresent(DataFormats.FileDrop, false) == true )
+                mv.AddFiles((string[]) e.Data.GetData(DataFormats.FileDrop));
+        }
     }
 }
