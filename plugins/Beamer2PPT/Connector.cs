@@ -122,9 +122,12 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             {
                 _builder.Build(filename, outputDirectory, parser.Document, parser.SlideCount, parser.SectionTable, parser.FrametitleTable);
             }
-            catch (DocumentBuilderException ex)
+            catch (Exception ex)
             {
-                Messenger.Instance.SendMessage(ex.Message, MessageLevel.ERROR);
+                if(ex is PowerPointApplicationException || ex is DocumentBuilderException)
+                    Messenger.Instance.SendMessage(ex.Message, MessageLevel.ERROR);
+
+                throw ex;   // propagate exception
             }
 
             #endregion // Building output document

@@ -127,9 +127,35 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             #region Initialize internal variables
             if (outputPath.Length == 0)
+            {
                 _filename = Path.Combine(Directory.GetCurrentDirectory(), "output", Path.GetFileNameWithoutExtension(filename));
+
+                try
+                {
+                    // if output directory doesn't exist then create it
+                    if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "output")))
+                        Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "output"));
+                }
+                catch (Exception)
+                {
+                    throw new PowerPointApplicationException("Couldn't create default output directory.");
+                }
+            }
             else
+            {
                 _filename = Path.Combine(outputPath, Path.GetFileNameWithoutExtension(filename));
+
+                try
+                {
+                    // if output directory doesn't exist then create it
+                    if (!Directory.Exists(outputPath))
+                        Directory.CreateDirectory(outputPath);
+                }
+                catch (Exception)
+                {
+                    throw new PowerPointApplicationException("Couldn't create output directory.");
+                }
+            }
 
             _document = document;
             _slideCount = slideCount;
