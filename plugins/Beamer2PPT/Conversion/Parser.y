@@ -256,7 +256,7 @@ image :
         ;
 
 environment :
-            BEGIN_ITEMIZE optional items_list END_ITEMIZE    {   // todo: add optinal support [<+->]
+            BEGIN_ITEMIZE optional items_list END_ITEMIZE    {
                                         $$ = new Node("bulletlist");
                                         $$.Children = $3;
                                         $$.OptionalParams = $2;

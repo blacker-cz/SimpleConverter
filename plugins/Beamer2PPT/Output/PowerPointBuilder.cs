@@ -292,6 +292,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     // title page settings
                     case "author":
                     case "title":
+                    case "institute":
                     case "date":
                         _preambuleSettings.TitlepageSettings[node.Type] = node.Children;
                         break;
