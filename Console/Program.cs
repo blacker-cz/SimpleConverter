@@ -16,16 +16,14 @@ namespace SimpleConverter.Console
             // no parameters given -> end execution
             if (args.Length == 0)
             {
-                System.Console.Write("SimpleConverter: ");
-                System.Console.WriteLine("No parameters given.");
-                System.Console.WriteLine("Try `sc --help' for more information.");
+                PrintError("No parameters given.");
                 return 1;
             }
 
             var p = new OptionSet() {
 			    { "p|plugin=", "{KEY} of used conversion plugin.",  v => plugin_key = v },
 			    { "o|output=", "output {DIRECTORY} for converted files.", v => output_dir = v },
-			    { "h|help",  "show this message and exit", v => show_help = v != null },
+			    { "h|?|help",  "show this message and exit", v => show_help = v != null },
 			    { "l|list",  "list available plugins and exit", v => list_plugins = v != null },
             };
 
@@ -36,15 +34,16 @@ namespace SimpleConverter.Console
             }
             catch (OptionException e)
             {
-                System.Console.Write("SimpleConverter: ");
-                System.Console.WriteLine(e.Message);
-                System.Console.WriteLine("Try `sc --help' for more information.");
+                PrintError(e.Message);
                 return 1;
             }
 
             // print help
             if (show_help)
             {
+                System.Console.WriteLine("SimpleConverter - universal document converter");
+                System.Console.WriteLine("Copyright (c) 2011 Lukáš Černý");
+                System.Console.WriteLine();
                 System.Console.WriteLine("Usage: sc [OPTIONS]+ files+");
                 System.Console.WriteLine("Convert document files using specified plugin.");
                 System.Console.WriteLine();
@@ -74,13 +73,31 @@ namespace SimpleConverter.Console
 
             if (plugin_key == null || plugin_key.Length == 0)
             {
-                System.Console.Write("SimpleConverter: ");
-                System.Console.WriteLine("no plugin key given.");
-                System.Console.WriteLine("Try `sc --help' for more information.");
+                PrintError("No plugin key given.");
                 return 1;
             }
 
-            return controller.Convert(plugin_key, output_dir, extra);
+            try
+            {
+                return controller.Convert(plugin_key, output_dir, extra);
+            }
+            catch (Exception ex)
+            {
+                System.Console.Error.WriteLine("Application encountered following unrecoverable error and will now exit:\n\n\"" + ex.Message + "\"");
+                return 1;
+            }
+        }
+
+        /// <summary>
+        /// Print error message
+        /// </summary>
+        /// <param name="message">Message to print</param>
+        /// <param name="arg">Message arguments</param>
+        public static void PrintError(string message, params object[] arg)
+        {
+            System.Console.Error.Write("SimpleConverter: ");
+            System.Console.Error.WriteLine(message, arg);
+            System.Console.Error.WriteLine("Try `sc --help' for more information.");
         }
 
     }
