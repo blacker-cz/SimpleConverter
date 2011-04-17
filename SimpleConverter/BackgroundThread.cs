@@ -49,6 +49,11 @@ namespace SimpleConverter
         public event ThreadEndedDelegate ThreadEndedEvent;
 
         /// <summary>
+        /// Conversion progress event
+        /// </summary>
+        public event ProgressDelegate ConversionProgressEvent;
+
+        /// <summary>
         /// Synchronization context
         /// </summary>
         private SynchronizationContext _synchronizationContext = SynchronizationContext.Current;
@@ -88,6 +93,8 @@ namespace SimpleConverter
 
             _outputPath = outputPath;
 
+            ChangeProgress(0);
+
             lock (_lock)
             {
                 _abort = false;
@@ -112,6 +119,7 @@ namespace SimpleConverter
         /// </summary>
         private void Worker()
         {
+            int progress = 0;
 
             try
             {
@@ -119,6 +127,7 @@ namespace SimpleConverter
 
                 foreach (ListFile file in _files)
                 {
+                    progress++;
                     try
                     {
                         if (file.Valid)
@@ -127,6 +136,8 @@ namespace SimpleConverter
                         }
                     }
                     catch (DocumentException) { }
+
+                    ChangeProgress(100 * progress / _files.Count);
 
                     lock (_lock)
                     {
@@ -142,6 +153,8 @@ namespace SimpleConverter
             {
                 _plugin.Done();
             }
+
+            ChangeProgress(100);
 
             // fire thread ended event
             try
@@ -161,6 +174,39 @@ namespace SimpleConverter
                         if (handler != null)
                         {
                             handler();
+                        }
+                    }), null);
+                }
+            }
+            catch (NullReferenceException)
+            {
+            }
+        }
+
+        /// <summary>
+        /// Raise progress event in GUI thread
+        /// </summary>
+        /// <param name="progress"></param>
+        private void ChangeProgress(int progress)
+        {
+            // fire thread ended event
+            try
+            {
+                if (SynchronizationContext.Current == _synchronizationContext)
+                {
+                    // Execute the ConversionProgressEvent event on the current thread
+                    ConversionProgressEvent(progress);
+                }
+                else
+                {
+                    // Post the ConversionProgressEvent event on the creator thread
+                    _synchronizationContext.Post(new SendOrPostCallback(delegate(object state)
+                    {
+                        ProgressDelegate handler = ConversionProgressEvent;
+
+                        if (handler != null)
+                        {
+                            handler(progress);
                         }
                     }), null);
                 }

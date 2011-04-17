@@ -62,7 +62,6 @@ namespace SimpleConverter
             SelectedPlugin = Factory.Loader.Instance.Plugins.First<Contract.IPluginMetaData>();
             SelectPluginEnabled = true;
             SettingsTabEnabled = true;
-            SelectedTab = 0;
 
             // load output path from user settings
             _outputPath = Properties.Settings.Default.OutputPath;
@@ -70,7 +69,7 @@ namespace SimpleConverter
             // initialize background thread
             _backgroundThread = new BackgroundThread();
             _backgroundThread.ThreadEndedEvent += new ThreadEndedDelegate(ConversionDone);
-
+            _backgroundThread.ConversionProgressEvent += new Contract.ProgressDelegate(OnCompleteProgress);
         }
 
         /// <summary>
@@ -191,6 +190,11 @@ namespace SimpleConverter
         public int FileProgress { get; private set; }
 
         /// <summary>
+        /// Progress counter for whole batch
+        /// </summary>
+        public int CompleteProgress { get; private set; }
+
+        /// <summary>
         /// Selected file in file list
         /// </summary>
         public ListFile SelectedFile { get; set; }
@@ -238,6 +242,16 @@ namespace SimpleConverter
             InvokePropertyChanged("FileProgress");
         }
 
+        /// <summary>
+        /// Event handling for complete progress change
+        /// </summary>
+        /// <param name="progress">Current progress</param>
+        private void OnCompleteProgress(int progress)
+        {
+            CompleteProgress = progress;
+            InvokePropertyChanged("CompleteProgress");
+        }
+
         #endregion // Event handlers
 
         #region Button Click Handlers
@@ -247,7 +261,6 @@ namespace SimpleConverter
         /// </summary>
         public void StartConversionClicked()
         {
-            // todo: disable add/remove file, settings, plugin change, convert, browse (maybe switch browse textbox to read-only); enable stop batch
             try
             {
                 AddFileCommand.Disabled = true;
@@ -260,6 +273,8 @@ namespace SimpleConverter
                 SettingsTabEnabled = false;
 
                 SelectedTab = 1;
+
+                Messages.Clear();   // clear message list
 
                 InvokePropertyChanged(null);
 
