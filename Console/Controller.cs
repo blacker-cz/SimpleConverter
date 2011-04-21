@@ -107,6 +107,45 @@ namespace SimpleConverter.Console
         }
 
         /// <summary>
+        /// Set plugin options
+        /// </summary>
+        /// <param name="plugin_key">Plugin key</param>
+        /// <param name="options">List of options</param>
+        /// <returns>Extra</returns>
+        public List<string> SetPluginOptions(string plugin_key, List<string> options)
+        {
+            Contract.IPlugin plugin = Factory.Loader.Instance[plugin_key];
+
+            if (plugin == null)     // check if plugin exists
+            {
+                Program.PrintError("Plugin with key '{0}' not found.", plugin_key);
+                return null;
+            }
+
+            return plugin.ConsoleOptions(options);
+        }
+
+        /// <summary>
+        /// Print plugin help
+        /// </summary>
+        /// <param name="plugin_key"></param>
+        /// <returns>true if plugin exists; false otherwise</returns>
+        public bool PrintPluginHelp(string plugin_key)
+        {
+            Contract.IPlugin plugin = Factory.Loader.Instance[plugin_key];
+
+            if (plugin == null)     // check if plugin exists
+            {
+                Program.PrintError("Plugin with key '{0}' not found.", plugin_key);
+                return false;
+            }
+
+            plugin.ConsoleHelp();
+
+            return true;
+        }
+
+        /// <summary>
         /// Print message to console
         /// </summary>
         /// <param name="message">Message text</param>

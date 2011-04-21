@@ -49,6 +49,18 @@ namespace SimpleConverter.Contract
         /// <param name="filename">Filename</param>
         /// <returns>True if is supported, false otherwise</returns>
         bool ValidateFile(string filename);
+
+        /// <summary>
+        /// Process console options (and setup internal logic)
+        /// </summary>
+        /// <param name="options">List of options</param>
+        /// <returns>List of non-processed parameters</returns>
+        List<string> ConsoleOptions(List<string> options);
+
+        /// <summary>
+        /// Print console help
+        /// </summary>
+        void ConsoleHelp();
     }
 
     /// <summary>

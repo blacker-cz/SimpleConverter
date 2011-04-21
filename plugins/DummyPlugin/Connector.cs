@@ -48,5 +48,9 @@ namespace SimpleConverter.Plugin.Dummy
         {
             return (_random.Next() % 2 == 1);
         }
+
+        public List<string> ConsoleOptions(List<string> options) { return options; }
+
+        public void ConsoleHelp() { }
     }
 }

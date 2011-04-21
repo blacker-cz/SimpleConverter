@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel.Composition;
 using SimpleConverter.Contract;
+using NDesk.Options;
 
 namespace SimpleConverter.Plugin.Beamer2PPT
 {
@@ -14,6 +15,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private System.Windows.FrameworkElement _visual;
 
         private PowerPointBuilder _builder;
+
+        private OptionSet _options;
 
         #region IPlugin implementation
 
@@ -28,6 +31,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         {
             // register Messenger
             Messenger.Instance.Add(this);
+
+            _options = new OptionSet() {
+			    { "n|nadjust",  "don't adjust image and table size", v => Settings.Instance.AdjustSize = v == null },
+			    { "e|extract",  "extract nested elements", v => Settings.Instance.NestedAsText = v == null },
+            };
         }
 
         /// <summary>
@@ -155,6 +163,34 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             if (System.IO.Path.GetExtension(filename) == ".tex" && System.IO.File.Exists(filename))
                 return true;
             return false;
+        }
+
+        /// <summary>
+        /// Process console options (and setup internal logic)
+        /// </summary>
+        /// <param name="options">List of options</param>
+        /// <returns>List of not-processed parameters</returns>
+        public List<string> ConsoleOptions(List<string> options)
+        {
+            List<string> extra;
+            try
+            {
+                extra = _options.Parse(options);
+            }
+            catch (OptionException e)
+            {
+                return options;
+            }
+
+            return extra;
+        }
+
+        /// <summary>
+        /// Print console help
+        /// </summary>
+        public void ConsoleHelp()
+        {
+            _options.WriteOptionDescriptions(System.Console.Out);
         }
 
         #endregion

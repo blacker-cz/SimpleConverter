@@ -67,6 +67,7 @@
     <Compile Include="IMessenger.cs" />
     <Compile Include="Messenger.cs" />
     <Compile Include="Misc.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Output\PowerPointBuilder.cs" />
     <Compile Include="Output\PreambuleSettings.cs" />
     <Compile Include="Output\SlideBuilder.cs" />

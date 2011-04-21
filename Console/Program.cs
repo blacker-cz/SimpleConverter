@@ -23,7 +23,7 @@ namespace SimpleConverter.Console
             var p = new OptionSet() {
 			    { "p|plugin=", "{KEY} of used conversion plugin.",  v => plugin_key = v },
 			    { "o|output=", "output {DIRECTORY} for converted files.", v => output_dir = v },
-			    { "h|?|help",  "show this message and exit", v => show_help = v != null },
+			    { "h|?|help",  "show this message and exit (if plugin is specified show plugin help)", v => show_help = v != null },
 			    { "l|list",  "list available plugins and exit", v => list_plugins = v != null },
             };
 
@@ -38,8 +38,8 @@ namespace SimpleConverter.Console
                 return 1;
             }
 
-            // print help
-            if (show_help)
+            // print help (if plugin key not specified)
+            if (show_help && (plugin_key == null || plugin_key == ""))
             {
                 System.Console.WriteLine("SimpleConverter - universal document converter");
                 System.Console.WriteLine("Copyright (c) 2011 Lukáš Černý");
@@ -76,6 +76,24 @@ namespace SimpleConverter.Console
                 PrintError("No plugin key given.");
                 return 1;
             }
+
+            // show plugin help
+            if (show_help)
+            {
+                System.Console.WriteLine("SimpleConverter - universal document converter");
+                System.Console.WriteLine("Copyright (c) 2011 Lukáš Černý");
+                System.Console.WriteLine();
+                System.Console.WriteLine("Plugin options:");
+                if (!controller.PrintPluginHelp(plugin_key))
+                    return 1;
+                else
+                    return 0;
+            }
+
+            // process plugin options
+            extra = controller.SetPluginOptions(plugin_key, extra);
+            if (extra == null)
+                return 1;
 
             try
             {
