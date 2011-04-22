@@ -228,10 +228,10 @@ envEnd      \\end{wsl}
     }
 
 // unknown commands etc.
-{envBegin}\{[^\}]+\}   { printWarning("Unknown environment " + yytext); }
-{envEnd}\{[^\}]+\}     { printWarning("Unknown environment " + yytext); }
+{envBegin}\{[^\}]+\}   { BEGIN(bpre_overlay); printWarning("Unknown environment " + yytext); }
+{envEnd}\{[^\}]+\}     { BEGIN(bpre_overlay); printWarning("Unknown environment " + yytext); }
 
-\\[[:IsLetter:]]+      { printWarning("Unknown command " + yytext); }
+\\[[:IsLetter:]]+      { BEGIN(bpre_overlay); printWarning("Unknown command " + yytext); }
 
 // Unknown command overlay specification - eat and ignore
 // -----------------------------------------------------------------------------

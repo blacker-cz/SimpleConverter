@@ -4,9 +4,9 @@
 
 // GPPG version 1.4.5
 // Machine:  LUKAS-PC
-// DateTime: 16.4.2011 22:57:33
+// DateTime: 22.4.2011 9:36:02
 // UserName: Lukas
-// Input file <D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 16.4.2011 22:23:51>
+// Input file <D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 17.4.2011 12:18:18>
 
 // options: conflicts no-lines diagnose & report gplex conflicts
 
@@ -48,12 +48,12 @@ public abstract class ScanBase : AbstractScanner<ValueType,LexLocation> {
 
 public class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
-  // Verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 16.4.2011 22:23:51
+  // Verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 17.4.2011 12:18:18
     public Node Document { get; private set; }
     public int SlideCount { get; private set; }
     public List<SectionRecord> SectionTable { get; private set; }
     public Dictionary<int, FrametitleRecord> FrametitleTable { get; private set; }
-  // End verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 16.4.2011 22:23:51
+  // End verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 17.4.2011 12:18:18
 
 #pragma warning disable 649
   private static Dictionary<int, string> aliasses;
@@ -746,7 +746,7 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
                                     }
         break;
       case 40: // environment -> "\begin{itemize}", optional, items_list, "\end{itemize}"
-{   // todo: add optinal support [<+->]
+{
                                         CurrentSemanticValue.documentNode = new Node("bulletlist");
                                         CurrentSemanticValue.documentNode.Children = ValueStack[ValueStack.Depth-2].nodeList;
                                         CurrentSemanticValue.documentNode.OptionalParams = ValueStack[ValueStack.Depth-3].Text;
