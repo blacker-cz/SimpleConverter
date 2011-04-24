@@ -220,12 +220,12 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 {
                     if (File.Exists(Path.Combine(path, imageName + ".jpg")))
                         return Path.Combine(path, imageName + ".jpg");
+                    if (File.Exists(Path.Combine(path, imageName + ".jpeg")))
+                        return Path.Combine(path, imageName + ".jpeg");
                     if (File.Exists(Path.Combine(path, imageName + ".png")))
                         return Path.Combine(path, imageName + ".png");
                     if (File.Exists(Path.Combine(path, imageName + ".gif")))
                         return Path.Combine(path, imageName + ".gif");
-                    if (File.Exists(Path.Combine(path, imageName + ".jpeg")))
-                        return Path.Combine(path, imageName + ".jpeg");
                 }
             }
             else    // file was given with extension
