@@ -1,4 +1,4 @@
-%x str, overlay, optional, pre_overlay, pre_optional, tabular_arg, boverlay, boptional, bpre_overlay, bpre_optional
+%x str, overlay, optional, pre_overlay, pre_optional, tabular_arg, boverlay, boptional, bpre_overlay, bpre_optional, math
 %s body
 
 %using SimpleConverter.Contract;
@@ -128,6 +128,15 @@ envEnd      \\end{wsl}
 
 // White space at the begining of line -> really needed?
 ^{wsp}         {/*ignore*/}
+
+\$              BEGIN(math); unformattedText = ""; spaces = 0; nls = 0;
+
+// Math (when math is implemented change token type to MATH)
+// -----------------------------------------------------------------------------
+<math> {
+        [^\$]   unformattedText += yytext;
+        \$      if(inBody) BEGIN(body); else BEGIN(INITIAL); yylval.Text = unformattedText; return (int) Tokens.STRING;
+    }
 
 // Overlay specification
 // -----------------------------------------------------------------------------
