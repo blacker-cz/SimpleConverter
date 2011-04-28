@@ -10,12 +10,17 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "distribution", "distribution", "{105F16B1-4325-482F-B59F-7F42E5C04ECB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleConverter", "SimpleConverter\SimpleConverter.csproj", "{AB94838A-E428-4DED-BE56-5F51CB345140}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7B5FDCE1-5F89-4E10-A196-78A59B26E8FB} = {7B5FDCE1-5F89-4E10-A196-78A59B26E8FB}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beamer2PPT", "plugins\Beamer2PPT\Beamer2PPT.csproj", "{F5BECEBF-72AA-4E55-84F5-BDE35AFEC4D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyPlugin", "plugins\DummyPlugin\DummyPlugin.csproj", "{3B74C07D-0932-44E7-AB70-95CA39F42BD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{7B5FDCE1-5F89-4E10-A196-78A59B26E8FB}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{EE41061E-3BD0-43D2-915E-79D746D4B13D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +91,12 @@ Global
 		{7B5FDCE1-5F89-4E10-A196-78A59B26E8FB}.Release|Mixed Platforms.Build.0 = Release|x86
 		{7B5FDCE1-5F89-4E10-A196-78A59B26E8FB}.Release|x86.ActiveCfg = Release|x86
 		{7B5FDCE1-5F89-4E10-A196-78A59B26E8FB}.Release|x86.Build.0 = Release|x86
+		{EE41061E-3BD0-43D2-915E-79D746D4B13D}.Debug|Any CPU.ActiveCfg = Debug
+		{EE41061E-3BD0-43D2-915E-79D746D4B13D}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{EE41061E-3BD0-43D2-915E-79D746D4B13D}.Debug|x86.ActiveCfg = Debug
+		{EE41061E-3BD0-43D2-915E-79D746D4B13D}.Release|Any CPU.ActiveCfg = Release
+		{EE41061E-3BD0-43D2-915E-79D746D4B13D}.Release|Mixed Platforms.ActiveCfg = Release
+		{EE41061E-3BD0-43D2-915E-79D746D4B13D}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,5 +104,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F5BECEBF-72AA-4E55-84F5-BDE35AFEC4D9} = {9A05B058-6AD2-42A0-9614-ABE94351C2A8}
 		{3B74C07D-0932-44E7-AB70-95CA39F42BD7} = {9A05B058-6AD2-42A0-9614-ABE94351C2A8}
+		{EE41061E-3BD0-43D2-915E-79D746D4B13D} = {105F16B1-4325-482F-B59F-7F42E5C04ECB}
 	EndGlobalSection
 EndGlobal

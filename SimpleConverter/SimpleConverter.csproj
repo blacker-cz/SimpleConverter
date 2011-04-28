@@ -135,7 +135,7 @@
 echo ""
 ) else (
 rm -f "$(TargetDir)..\no-install\SimpleConverter.zip"
-7z a -tzip -r -x!*.vshost.* $(TargetDir)..\no-install\SimpleConverter.zip $(TargetDir)*.dll $(TargetDir)*.exe
+7z a -tzip -r -x!*.vshost.* -x!DummyPlugin* $(TargetDir)..\no-install\SimpleConverter.zip $(TargetDir)*.dll $(TargetDir)*.exe
 )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
