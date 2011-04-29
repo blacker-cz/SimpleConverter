@@ -950,6 +950,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             if (paragraphs == 0)
             {
+                shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].ParagraphFormat.Bullet.StartValue = itemsCount;
                 shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].ParagraphFormat.Bullet.Type = type;
                 shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].ParagraphFormat.IndentLevel = level + 1;
                 if (!show_bullet)
@@ -957,17 +958,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].ParagraphFormat.Bullet.Visible = MsoTriState.msoFalse;
                     shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].ParagraphFormat.IndentLevel = level + 2;
                 }
-                if (type == MsoBulletType.msoBulletNumbered && show_bullet)
-                    shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].ParagraphFormat.Bullet.StartValue = itemsCount;
             }
             else
             {
+                shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[1, 1].ParagraphFormat.Bullet.StartValue = itemsCount;
                 if (show_bullet)
                 {
                     shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[1, 1].ParagraphFormat.Bullet.Type = type;
                     shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[1, 1].ParagraphFormat.IndentLevel = level + 1;
-                    if (type == MsoBulletType.msoBulletNumbered)
-                        shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[1, 1].ParagraphFormat.Bullet.StartValue = itemsCount;
                     shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[2, paragraphs].ParagraphFormat.Bullet.Type = type;
                     shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[2, paragraphs].ParagraphFormat.Bullet.Visible = MsoTriState.msoFalse;
                     shape.TextFrame2.TextRange.Characters[itemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - itemStartAt - 1].Paragraphs[2, paragraphs].ParagraphFormat.IndentLevel = level + 2;
