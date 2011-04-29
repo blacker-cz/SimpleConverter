@@ -619,7 +619,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                                 if (int.TryParse(tmp.Trim(), out merge_count))
                                 {
                                     // merge cells
-                                    tableShape.Table.Cell(rowCounter, columnCounter).Merge(tableShape.Table.Cell(rowCounter, columnCounter + merge_count - 1));
+                                    if(merge_count > 1)
+                                        tableShape.Table.Cell(rowCounter, columnCounter).Merge(tableShape.Table.Cell(rowCounter, columnCounter + merge_count - 1));
 
                                     TabularSettings mset = TabularSettings.Parse(rowcontent.OptionalParams, true);
 
