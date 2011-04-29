@@ -70,20 +70,20 @@ envEnd      \\end{wsl}
 \\texttt        { BEGIN(pre_overlay); return (int) Tokens.TEXTTT; }
 \\textit        { BEGIN(pre_overlay); return (int) Tokens.TEXTIT; }
 \\textsc        { BEGIN(pre_overlay); return (int) Tokens.TEXTSC; }
-\\bfseries      { return (int) Tokens.BFSERIES; }
-\\ttfamily      { return (int) Tokens.TTFAMILY; }
-\\itshape       { return (int) Tokens.ITSHAPE; }
-\\scshape       { return (int) Tokens.SCSHAPE; }
-\\tiny          { return (int) Tokens.TINY; }
-\\scriptsize    { return (int) Tokens.SCRIPTSIZE; }
-\\footnotesize  { return (int) Tokens.FOOTNOTESIZE; }
-\\small         { return (int) Tokens.SMALL; }
-\\normalsize    { return (int) Tokens.NORMALSIZE; }
-\\large         { return (int) Tokens.LARGE; }
-\\Large         { return (int) Tokens.LARGE2; }
-\\LARGE         { return (int) Tokens.LARGE3; }
-\\huge          { return (int) Tokens.HUGE; }
-\\Huge          { return (int) Tokens.HUGE2; }
+\\bfseries[ ]?      { return (int) Tokens.BFSERIES; }
+\\ttfamily[ ]?      { return (int) Tokens.TTFAMILY; }
+\\itshape[ ]?       { return (int) Tokens.ITSHAPE; }
+\\scshape[ ]?       { return (int) Tokens.SCSHAPE; }
+\\tiny[ ]?          { return (int) Tokens.TINY; }
+\\scriptsize[ ]?    { return (int) Tokens.SCRIPTSIZE; }
+\\footnotesize[ ]?  { return (int) Tokens.FOOTNOTESIZE; }
+\\small[ ]?         { return (int) Tokens.SMALL; }
+\\normalsize[ ]?    { return (int) Tokens.NORMALSIZE; }
+\\large[ ]?         { return (int) Tokens.LARGE; }
+\\Large[ ]?         { return (int) Tokens.LARGE2; }
+\\LARGE[ ]?         { return (int) Tokens.LARGE3; }
+\\huge[ ]?          { return (int) Tokens.HUGE; }
+\\Huge[ ]?          { return (int) Tokens.HUGE2; }
 \\color         { BEGIN(pre_overlay); return (int) Tokens.COLOR; }
 \\textcolor     { BEGIN(pre_overlay); return (int) Tokens.TEXTCOLOR; }
 \\underline     { BEGIN(pre_overlay); return (int) Tokens.UNDERLINE; }
