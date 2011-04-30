@@ -322,6 +322,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             int passNumber = 0,
                 pauseCounter = 0;
 
+            int maxPass = 0;
+
             bool titleNextPass = true,
                 slideNextPass = true,
                 paused = false;
@@ -349,8 +351,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                     // check if slide has title for current pass
                     if (record.SubtitleOverlaySet.Count == 0 && record.Subtitle != null
                         || record.TitleOverlaySet.Count == 0 && record.Title != null
-                        || record.SubtitleOverlaySet.Count != 0 && record.SubtitleOverlaySet.Contains(passNumber) && record.Subtitle != null
-                        || record.TitleOverlaySet.Count != 0 && record.TitleOverlaySet.Contains(passNumber) && record.Title != null)
+                        || Misc.ShowOverlay(passNumber, record.SubtitleOverlaySet, ref maxPass) && record.Subtitle != null
+                        || Misc.ShowOverlay(passNumber, record.TitleOverlaySet, ref maxPass) && record.Title != null)
                     {
                         slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
 

@@ -281,5 +281,24 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             return regex.IsMatch(text);
         }
+
+        /// <summary>
+        /// Check if element should be used/drawn
+        /// </summary>
+        /// <param name="passNumber">Number of current pass</param>
+        /// <param name="overlayList">Overlay specification list</param>
+        /// <returns>true if element should be drawn/used; false otherwise</returns>
+        internal static bool ShowOverlay(int passNumber, ISet<int> overlayList, ref int maxPass)
+        {
+            // check overlays
+            int min = overlayList.Count != 0 ? overlayList.Min() : int.MaxValue;
+            maxPass = Math.Max(Misc.MaxOverlay(overlayList), maxPass);    // set maximal number of passes from overlay specification
+            if (!(overlayList.Count == 0 || overlayList.Contains(passNumber) || min < 0 && Math.Abs(min) < passNumber))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

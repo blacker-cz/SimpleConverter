@@ -403,9 +403,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 case "huge":
                 case "Huge":
                     // check overlay settings
-                    int min = node.OverlayList.Count != 0 ? node.OverlayList.Min() : int.MaxValue;
-                    _maxPass = Math.Max(Misc.MaxOverlay(node.OverlayList), _maxPass);    // set maximal number of passes from overlay specification
-                    if (node.OverlayList.Count == 0 || node.OverlayList.Contains(_passNumber) || min < 0 && Math.Abs(min) < _passNumber)
+                    if (Misc.ShowOverlay(_passNumber, node.OverlayList, ref _maxPass))
                     {
                         _format.ModifyFormat(node);
                         nodes.Push(rollbackNode);
@@ -919,9 +917,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
                 FormatListItem(shape, type, itemStartAt, level, paragraphs, itemsCount, show_bullet);
 
-                int min = item.OverlayList.Count != 0 ? item.OverlayList.Min() : int.MaxValue;
-                _maxPass = Math.Max(Misc.MaxOverlay(item.OverlayList), _maxPass);    // set maximal number of passes from overlay specification
-                if (!(item.OverlayList.Count == 0 || item.OverlayList.Contains(_passNumber) || min < 0 && Math.Abs(min) < _passNumber))
+                if (!Misc.ShowOverlay(_passNumber, item.OverlayList, ref _maxPass))
                 {
                     shape.TextFrame2.TextRange.Characters[realItemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - realItemStartAt - 1].Paragraphs.Font.Fill.Visible = MsoTriState.msoFalse;
                     shape.TextFrame2.TextRange.Characters[realItemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - realItemStartAt - 1].Paragraphs.ParagraphFormat.Bullet.Visible = MsoTriState.msoFalse;
@@ -1111,9 +1107,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         shape.Table.Rows.Add();
 
                         // check overlays
-                        int min = node.OverlayList.Count != 0 ? node.OverlayList.Min() : int.MaxValue;
-                        _maxPass = Math.Max(Misc.MaxOverlay(node.OverlayList), _maxPass);    // set maximal number of passes from overlay specification
-                        if (!(node.OverlayList.Count == 0 || node.OverlayList.Contains(_passNumber) || min < 0 && Math.Abs(min) < _passNumber))
+                        if (!Misc.ShowOverlay(_passNumber, node.OverlayList, ref _maxPass))
                         {
                             termShape.TextFrame2.TextRange.Font.Fill.Visible = MsoTriState.msoFalse;
                             definitionShape.TextFrame2.TextRange.Font.Fill.Visible = MsoTriState.msoFalse;
