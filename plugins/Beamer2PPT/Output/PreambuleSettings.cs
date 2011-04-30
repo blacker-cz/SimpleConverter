@@ -67,7 +67,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
                                 // add path only if directory exists
                                 if(Directory.Exists(path))
-                                    GraphicsPath.Add(child.Content as string);
+                                    GraphicsPath.Add(path);
                             }
                         }
                         break;
