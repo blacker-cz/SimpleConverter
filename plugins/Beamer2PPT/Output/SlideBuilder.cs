@@ -1201,6 +1201,20 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             // trim shape
             Misc.TrimShape(shape);
+
+            // resize shape with its content to fit slide
+            if (shape.Height > 540.0f - shape.Top - 30.0f)
+            {
+                shape.Height = 540.0f - shape.Top - 30.0f;
+
+                while (shape.TextFrame2.TextRange.BoundHeight > shape.Height)
+                {
+                    foreach (TextRange2 range in shape.TextFrame2.TextRange.Runs)
+                    {
+                        range.Font.Size -= 1;
+                    }
+                }
+            }
         }
 
         /// <summary>
