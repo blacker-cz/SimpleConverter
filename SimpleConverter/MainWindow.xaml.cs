@@ -32,6 +32,13 @@ namespace SimpleConverter
                 this.Close();
                 MessageBox.Show("Application encountered following error and will now end:\n\n\"" + e.Message + "\"", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            // autosize ListView Message column on resize
+            listViewProgress.SizeChanged += (s, e) =>
+            {
+                // new width = (new width of listview) - (width of first column) - (space for scrollbar)
+                ((GridViewColumn)((GridView)listViewProgress.View).Columns[1]).Width = e.NewSize.Width - ((GridViewColumn)((GridView)listViewProgress.View).Columns[0]).Width - 30;
+            };
         }
 
         /// <summary>
