@@ -182,23 +182,23 @@ bodycontent :                       {
         ;
 
 slide :
-            BEGIN_FRAME slidecontent END_FRAME   {
+            BEGIN_FRAME optional slidecontent END_FRAME   {
                                         $$ = new Node("slide");
-                                        $$.Children = $2;
+                                        $$.Children = $3;
                                         SlideCount++;
                                     }
-        |   BEGIN_FRAME '{' simpleformtext '}' slidecontent END_FRAME   {
+        |   BEGIN_FRAME optional '{' simpleformtext '}' slidecontent END_FRAME   {
                                         $$ = new Node("slide");
-                                        $$.Children = $5;
+                                        $$.Children = $6;
                                         SlideCount++;
-                                        SetFrameTitle(SlideCount, $3);
+                                        SetFrameTitle(SlideCount, $4);
                                     }
-        |   BEGIN_FRAME '{' simpleformtext '}' '{' simpleformtext '}' slidecontent END_FRAME   {
+        |   BEGIN_FRAME optional '{' simpleformtext '}' '{' simpleformtext '}' slidecontent END_FRAME   {
                                         $$ = new Node("slide");
-                                        $$.Children = $8;
+                                        $$.Children = $9;
                                         SlideCount++;
-                                        SetFrameTitle(SlideCount, $3);
-                                        SetFrameSubtitle(SlideCount, $6);
+                                        SetFrameTitle(SlideCount, $4);
+                                        SetFrameSubtitle(SlideCount, $7);
                                     }
         |   FRAME optional '{' slidecontent '}'   {
                                         $$ = new Node("slide");

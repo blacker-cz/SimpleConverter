@@ -1,4 +1,4 @@
-%x str, overlay, optional, pre_overlay, pre_optional, tabular_arg, boverlay, boptional, bpre_overlay, bpre_optional, math
+%x str, overlay, optional, pre_overlay, pre_optional, tabular_arg, boverlay, boptional, bpre_overlay, bpre_optional, math, comment
 %s body
 
 %using SimpleConverter.Contract;
@@ -15,6 +15,8 @@ envEnd      \\end{wsl}
     // global variables
     bool tabular = false;   // info if we are in tabular env., inclusive states don't seem to work and exclusive are out of question
     bool inBody = false;    // info if we are in body of document (needed for processing white space characters)
+
+    public String Filename { get; set; }
 %}
 
 %%
@@ -43,7 +45,7 @@ envEnd      \\end{wsl}
 // -----------------------------------------------------------------------------
 {envBegin}\{document\}      { inBody = true; BEGIN(body); return (int) Tokens.BEGIN_DOCUMENT; }
 {envEnd}\{document\}        { inBody = false; BEGIN(INITIAL); return (int) Tokens.END_DOCUMENT; }
-{envBegin}\{frame\}         { return (int) Tokens.BEGIN_FRAME; }
+{envBegin}\{frame\}         { BEGIN(pre_optional); return (int) Tokens.BEGIN_FRAME; }
 {envEnd}\{frame\}           { return (int) Tokens.END_FRAME; }
 {envBegin}\{itemize\}       { BEGIN(pre_optional); return (int) Tokens.BEGIN_ITEMIZE; }
 {envEnd}\{itemize\}         { return (int) Tokens.END_ITEMIZE; }
@@ -51,7 +53,7 @@ envEnd      \\end{wsl}
 {envEnd}\{enumerate\}       { return (int) Tokens.END_ENUMERATE; }
 {envBegin}\{description\}   { BEGIN(pre_optional); return (int) Tokens.BEGIN_DESCRIPTION; }
 {envEnd}\{description\}     { return (int) Tokens.END_DESCRIPTION; }
-{envBegin}\{tabular\}\{     { tabular = true; BEGIN(tabular_arg); tbl = 0; unformattedText = ""; return (int) Tokens.BEGIN_TABULAR; }
+{envBegin}\{tabular\}{ws}(\[[bct]\]{ws})?\{     { tabular = true; BEGIN(tabular_arg); tbl = 0; unformattedText = ""; return (int) Tokens.BEGIN_TABULAR; }
 {envEnd}\{tabular\}         { tabular = false; return (int) Tokens.END_TABULAR; }
 \\item                      { BEGIN(pre_overlay); return (int) Tokens.ITEM; }
 \\multicolumn               { return (int) Tokens.MULTICOLUMN; }
@@ -105,6 +107,7 @@ envEnd      \\end{wsl}
 \\LaTeX[ ]?     { BEGIN(str); unformattedText = @"LaTeX"; spaces = 0; nls = 0; }
 // New paragraph
 \\\\|\\cr       { BEGIN(pre_optional); if(tabular) return (int) Tokens.ENDROW; else return (int) Tokens.NL; }
+\\newline       { return (int) Tokens.NL; }
 
 \\#                       BEGIN(str); unformattedText += @"#"; spaces = 0; nls = 0;
 \\\$                      BEGIN(str); unformattedText += @"$"; spaces = 0; nls = 0;
@@ -129,13 +132,13 @@ envEnd      \\end{wsl}
 // White space at the begining of line -> really needed?
 ^{wsp}         {/*ignore*/}
 
-\$              BEGIN(math); unformattedText = ""; spaces = 0; nls = 0;
+\$              BEGIN(math); unformattedText = "$"; spaces = 0; nls = 0;
 
 // Math (when math is implemented change token type to MATH)
 // -----------------------------------------------------------------------------
 <math> {
         [^\$]   unformattedText += yytext;
-        \$      if(inBody) BEGIN(body); else BEGIN(INITIAL); yylval.Text = unformattedText; return (int) Tokens.STRING;
+        \$      if(inBody) BEGIN(body); else BEGIN(INITIAL); yylval.Text = unformattedText + "$"; return (int) Tokens.STRING;
     }
 
 // Overlay specification
@@ -236,14 +239,25 @@ envEnd      \\end{wsl}
                                    }
     }
 
-// unknown commands etc.
+// Block comment (comment environment)
+// ----------------------------------------------------------------------------
+{envBegin}\{comment\}           BEGIN(comment);
+
+<comment> {
+        [^\\]*                  {/* ignore */}
+        \\                      {/* ignore */}
+        {envEnd}\{comment\}     if(inBody) BEGIN(body); else BEGIN(INITIAL);
+    }
+
+// Unknown commands etc.
+// ============================================================================
 {envBegin}\{[^\}]+\}   { BEGIN(bpre_overlay); printWarning("Unknown environment " + yytext); }
 {envEnd}\{[^\}]+\}     { BEGIN(bpre_overlay); printWarning("Unknown environment " + yytext); }
 
 \\[[:IsLetter:]]+      { BEGIN(bpre_overlay); printWarning("Unknown command " + yytext); }
 
 // Unknown command overlay specification - eat and ignore
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 <bpre_overlay> {
         {wsl}<                  BEGIN(boverlay);
         {wsl}[^<]               BEGIN(bpre_optional); yyless(0);
@@ -254,7 +268,7 @@ envEnd      \\end{wsl}
     }
 
 //  Unknown command optional parameters - eat and ignore
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 <bpre_optional> {
         {wsl}\[                 BEGIN(boptional);
         {wsl}[^[]               if(inBody) BEGIN(body); else BEGIN(INITIAL); yyless(0);
@@ -278,7 +292,7 @@ override public void yyerror(string format, params object[] args)
 {
     string tmp;
 
-    tmp = System.String.Format("{0}:{1} - ", yyline, yycol);
+    tmp = System.String.Format("{0}:{1}:{2} - ", Filename, yyline, yycol);
     Messenger.Instance.SendMessage(tmp + format, SimpleConverter.Contract.MessageLevel.ERROR);
 }
 
@@ -290,6 +304,6 @@ private void printWarning(string message)
 {
     string tmp;
 
-    tmp = System.String.Format("{0}:{1} - ", yyline, yycol);
+    tmp = System.String.Format("{0}:{1}:{2} - ", Filename, yyline, yycol);
     Messenger.Instance.SendMessage(tmp + message, SimpleConverter.Contract.MessageLevel.WARNING);
 }
