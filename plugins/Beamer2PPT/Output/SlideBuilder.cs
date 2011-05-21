@@ -919,11 +919,13 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
                 if (!Misc.ShowOverlay(_passNumber, item.OverlayList, ref _maxPass))
                 {
-                    shape.TextFrame2.TextRange.Characters[realItemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - realItemStartAt - 1].Paragraphs.Font.Fill.Visible = MsoTriState.msoFalse;
-                    shape.TextFrame2.TextRange.Characters[realItemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - realItemStartAt - 1].Paragraphs.ParagraphFormat.Bullet.Visible = MsoTriState.msoFalse;
+                    int balancer = shape.TextFrame2.TextRange.Text.EndsWith(" ") ? 1 : 0;
+                    shape.TextFrame2.TextRange.Characters[realItemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - realItemStartAt - balancer].Paragraphs.Font.Fill.Visible = MsoTriState.msoFalse;
+                    shape.TextFrame2.TextRange.Characters[realItemStartAt + 1, shape.TextFrame2.TextRange.Text.Length - realItemStartAt - balancer].Paragraphs.ParagraphFormat.Bullet.Visible = MsoTriState.msoFalse;
                 }
 
-                _format.AppendText(shape, "\r");
+                if(!Misc.EndsWithNewLine(shape.TextFrame2.TextRange.Text))
+                    _format.AppendText(shape, "\r");
             }
 
             return true;
