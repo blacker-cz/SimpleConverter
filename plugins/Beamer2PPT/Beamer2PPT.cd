@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.Connector" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAgQAAEAAgQCAAhAAACAAAAAQAAAACQAAACAA=</HashCode>
+      <FileName>Connector.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.FrametitleRecord" Collapsed="true">
+    <Position X="9.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAEAAEAAQAAAQQAAAAACEABAAAAAgAAAAAA=</HashCode>
+      <FileName>Conversion\FrametitleRecord.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.Node" Collapsed="true">
+    <Position X="7.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAQQgAEAACAAAAEAACAAAAAAAAAAQAiAAAIAAA=</HashCode>
+      <FileName>Conversion\Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.ScanBase" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAgAAAAAAIAA=</HashCode>
+      <FileName>Conversion\Parser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.Parser" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAYAAAAAAwAAAAAAAAgAAAAIAEgGAAAABAUAAAA=</HashCode>
+      <FileName>Conversion\Parser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.Scanner" Collapsed="true">
+    <Position X="2.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>Aiz6HwwAkNmGUgoBIADogdAIL8BkA77EJTBwOIngUYE=</HashCode>
+      <FileName>Conversion\Scanner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.BufferException" Collapsed="true">
+    <Position X="10.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Conversion\Scanner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.ScanBuff" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAABAAgAACAQAAAAAiAAABAAQA=</HashCode>
+      <FileName>Conversion\Scanner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.StringBuffer" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAEAAAAJAAgAACAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Conversion\Scanner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.LineBuffer" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAEAABAAEAQAAAAGABAAFACgAECAAIAAACAAAAAACAA=</HashCode>
+      <FileName>Conversion\Scanner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.BuildBuffer" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAEAAAEAAAAJAAgAACAAAAAAACQAAAAAAA=</HashCode>
+      <FileName>Conversion\Scanner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.BlockReaderFactory" Collapsed="true">
+    <Position X="0.5" Y="6.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACABAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Conversion\Scanner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.CodePageHandling" Collapsed="true">
+    <Position X="2.5" Y="6.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Conversion\Scanner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.Guesser" Collapsed="true">
+    <Position X="3.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQIEAAAAMACAgCAIAAAAIAAICAECgAEAADAAAAAAAA=</HashCode>
+      <FileName>Conversion\Scanner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.SectionRecord" Collapsed="true">
+    <Position X="11.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAQAAAAAABAA=</HashCode>
+      <FileName>Conversion\SectionRecord.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.PowerPointApplicationException" Collapsed="true">
+    <Position X="10.5" Y="7.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.DocumentBuilderException" Collapsed="true">
+    <Position X="13.25" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.BooleanConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GUI\BooleanConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.SettingsView" Collapsed="true">
+    <Position X="10" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GUI\SettingsView.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.SettingsViewViewModel" Collapsed="true">
+    <Position X="7.75" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAJAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>GUI\SettingsViewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.SaveFileType" Collapsed="true">
+    <Position X="14.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>GUI\SettingsViewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.Messenger" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQIAAAAAAAAAAAAQACAABAAAAABAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Messenger.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.Misc" Collapsed="true">
+    <Position X="7.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAABAABAAAAAAAAgABAggAAAAAAAAgAABAAAAgAAAAA=</HashCode>
+      <FileName>Misc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.PowerPointBuilder" Collapsed="true">
+    <Position X="7.75" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAIEgBAAEAAAAQAAEEAAAAAAEAAiAAAAAYAAoCIAEg=</HashCode>
+      <FileName>Output\PowerPointBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.PreambuleSettings" Collapsed="true">
+    <Position X="11.25" Y="6" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAAQAAAAAAAAIAAAAAAACAAAA=</HashCode>
+      <FileName>Output\PreambuleSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.SlideBuilder" Collapsed="true">
+    <Position X="9.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAgBAAkEBBBBAAAgEAaAAAAAABAAwCAACIAAgAEgEA=</HashCode>
+      <FileName>Output\SlideBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.TabularSettings" Collapsed="true">
+    <Position X="9.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAgAAAAAAAAAAAIAAAABAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Output\TabularSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.TextFormat" Collapsed="true">
+    <Position X="13.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAEgAAAAAAQAAAAACAAAgAAAAAAAAIAAEAABAA=</HashCode>
+      <FileName>Output\TextFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.TitleBuilder" Collapsed="true">
+    <Position X="11.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABgAAAAAIAAAAAAAAAQCAAAIAAAAAAAI=</HashCode>
+      <FileName>Output\TitleBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Plugin.Beamer2PPT.Settings" Collapsed="true">
+    <Position X="13" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAJAAABIAAAAQBAAAAAAAAA=</HashCode>
+      <FileName>Settings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="SimpleConverter.Plugin.Beamer2PPT.ValueType" Collapsed="true">
+    <Position X="0.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACgAAAAAABAAAACAAAAAA=</HashCode>
+      <FileName>Conversion\Parser.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="SimpleConverter.Plugin.Beamer2PPT.IMessenger" Collapsed="true">
+    <Position X="11.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IMessenger.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="SimpleConverter.Plugin.Beamer2PPT.Tokens" Collapsed="true">
+    <Position X="2.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>oYgAUgABJBACAgQBAAkjRwCEARgw4ADEBM0SCagCBAA=</HashCode>
+      <FileName>Conversion\Parser.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SimpleConverter.Plugin.Beamer2PPT.SectionType" Collapsed="true">
+    <Position X="7.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAIAAAAA=</HashCode>
+      <FileName>Conversion\SectionRecord.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="SimpleConverter.Plugin.Beamer2PPT.BlockReader" Collapsed="true">
+    <Position X="0.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACABAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Conversion\Scanner.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

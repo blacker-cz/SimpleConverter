@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SimpleConverter.Contract.AsyncObservableCollection&lt;T&gt;" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAIAAAAAAAAAAAEBAAAAgAAAAAAAA=</HashCode>
+      <FileName>AsyncObservableCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Contract.BaseViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>BaseViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SimpleConverter.Contract.ElementCollection&lt;T&gt;" Collapsed="true">
+    <Position X="3.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ElementCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Contract.InitException" Collapsed="true">
+    <Position X="8.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Contract.DocumentException" Collapsed="true">
+    <Position X="6.75" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Contract.Hash" Collapsed="true">
+    <Position X="2.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Hash.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Contract.PluginMetadataAttribute" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAgAAQAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PluginMetadataAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="SimpleConverter.Contract.IPlugin" Collapsed="true">
+    <Position X="0.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAgAAAEAAAQAAABAAACAAAAAQAAAACQAAAAAA=</HashCode>
+      <FileName>IPlugin.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SimpleConverter.Contract.IPluginMetaData" Collapsed="true">
+    <Position X="2.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAgAAQAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IPluginMetaData.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="SimpleConverter.Contract.MessageLevel" Collapsed="true">
+    <Position X="0.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAEAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>IPlugin.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="SimpleConverter.Contract.SendMessageDelegate" Collapsed="true">
+    <Position X="2.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IPlugin.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="SimpleConverter.Contract.ProgressDelegate" Collapsed="true">
+    <Position X="0.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IPlugin.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

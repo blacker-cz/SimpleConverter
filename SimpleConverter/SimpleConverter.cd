@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SimpleConverter.App" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.BackgroundThread" Collapsed="true">
+    <Position X="0.5" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AACAABABAAAAECggAAABAAAAAAAoAAAAAAgAAAAAEAo=</HashCode>
+      <FileName>BackgroundThread.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.ListFile" Collapsed="true">
+    <Position X="9" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAACAQABAAAAAA=</HashCode>
+      <FileName>ListFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.ListMessage" Collapsed="true">
+    <Position X="9" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAEAAAA=</HashCode>
+      <FileName>ListMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.MainWindow" Collapsed="true">
+    <Position X="3" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.BaseCommand" Collapsed="true">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAARQAECAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainWindowCommands.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SimpleConverter.StartConversionCommand" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainWindowCommands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.AddFileCommand" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainWindowCommands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.RemoveFileCommand" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainWindowCommands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.BrowseCommand" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainWindowCommands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.StopBatchCommand" Collapsed="true">
+    <Position X="9.5" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainWindowCommands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.MainWindowViewModel" Collapsed="true">
+    <Position X="4.75" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ABAQCAQHAKEAACAAIECAAgEEVYDAAIQABgEgwQCABYA=</HashCode>
+      <FileName>MainWindowViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Properties.Resources" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleConverter.Properties.Settings" Collapsed="true">
+    <Position X="3.75" Y="5.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAQAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Delegate Name="SimpleConverter.ThreadEndedDelegate" Collapsed="true">
+    <Position X="2.5" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BackgroundThread.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
