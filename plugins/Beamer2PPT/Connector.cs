@@ -9,19 +9,34 @@ using NDesk.Options;
 namespace SimpleConverter.Plugin.Beamer2PPT
 {
     [Export(typeof(IPlugin))]
-    [PluginMetadata("Beamer 2 Powerpoint", "0.0.0.1", "Plugin for conversion from Beamer to PowerPoint")]
+    [PluginMetadata("Beamer 2 Powerpoint", "0.9.0.1", "Plugin for conversion from Beamer to PowerPoint")]
     public class Connector : IPlugin, IMessenger
     {
+        /// <summary>
+        /// Plugin UI
+        /// </summary>
         private System.Windows.FrameworkElement _visual;
 
+        /// <summary>
+        /// PowerPoint builder class (for creation of output)
+        /// </summary>
         private PowerPointBuilder _builder;
 
+        /// <summary>
+        /// Command line options parser
+        /// </summary>
         private OptionSet _options;
 
         #region IPlugin implementation
 
+        /// <summary>
+        /// Event for sending messages
+        /// </summary>
         public event SendMessageDelegate SendMessageEvent;
 
+        /// <summary>
+        /// Event for reporting current progress
+        /// </summary>
         public event ProgressDelegate ProgressEvent;
 
         /// <summary>
@@ -78,13 +93,14 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             ProgressInfo(0);
 
             #region Analysis of Beamer document
-            Messenger.Instance.SendMessage("Started parsing.");
+            Messenger.Instance.SendMessage(System.IO.Path.GetFileName(filename) + " - Started parsing.");
 
             Parser parser;
 
             System.IO.FileStream reader;
             reader = new System.IO.FileStream(filename, System.IO.FileMode.Open);
             Scanner scanner = new Scanner(reader);
+            scanner.Filename = System.IO.Path.GetFileName(filename);
 
             parser = new Parser(scanner);
 
@@ -93,27 +109,16 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             reader.Close();
 
             if (!ok)
-                return;
+                throw new DocumentException(System.IO.Path.GetFileName(filename) + " - Error processing input !");
 
-            Messenger.Instance.SendMessage("Parsing done!");
+            Messenger.Instance.SendMessage(System.IO.Path.GetFileName(filename) + " - Parsing done!");
 
             #endregion // Analysis of Beamer document
-
-            #region Debug serialization
-#if DEBUG
-            System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(parser.Document.GetType());
-            System.IO.StreamWriter writer = new System.IO.StreamWriter(@"document.xml");
-            x.Serialize(writer, parser.Document);
-            writer.Close();
-
-            Messenger.Instance.SendMessage(@"Document tree serialized to ""document.xml""");
-#endif
-            #endregion // Debug serialization
 
             // check if there are slides in presentation
             if (parser.SlideCount == 0)
             {
-                Messenger.Instance.SendMessage("Empty presentation - output omitted.", MessageLevel.ERROR);
+                Messenger.Instance.SendMessage(System.IO.Path.GetFileName(filename) + " - Empty presentation - output omitted.", MessageLevel.ERROR);
                 return;
             }
 
@@ -121,7 +126,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
 
             #region Building output document
 
-            Messenger.Instance.SendMessage("Started building output.");
+            Messenger.Instance.SendMessage(System.IO.Path.GetFileName(filename) + " - Started building output.");
 
             if (_builder == null)
                 throw new InvalidOperationException("Plugin wasn't initialized yet");
@@ -132,8 +137,12 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             }
             catch (Exception ex)
             {
-                if(ex is PowerPointApplicationException || ex is DocumentBuilderException)
+                if (ex is PowerPointApplicationException || ex is DocumentBuilderException)
+                {
                     Messenger.Instance.SendMessage(ex.Message, MessageLevel.ERROR);
+
+                    Messenger.Instance.SendMessage(System.IO.Path.GetFileName(filename) + " - Presentation couldn't be converted.", MessageLevel.ERROR);
+                }
 
                 throw ex;   // propagate exception
             }

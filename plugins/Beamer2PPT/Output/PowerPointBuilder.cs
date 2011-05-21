@@ -207,13 +207,13 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 case Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsDefault:
                 case Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation:
                 case Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsPresentation:
-                    Messenger.Instance.SendMessage("Output saved to: \"" + _pptPresentation.FullName + "\"");
+                    Messenger.Instance.SendMessage(System.IO.Path.GetFileName(filename) + " - Output saved to: \"" + _pptPresentation.FullName + "\"");
                     break;
                 case Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsPDF:
-                    Messenger.Instance.SendMessage("Output saved to: \"" + _filename + ".pdf\"");
+                    Messenger.Instance.SendMessage(System.IO.Path.GetFileName(filename) + " - Output saved to: \"" + _filename + ".pdf\"");
                     break;
                 default:
-                    Messenger.Instance.SendMessage("Output saved to output directory.");
+                    Messenger.Instance.SendMessage(System.IO.Path.GetFileName(filename) + " - Output saved to output directory.");
                     break;
             }
 

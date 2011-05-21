@@ -56,9 +56,7 @@ namespace SimpleConverter
             Plugins = new ObservableCollection<Contract.IPluginMetaData>(Factory.Loader.Instance.Plugins);
             Messages = new Contract.AsyncObservableCollection<ListMessage>();
             Files = new Contract.ElementCollection<ListFile>();
-#if DEBUG
-            Files.Add(new ListFile(@"D:\Programovani\VS.2010\SimpleConverter\_bordel\slide.tex"));
-#endif
+
             SelectedPlugin = Factory.Loader.Instance.Plugins.First<Contract.IPluginMetaData>();
             SelectPluginEnabled = true;
             SettingsTabEnabled = true;
@@ -263,6 +261,8 @@ namespace SimpleConverter
         {
             try
             {
+                _backgroundThread.Run(_currentPlugin, Files, OutputPath);
+
                 AddFileCommand.Disabled = true;
                 RemoveFileCommand.Disabled = true;
                 StartConversionCommand.Disabled = true;
@@ -277,8 +277,6 @@ namespace SimpleConverter
                 Messages.Clear();   // clear message list
 
                 InvokePropertyChanged(null);
-
-                _backgroundThread.Run(_currentPlugin, Files, OutputPath);
             }
             catch (Factory.InvalidArgumentException ex)
             {
@@ -289,7 +287,7 @@ namespace SimpleConverter
         /// <summary>
         /// Conversion in background thread ended
         /// </summary>
-        public void ConversionDone()
+        public void ConversionDone(int successful, int from)
         {
             AddFileCommand.Disabled = false;
             RemoveFileCommand.Disabled = false;
@@ -303,6 +301,10 @@ namespace SimpleConverter
             _backgroundThread.Join();
 
             InvokePropertyChanged(null);
+
+            // show information message box
+            string message = String.Format("Successfully converted {0} file(s) from {1}.\nFor more information look at progress messages.", successful, from);
+            MessageBox.Show(message, "Conversion completed", MessageBoxButton.OK, successful == from ? MessageBoxImage.Information : MessageBoxImage.Warning);
         }
 
         /// <summary>

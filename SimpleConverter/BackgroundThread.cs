@@ -120,6 +120,8 @@ namespace SimpleConverter
         private void Worker()
         {
             int progress = 0;
+            int successful = 0;
+            int count = 0;
 
             try
             {
@@ -127,12 +129,14 @@ namespace SimpleConverter
 
                 foreach (ListFile file in _files)
                 {
+                    count++;
                     progress++;
                     try
                     {
                         if (file.Valid)
                         {
                             _plugin.ConvertDocument(file.Filepath, _outputPath);
+                            successful++;
                         }
                     }
                     catch (DocumentException) { }
@@ -162,7 +166,7 @@ namespace SimpleConverter
                 if (SynchronizationContext.Current == _synchronizationContext)
                 {
                     // Execute the ThreadEndedEvent event on the current thread
-                    ThreadEndedEvent();
+                    ThreadEndedEvent(successful, count);
                 }
                 else
                 {
@@ -173,7 +177,7 @@ namespace SimpleConverter
 
                         if (handler != null)
                         {
-                            handler();
+                            handler(successful, count);
                         }
                     }), null);
                 }
@@ -242,5 +246,7 @@ namespace SimpleConverter
     /// <summary>
     /// Delegate for thread ended event
     /// </summary>
-    public delegate void ThreadEndedDelegate();
+    /// <param name="successful">Number of successfully processed files</param>
+    /// <param name="from">Number from how many</param>
+    public delegate void ThreadEndedDelegate(int successful, int from);
 }
