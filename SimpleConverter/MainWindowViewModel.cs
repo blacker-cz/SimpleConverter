@@ -259,29 +259,31 @@ namespace SimpleConverter
         /// </summary>
         public void StartConversionClicked()
         {
+            Messages.Clear();   // clear message list
+
             try
             {
-                _backgroundThread.Run(_currentPlugin, Files, OutputPath);
-
-                AddFileCommand.Disabled = true;
-                RemoveFileCommand.Disabled = true;
-                StartConversionCommand.Disabled = true;
-                BrowseCommand.Disabled = true;
-                StopBatchCommand.Disabled = false;
-
-                SelectPluginEnabled = false;
-                SettingsTabEnabled = false;
-
-                SelectedTab = 1;
-
-                Messages.Clear();   // clear message list
-
-                InvokePropertyChanged(null);
+                if(!_backgroundThread.Run(_currentPlugin, Files, OutputPath))
+                    MessageBox.Show("Couldn't start new thread.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Factory.InvalidArgumentException ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
+
+            AddFileCommand.Disabled = true;
+            RemoveFileCommand.Disabled = true;
+            StartConversionCommand.Disabled = true;
+            BrowseCommand.Disabled = true;
+            StopBatchCommand.Disabled = false;
+
+            SelectPluginEnabled = false;
+            SettingsTabEnabled = false;
+
+            SelectedTab = 1;
+
+            InvokePropertyChanged(null);
         }
 
         /// <summary>
