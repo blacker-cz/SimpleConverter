@@ -59,6 +59,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// </summary>
         public void Init()
         {
+            KillPowerPoint();
+
             try
             {
                 _builder = new PowerPointBuilder();
@@ -247,5 +249,26 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             }
         }
 
+        /// <summary>
+        /// Kill running PowerPoint application instance
+        /// </summary>
+        private void KillPowerPoint()
+        {
+            try
+            {
+                foreach (System.Diagnostics.Process clsProcess in System.Diagnostics.Process.GetProcesses())
+                {
+                    if (clsProcess.ProcessName.StartsWith("PowerPnt", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        clsProcess.Kill();
+                        // sleep a moment before continuing
+                        System.Threading.Thread.Sleep(2500);
+                    }
+                }
+            }
+            catch // best effort
+            {
+            }
+        } 
     }
 }
