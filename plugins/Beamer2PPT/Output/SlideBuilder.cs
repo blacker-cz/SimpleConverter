@@ -1285,7 +1285,6 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                             shapes[0].TextFrame2.TextRange.Lines[shapes[0].TextFrame2.TextRange.Lines.Count].Cut();
                             lastLineShape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, shapes[0].Left, shapes[0].Top + shapes[0].Height + 5.0f, 648.0f, 10.0f);
                             lastLineShape.TextFrame2.TextRange.Paste();
-                            lastMovableShape = lastLineShape;
                         }
                         else
                         {
@@ -1333,7 +1332,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         {
                             shapes[1].TextFrame2.TextRange.Lines[2, shapes[1].TextFrame2.TextRange.Lines.Count - 1].Cut();
                             UpdateBottomShapeBorder();
-                            PowerPoint.Shape lastLinesShape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, shapes[0].Left, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
+                            PowerPoint.Shape lastLinesShape = _slide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 36.0f, _bottomShapeBorder + 5.0f, 648.0f, 10.0f);
                             lastLinesShape.TextFrame2.TextRange.Paste();
                             lastMovableShape = lastLinesShape;
                         }
