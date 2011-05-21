@@ -10,6 +10,11 @@ namespace SimpleConverter
     /// </summary>
     public class ListMessage
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="message">Message text</param>
+        /// <param name="level">Message level</param>
         public ListMessage(string message, Contract.MessageLevel level = Contract.MessageLevel.INFO)
         {
             Message = message;
@@ -29,8 +34,14 @@ namespace SimpleConverter
             }
         }
 
+        /// <summary>
+        /// Message text
+        /// </summary>
         public string Message { get; private set; }
 
+        /// <summary>
+        /// Message icon
+        /// </summary>
         public System.Windows.Media.ImageSource Icon { get; private set; }
     }
 }

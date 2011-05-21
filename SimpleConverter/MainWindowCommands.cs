@@ -11,10 +11,19 @@ namespace SimpleConverter
     /// </summary>
     public abstract class BaseCommand : ICommand
     {
+        /// <summary>
+        /// ViewModel associated with command
+        /// </summary>
         protected readonly MainWindowViewModel _viewModel;
 
+        /// <summary>
+        /// Flag if control is disabled or not
+        /// </summary>
         private bool _disabled;
 
+        /// <summary>
+        /// Getter/setter for <see cref="_disabled"/> flag
+        /// </summary>
         public bool Disabled
         {
             get { return _disabled; }
@@ -28,19 +37,36 @@ namespace SimpleConverter
             }
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="viewModel">Associated ViewModel</param>
+        /// <param name="disabled">Flag if control is disabled</param>
         public BaseCommand(MainWindowViewModel viewModel, bool disabled = false)
         {
             _viewModel = viewModel;
             Disabled = disabled;
         }
 
+        /// <summary>
+        /// Execute method for command
+        /// </summary>
+        /// <param name="parameter">Parameter</param>
         public abstract void Execute(object parameter);
 
+        /// <summary>
+        /// CanExecute method for command
+        /// </summary>
+        /// <param name="parameter">Parameter</param>
+        /// <returns>Return value depends on <see cref="_disabled"/> flag</returns>
         public bool CanExecute(object parameter)
         {
             return !Disabled;
         }
 
+        /// <summary>
+        /// CanExecuteChanged event
+        /// </summary>
         public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
@@ -53,6 +79,11 @@ namespace SimpleConverter
     /// </summary>
     public class StartConversionCommand : BaseCommand
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="viewModel">Associated ViewModel</param>
+        /// <param name="disabled">Flag if control is disabled</param>
         public StartConversionCommand(MainWindowViewModel viewModel, bool disabled = false) : base(viewModel, disabled) { }
 
         public override void Execute(object parameter)
@@ -66,8 +97,17 @@ namespace SimpleConverter
     /// </summary>
     public class AddFileCommand : BaseCommand
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="viewModel">Associated ViewModel</param>
+        /// <param name="disabled">Flag if control is disabled</param>
         public AddFileCommand(MainWindowViewModel viewModel, bool disabled = false) : base(viewModel, disabled) { }
 
+        /// <summary>
+        /// Execute method for command
+        /// </summary>
+        /// <param name="parameter">Parameter</param>
         public override void Execute(object parameter)
         {
             _viewModel.AddFileClicked();
@@ -79,8 +119,17 @@ namespace SimpleConverter
     /// </summary>
     public class RemoveFileCommand : BaseCommand
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="viewModel">Associated ViewModel</param>
+        /// <param name="disabled">Flag if control is disabled</param>
         public RemoveFileCommand(MainWindowViewModel viewModel, bool disabled = false) : base(viewModel, disabled) { }
 
+        /// <summary>
+        /// Execute method for command
+        /// </summary>
+        /// <param name="parameter">Parameter</param>
         public override void Execute(object parameter)
         {
             _viewModel.RemoveFileClicked();
@@ -92,8 +141,17 @@ namespace SimpleConverter
     /// </summary>
     public class BrowseCommand : BaseCommand
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="viewModel">Associated ViewModel</param>
+        /// <param name="disabled">Flag if control is disabled</param>
         public BrowseCommand(MainWindowViewModel viewModel, bool disabled = false) : base(viewModel, disabled) { }
 
+        /// <summary>
+        /// Execute method for command
+        /// </summary>
+        /// <param name="parameter">Parameter</param>
         public override void Execute(object parameter)
         {
             _viewModel.BrowseClicked();
@@ -105,8 +163,17 @@ namespace SimpleConverter
     /// </summary>
     public class StopBatchCommand : BaseCommand
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="viewModel">Associated ViewModel</param>
+        /// <param name="disabled">Flag if control is disabled</param>
         public StopBatchCommand(MainWindowViewModel viewModel, bool disabled = false) : base(viewModel, disabled) { }
 
+        /// <summary>
+        /// Execute method for command
+        /// </summary>
+        /// <param name="parameter">Parameter</param>
         public override void Execute(object parameter)
         {
             _viewModel.StopBatch();
