@@ -83,7 +83,7 @@
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <None Include="Beamer2PPT.cd" />
     <None Include="Conversion\Scanner.lex" />
     <None Include="Conversion\Parser.y" />
   </ItemGroup>
