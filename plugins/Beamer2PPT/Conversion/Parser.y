@@ -40,6 +40,7 @@
 %nonassoc <Text> STRING "plain text"
 %nonassoc <Text> OPTIONAL "optional parameter"
 %nonassoc <Text> OVERLAY "overlay specification"
+%nonassoc <Text> VERB "verbatim"
 
 // setup types for some non-terminals
 %type <documentNode> command groupcommand standalonecommand commands slide titlesettings body environment documentclass preambule image
@@ -496,6 +497,13 @@ standalonecommand :
         |   NL                      {
                                         $$ = new Node("paragraph");
                                     }
+        |   VERB                    {
+                                        $$ = new Node("typewriter");
+                                        Node tmp = new Node("string");
+                                        tmp.Content = $1 as object;
+                                        $$.Children = new List<Node>();
+                                        $$.Children.Add(tmp);
+                                    }
         ;
 
 optional :                          {
@@ -558,6 +566,15 @@ simpleformtext :                    {
                                         // process \and command as tabulator
                                         Node tmp = new Node("string");
                                         tmp.Content = "\t" as object;
+                                        $1.Add(tmp);
+                                        $$ = $1;
+                                    }
+        |   simpleformtext VERB     {
+                                        Node tmp = new Node("typewriter");
+                                        Node tmp1 = new Node("string");
+                                        tmp1.Content = $2 as object;
+                                        tmp.Children = new List<Node>();
+                                        tmp.Children.Add(tmp1);
                                         $1.Add(tmp);
                                         $$ = $1;
                                     }

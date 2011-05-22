@@ -1,4 +1,4 @@
-%x str, overlay, optional, pre_overlay, pre_optional, tabular_arg, boverlay, boptional, bpre_overlay, bpre_optional, math, comment
+%x str, overlay, optional, pre_overlay, pre_optional, tabular_arg, boverlay, boptional, bpre_overlay, bpre_optional, math, comment, verb
 %s body
 
 %using SimpleConverter.Contract;
@@ -15,6 +15,7 @@ envEnd      \\end{wsl}
     // global variables
     bool tabular = false;   // info if we are in tabular env., inclusive states don't seem to work and exclusive are out of question
     bool inBody = false;    // info if we are in body of document (needed for processing white space characters)
+    char verbBoundary = '\0';  // boundary character for \verb command
 
     public String Filename { get; set; }
 %}
@@ -133,6 +134,25 @@ envEnd      \\end{wsl}
 ^{wsp}         {/*ignore*/}
 
 \$              BEGIN(math); unformattedText = "$"; spaces = 0; nls = 0;
+
+// Verbatim
+// -----------------------------------------------------------------------------
+\\verb.        { BEGIN(verb); unformattedText = ""; spaces = 0; nls = 0; verbBoundary = yytext[yytext.Length - 1]; }
+<verb> {
+    .          {
+                    if(yytext[0] != verbBoundary)
+                        unformattedText += yytext;
+                    else {
+                        if(inBody)
+                            BEGIN(body);
+                        else
+                            BEGIN(INITIAL);
+
+                        yylval.Text = unformattedText;
+                        return (int) Tokens.VERB;
+                    }
+               }
+}
 
 // Math (when math is implemented change token type to MATH)
 // -----------------------------------------------------------------------------
