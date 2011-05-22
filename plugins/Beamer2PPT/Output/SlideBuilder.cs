@@ -840,6 +840,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 realItemStartAt = itemStartAt = shape.TextFrame2.TextRange.Text.Length;
                 paragraphs = 0;
                 itemsCount++;
+                _format.Invalidate();
 
                 // copy content to stack
                 foreach (Node node in item.Children.Reverse<Node>())
