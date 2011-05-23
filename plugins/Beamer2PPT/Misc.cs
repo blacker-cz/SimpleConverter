@@ -48,7 +48,8 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         {
                             number = int.Parse(part.Trim().Substring(1));
                             if (number > 0)
-                                overlays.Add(number);
+                                for (int i = 1; i <= number; i++)
+                                    overlays.Add(i);
                         }
                         else if (part.Trim().EndsWith("-"))
                         {
