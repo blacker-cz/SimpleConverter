@@ -9,7 +9,7 @@ using NDesk.Options;
 namespace SimpleConverter.Plugin.Beamer2PPT
 {
     [Export(typeof(IPlugin))]
-    [PluginMetadata("Beamer 2 Powerpoint", "0.9.0.1", "Plugin for conversion from Beamer to PowerPoint")]
+    [PluginMetadata("Beamer 2 Powerpoint", "0.9", "Plugin for conversion from Beamer to PowerPoint")]
     public class Connector : IPlugin, IMessenger
     {
         /// <summary>

@@ -2,13 +2,31 @@ h1. SimpleConverter
 
 h2. Description
 
-SimpleConverter is very simple document convertor. Allows use of plugins for conversion between different document formats.
+SimpleConverter is very simple document convertor. It allows use of plugins for conversion between different document formats.
+
+This application (version 0.9) was created as part of my Master's Thesis on "Faculty of Information Technology, BUT":http://www.fit.vutbr.cz .
+
+h2. Beamer2PPT
+
+Beamer2PPT is plugin for conversion of LaTeX presentations using Beamer class, to Microsoft PowerPoint presentations.
+
+It currently supports (at least partially):
+* changing font style or size (\textbf, \texttt, \large, \huge, etc.)
+* lists (itemize, enumerate, description)
+* simple tables
+* simple overlays
+* \pause command
+* images (\includegraphics) 
+* UTF-8 code page
+
+Plugin requires Microsoft Office 2007 or newer installed.
 
 h2. 3rd party software, libraries, etc.
 
 SimpleConverter depends on following libraries:
 * Managed Extensibility Framework - "http://mef.codeplex.com/(http://mef.codeplex.com/)":http://mef.codeplex.com/
 * GPPG shift reduce parser library - "http://gppg.codeplex.com/(http://gppg.codeplex.com/)":http://gppg.codeplex.com/
+* NDesk.Options - "http://www.ndesk.org/Options":http://www.ndesk.org/Options
 
 SimpleConverter is using following software for generation of document scanner and parser:
 * Gardens Point LEX - "http://gplex.codeplex.com/(http://gplex.codeplex.com/)":http://gplex.codeplex.com/

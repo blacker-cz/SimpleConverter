@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Beamer2PPT")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("SimpleConverter Beamer2PPT")]
+[assembly: AssemblyDescription("Plugin for conversion of simple LaTeX presentations (using Beamer class) to Microsoft PowerPoint presentations")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Beamer2PPT")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
+[assembly: AssemblyCompany("Lukáš Černý")]
+[assembly: AssemblyProduct("SimpleConverter")]
+[assembly: AssemblyCopyright("Copyright © Lukáš Černý 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.9.*")]
+[assembly: AssemblyFileVersion("0.9.*")]
