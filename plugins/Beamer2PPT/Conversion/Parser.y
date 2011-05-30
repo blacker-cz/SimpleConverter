@@ -186,17 +186,20 @@ slide :
             BEGIN_FRAME optional slidecontent END_FRAME   {
                                         $$ = new Node("slide");
                                         $$.Children = $3;
+                                        $$.OptionalParams = $2;
                                         SlideCount++;
                                     }
         |   BEGIN_FRAME optional '{' simpleformtext '}' slidecontent END_FRAME   {
                                         $$ = new Node("slide");
                                         $$.Children = $6;
+                                        $$.OptionalParams = $2;
                                         SlideCount++;
                                         SetFrameTitle(SlideCount, $4);
                                     }
         |   BEGIN_FRAME optional '{' simpleformtext '}' '{' simpleformtext '}' slidecontent END_FRAME   {
                                         $$ = new Node("slide");
                                         $$.Children = $9;
+                                        $$.OptionalParams = $2;
                                         SlideCount++;
                                         SetFrameTitle(SlideCount, $4);
                                         SetFrameSubtitle(SlideCount, $7);

@@ -71,6 +71,7 @@
     <Compile Include="Output\PowerPointBuilder.cs" />
     <Compile Include="Output\PreambuleSettings.cs" />
     <Compile Include="Output\SlideBuilder.cs" />
+    <Compile Include="Output\SlideSettings.cs" />
     <Compile Include="Output\TextFormat.cs" />
     <Compile Include="Output\TitleBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -331,6 +331,12 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             SlideBuilder slideBuilder = new SlideBuilder(_preambuleSettings, _currentSlide, _baseFontSize);
             TitleBuilder titleBuilder = new TitleBuilder(_baseFontSize);
 
+            // list of sub-slides
+            List<PowerPoint.Slide> subSlides = new List<PowerPoint.Slide>();
+
+            // slide settings
+            SlideSettings slideSettings = new SlideSettings(slideNode.OptionalParams);
+
             do
             {    // --- loop over all overlays
 
@@ -355,6 +361,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         || Misc.ShowOverlay(passNumber, record.TitleOverlaySet, ref maxPass) && record.Title != null)
                     {
                         slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
+                        subSlides.Add(slide);   // add slide to list of sub-slides
 
                         titleNextPass = titleBuilder.BuildTitle(slide.Shapes[1], _frametitleTable[_currentSlide], passNumber, pauseCounter, out paused);
 
@@ -368,10 +375,41 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                 }
                 
                 slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutBlank);
+                subSlides.Add(slide);   // add slide to list of sub-slides
 
                 slideNextPass = slideBuilder.BuildSlide(slide, slideNode, passNumber, pauseCounter, out paused);
     
             } while (!titleNextPass || !slideNextPass); // --- end loop over all overlays
+
+            // change slide content vertical align
+            if (slideSettings.ContentAlign != SlideSettings.Align.TOP)
+            {
+                float bottom = float.MinValue;
+
+                // compute maximal top and bottom of slide content
+                foreach (PowerPoint.Slide subSlide in subSlides)
+                {
+                    bottom = Math.Max(bottom, subSlide.Shapes[subSlide.Shapes.Count].Top + subSlide.Shapes[subSlide.Shapes.Count].Height);
+                }
+
+                float change;
+                
+                if (slideSettings.ContentAlign == SlideSettings.Align.BOTTOM)
+                    change = (540.0f - bottom) - 10.0f;
+                else
+                    change = (540.0f - bottom) / 2.5f;
+
+                foreach (PowerPoint.Slide subSlide in subSlides)
+                {
+                    foreach (PowerPoint.Shape shape in subSlide.Shapes)
+                    {
+                        if (subSlide.Shapes.HasTitle != MsoTriState.msoTrue || shape != subSlide.Shapes.Title)
+                        {
+                            shape.Top = shape.Top + change;
+                        }
+                    }
+                }
+            }
 
             // report progress
             RaiseProgress();

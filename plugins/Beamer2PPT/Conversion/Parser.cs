@@ -4,9 +4,9 @@
 
 // GPPG version 1.4.5
 // Machine:  LUKAS-PC
-// DateTime: 22.5.2011 11:17:19
+// DateTime: 30.5.2011 23:03:04
 // UserName: Lukas
-// Input file <D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 22.5.2011 11:17:16>
+// Input file <D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 30.5.2011 22:16:24>
 
 // options: conflicts no-lines diagnose & report gplex conflicts
 
@@ -48,12 +48,12 @@ public abstract class ScanBase : AbstractScanner<ValueType,LexLocation> {
 
 public class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
-  // Verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 22.5.2011 11:17:16
+  // Verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 30.5.2011 22:16:24
     public Node Document { get; private set; }
     public int SlideCount { get; private set; }
     public List<SectionRecord> SectionTable { get; private set; }
     public Dictionary<int, FrametitleRecord> FrametitleTable { get; private set; }
-  // End verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 22.5.2011 11:17:16
+  // End verbatim content from D:\Programovani\VS.2010\SimpleConverter\plugins\Beamer2PPT\Conversion\Parser.y - 30.5.2011 22:16:24
 
 #pragma warning disable 649
   private static Dictionary<int, string> aliasses;
@@ -660,6 +660,7 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
                                         CurrentSemanticValue.documentNode = new Node("slide");
                                         CurrentSemanticValue.documentNode.Children = ValueStack[ValueStack.Depth-2].nodeList;
+                                        CurrentSemanticValue.documentNode.OptionalParams = ValueStack[ValueStack.Depth-3].Text;
                                         SlideCount++;
                                     }
         break;
@@ -668,6 +669,7 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
                                         CurrentSemanticValue.documentNode = new Node("slide");
                                         CurrentSemanticValue.documentNode.Children = ValueStack[ValueStack.Depth-2].nodeList;
+                                        CurrentSemanticValue.documentNode.OptionalParams = ValueStack[ValueStack.Depth-6].Text;
                                         SlideCount++;
                                         SetFrameTitle(SlideCount, ValueStack[ValueStack.Depth-4].nodeList);
                                     }
@@ -677,6 +679,7 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
                                         CurrentSemanticValue.documentNode = new Node("slide");
                                         CurrentSemanticValue.documentNode.Children = ValueStack[ValueStack.Depth-2].nodeList;
+                                        CurrentSemanticValue.documentNode.OptionalParams = ValueStack[ValueStack.Depth-9].Text;
                                         SlideCount++;
                                         SetFrameTitle(SlideCount, ValueStack[ValueStack.Depth-7].nodeList);
                                         SetFrameSubtitle(SlideCount, ValueStack[ValueStack.Depth-4].nodeList);
