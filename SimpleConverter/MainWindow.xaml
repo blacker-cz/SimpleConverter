@@ -34,7 +34,8 @@
             </ListBox.InputBindings>
         </ListBox>
         <TabControl Margin="12,6,12,12" Name="tabControl" Grid.ColumnSpan="3" Grid.Row="2" Grid.RowSpan="2" SelectedIndex="{Binding SelectedTab}">
-            <TabItem Header="Settings" Name="tabSettings" Content="{Binding PluginView}" IsEnabled="{Binding SettingsTabEnabled, Mode=OneWay}">
+            <TabItem Header="Settings" Name="tabSettings" IsEnabled="{Binding SettingsTabEnabled, Mode=OneWay}">
+                <ScrollViewer Content="{Binding PluginView}" CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" />
             </TabItem>
             <TabItem Header="Progress" Name="tabProgress">
                 <Grid>
