@@ -201,7 +201,7 @@ envEnd      \\end{wsl}
 
 // Plain text
 // -----------------------------------------------------------------------------
-<body> [^#\$%\^&_\{\}\\]    BEGIN(str); yyless(0); unformattedText = ""; spaces = 0; nls = 0;
+<body> [^#\$%\^&_\{\}\\]    BEGIN(str); yyless(0); unformattedText = ""; nls = 0;
 
 [^#\$%\^&_\{\}\\[:IsWhiteSpace:]]    BEGIN(str); yyless(0); unformattedText = ""; spaces = 0; nls = 0;
 
@@ -213,7 +213,7 @@ envEnd      \\end{wsl}
                                             unformattedText += @" ";
                                    }
         \r                         { /* ignore */ }
-        ~                          {    spaces++; unformattedText += @" "; }
+        ~                          {    spaces++; unformattedText += "\u00A0"; }
         \n                         {    // eat multiple new lines
                                         nls++;
                                         if(nls == 1 && spaces == 0) {   // if one empty line add space
