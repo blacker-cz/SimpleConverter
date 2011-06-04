@@ -34,6 +34,11 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         private bool _changed;
 
         /// <summary>
+        /// Information if format was applied before
+        /// </summary>
+        private bool _firstRun;
+
+        /// <summary>
         /// Default parameterless constructor.
         /// Base font size is set to 11pt
         /// </summary>
@@ -45,15 +50,18 @@ namespace SimpleConverter.Plugin.Beamer2PPT
         /// Constructor
         /// </summary>
         /// <param name="baseFontSize">Base font size (11pt, 12pt, ...)</param>
-        public TextFormat(float baseFontSize)
+        /// <param name="isTitle">Flag if shape is title shape (uses different default font) - optional, default: false</param>
+        public TextFormat(float baseFontSize, bool isTitle = false)
         {
             _baseFontSize = baseFontSize * 2.0f;
 
             _settingsStack = new Stack<FormatSettings>();
 
-            _currentSettings = new FormatSettings(_baseFontSize);
+            _currentSettings = new FormatSettings(_baseFontSize, isTitle);
 
             _changed = true;
+
+            _firstRun = true;
         }
 
         /// <summary>
@@ -170,7 +178,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             text = text.Replace("\n", "\r");
 
             // filter spaces (no space at beginning of line, and no space after space)
-            if(text.StartsWith(" ") && (range.Text.EndsWith(" ") || range.Text.Length == 0 || range.Text.EndsWith("\r")))
+            if (text.StartsWith(" ") && (range.Text.EndsWith(" ") || range.Text.EndsWith("\u00A0") || range.Text.Length == 0 || range.Text.EndsWith("\r")))
                 text = text.TrimStart(' ');
 
             if (text.Length > 0)
@@ -183,8 +191,13 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             {
                 TextRange2 format = range.Characters[start + 1, text.Length];
 
+                // check used color, if color is null set default theme color
+                if (_currentSettings.Color != null)
+                    format.Font.Fill.ForeColor.RGB = (int) _currentSettings.Color;
+                else
+                    format.Font.Fill.ForeColor.ObjectThemeColor = MsoThemeColorIndex.msoThemeColorText1;
+
                 format.Font.Bold = _currentSettings.Bold;
-                format.Font.Fill.ForeColor.RGB = _currentSettings.Color;
                 format.Font.Italic = _currentSettings.Italic;
                 format.Font.Name = _currentSettings.FontFamily;
                 format.Font.UnderlineStyle = _currentSettings.Underline;
@@ -359,7 +372,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             /// <summary>
             /// Font color
             /// </summary>
-            public int Color { get; set; }
+            public int? Color { get; set; }
 
             /// <summary>
             /// Bold
@@ -389,11 +402,32 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             /// Default constructor
             /// </summary>
             /// <param name="fontSize">Font size</param>
-            public FormatSettings(float fontSize)
+            /// <param name="isTitle">Flag if shape is title shape (uses different default font)</param>
+            public FormatSettings(float fontSize, bool isTitle)
             {
-                FontFamily = @"Calibri";
+                // To assign a Headings (major) or Body (minor) font style to text, you change the font name to this:
+                //
+                // "+" & FontType & "-" & FontLang
+                //
+                // FontType:
+                //
+                //    Major (Headings) = "mj"
+                //    Minor (Body) = "mn"
+                //
+                // FontLang:
+                //
+                //    Latin = "lt"
+                //    Complex Scripts = "cs"
+                //    East Asian = "ea"
+                // (source: http://pptfaq.com/FAQ00957.htm)
+
+                if(isTitle)
+                    FontFamily = @"+mj-lt";
+                else
+                    FontFamily = @"+mn-lt";
+
                 FontSize = fontSize;
-                Color = 0;  // default black color
+                Color = null;  // default black color
                 Bold = MsoTriState.msoFalse;
                 Italic = MsoTriState.msoFalse;
                 Underline = MsoTextUnderlineType.msoNoUnderline;

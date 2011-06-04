@@ -62,18 +62,21 @@ namespace SimpleConverter.Plugin.Beamer2PPT
             _localPauseCounter = 0;
 
             // prepare shape
-            shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignLeft;
             shape.TextFrame2.TextRange.ParagraphFormat.SpaceWithin = 0.8f;
-            shape.TextFrame2.VerticalAnchor = MsoVerticalAnchor.msoAnchorTop;
             shape.TextFrame2.AutoSize = MsoAutoSize.msoAutoSizeShapeToFitText;
-            shape.ScaleWidth(1.085f, MsoTriState.msoFalse, MsoScaleFrom.msoScaleFromMiddle);
+            shape.TextFrame2.MarginBottom = 15.0f;
+
+            // following values are theme dependent (in earlier version themes wasn't used)
+            //shape.TextFrame2.TextRange.ParagraphFormat.Alignment = MsoParagraphAlignment.msoAlignLeft;
+            //shape.TextFrame2.VerticalAnchor = MsoVerticalAnchor.msoAnchorTop;
+            //shape.ScaleWidth(1.085f, MsoTriState.msoFalse, MsoScaleFrom.msoScaleFromMiddle);
 
             // setup overlays for title
             _maxPass = Math.Max(Misc.MaxOverlay(frametitle.TitleOverlaySet), _maxPass);
             _maxPass = Math.Max(Misc.MaxOverlay(frametitle.SubtitleOverlaySet), _maxPass);
             
             // generate title
-            TextFormat textformat = new TextFormat(_baseFontSize);
+            TextFormat textformat = new TextFormat(_baseFontSize, true);
             textformat.ModifyFormat(new Node("Large")); // in beamer title font size is same as \Large
             paused = !BuildTitlePart(shape, frametitle.Title, textformat);
 
