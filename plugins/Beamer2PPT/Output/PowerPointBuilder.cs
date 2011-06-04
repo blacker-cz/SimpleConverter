@@ -363,7 +363,7 @@ namespace SimpleConverter.Plugin.Beamer2PPT
                         slide = _pptPresentation.Slides.Add(_slideIndex, PowerPoint.PpSlideLayout.ppLayoutTitleOnly);
                         subSlides.Add(slide);   // add slide to list of sub-slides
 
-                        titleNextPass = titleBuilder.BuildTitle(slide.Shapes[1], _frametitleTable[_currentSlide], passNumber, pauseCounter, out paused);
+                        titleNextPass = titleBuilder.BuildTitle(slide.Shapes.Title, _frametitleTable[_currentSlide], passNumber, pauseCounter, out paused);
 
                         if (paused)
                             continue;
