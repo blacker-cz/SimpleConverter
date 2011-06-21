@@ -44,6 +44,9 @@ namespace SimpleConverter
         /// <param name="disabled">Flag if control is disabled</param>
         public BaseCommand(MainWindowViewModel viewModel, bool disabled = false)
         {
+            if (viewModel == null)
+                throw new ArgumentNullException();
+
             _viewModel = viewModel;
             Disabled = disabled;
         }
@@ -177,6 +180,28 @@ namespace SimpleConverter
         public override void Execute(object parameter)
         {
             _viewModel.StopBatch();
+        }
+    }
+
+    /// <summary>
+    /// Command handler class for About button
+    /// </summary>
+    public class AboutCommand : BaseCommand
+    {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="viewModel">Associated ViewModel</param>
+        /// <param name="disabled">Flag if control is disabled</param>
+        public AboutCommand(MainWindowViewModel viewModel, bool disabled = false) : base(viewModel, disabled) { }
+
+        /// <summary>
+        /// Execute method for command
+        /// </summary>
+        /// <param name="parameter">Parameter</param>
+        public override void Execute(object parameter)
+        {
+            _viewModel.About();
         }
     }
 }

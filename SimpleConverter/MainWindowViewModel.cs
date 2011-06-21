@@ -38,7 +38,8 @@ namespace SimpleConverter
                          _addFileCommand,
                          _removeFileCommand,
                          _browseCommand,
-                         _stopBatchCommand;
+                         _stopBatchCommand,
+                         _aboutCommand;
 
         /// <summary>
         /// Background thread object reference
@@ -111,6 +112,11 @@ namespace SimpleConverter
         /// Command binding for stop batch command
         /// </summary>
         public BaseCommand StopBatchCommand { get { return _stopBatchCommand ?? (_stopBatchCommand = new StopBatchCommand(this, true)); } }
+
+        /// <summary>
+        /// Command binding for about command
+        /// </summary>
+        public BaseCommand AboutCommand { get { return _aboutCommand ?? (_aboutCommand = new AboutCommand(this)); } }
 
         #endregion // Binding for button commands
 
@@ -374,6 +380,24 @@ namespace SimpleConverter
             }
 
             dlg.Dispose();
+        }
+
+        /// <summary>
+        /// About command handler
+        /// </summary>
+        public void About()
+        {
+            AboutBox about = new AboutBox(Application.Current.MainWindow);
+            about.Title = @"About SimpleConverter";
+            try
+            {
+                System.IO.StreamReader reader = new System.IO.StreamReader(Application.GetResourceStream(new System.Uri("/about.txt", UriKind.Relative)).Stream);
+                about.description.Text = reader.ReadToEnd();
+            }
+            catch (System.IO.IOException)
+            {
+            }
+            about.ShowDialog();
         }
 
         /// <summary>

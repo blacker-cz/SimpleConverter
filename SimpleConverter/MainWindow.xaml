@@ -33,7 +33,7 @@
                 <KeyBinding Command="{Binding RemoveFileCommand}" Key="Delete" />
             </ListBox.InputBindings>
         </ListBox>
-        <TabControl Margin="12,6,12,12" Name="tabControl" Grid.ColumnSpan="3" Grid.Row="2" Grid.RowSpan="2" SelectedIndex="{Binding SelectedTab}">
+        <TabControl Margin="12,6,12,12" Name="tabControl" Grid.ColumnSpan="3" Grid.Row="2" Grid.RowSpan="2" SelectedIndex="{Binding SelectedTab}" Panel.ZIndex="0">
             <TabItem Header="Settings" Name="tabSettings" IsEnabled="{Binding SettingsTabEnabled, Mode=OneWay}">
                 <ScrollViewer Content="{Binding PluginView}" CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" />
             </TabItem>
@@ -84,5 +84,22 @@
         <Button Content="Browse" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" Margin="0,7,0,0" Name="buttonBrowse" Width="99" Height="26" VerticalAlignment="Top" ToolTip="Browse for output directory" Command="{Binding BrowseCommand}" />
         <Button Content="X" Grid.Column="2" Height="33" HorizontalAlignment="Left" Margin="80,12,0,0" Name="buttonRemove" VerticalAlignment="Top" Width="19" ToolTip="Remove file from conversion job" Command="{Binding RemoveFileCommand}" />
         <Label Content="Output:" Grid.Row="1" Height="28" HorizontalAlignment="Left" Margin="12,7,0,0" Name="label1" VerticalAlignment="Top" />
+        <Button Margin="142,0,0,5" Content="About" Cursor="Hand" Grid.Row="2" Panel.ZIndex="0" HorizontalAlignment="Left" Width="39" Height="17" VerticalAlignment="Bottom" Command="{Binding AboutCommand}">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter />
+                </ControlTemplate>
+            </Button.Template>
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Foreground" Value="Black" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" Value="Red" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </Window>
